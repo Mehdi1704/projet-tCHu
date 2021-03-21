@@ -4,8 +4,6 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 import java.util.Map;
-//CHONB DE IJ
-//Effacer changement
 
 public class PublicGameState {
 
