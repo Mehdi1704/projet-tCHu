@@ -4,8 +4,7 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 import java.util.Map;
-//ALOULOU YA MIBOUN
-//YAATIK ASBA
+
 public class PublicGameState {
 
     private final int ticketsCount;
