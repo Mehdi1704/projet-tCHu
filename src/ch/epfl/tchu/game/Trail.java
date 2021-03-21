@@ -1,0 +1,110 @@
+package ch.epfl.tchu.game;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class Trail {
+    private final Station station1;
+    private final Station station2;
+    private final List<Route> routes;
+    private final int length;
+
+    /**
+     * contructeur privé de notre classe
+     */
+
+
+    private Trail(Station station1, Station station2, List<Route> routes, int length) {
+
+        this.station1 = station1;
+        this.station2 = station2;
+        this.routes = routes;
+        this.length = length;
+    }
+
+    /**
+     * methode longest retournant le trail le plus long en fonction d'une liste de routes donner
+     */
+
+    public static Trail longest(List<Route> routes) {
+        Trail longest = new Trail(null, null, List.of(), 0);
+
+        if (routes.isEmpty()) return longest;
+
+        List<Trail> trailList = new ArrayList<>();
+        for (Route r : routes) {
+            trailList.add(new Trail(r.station1(), r.station2(), List.of(r), r.length()));
+            trailList.add(new Trail(r.station2(), r.station1(), List.of(r), r.length()));
+        }
+
+        while (!trailList.isEmpty()) {
+            List<Trail> prolongedTrails = new ArrayList<>();
+            for (Trail t : trailList) {
+
+                for (Route r : routes) {
+                    if (!t.routes.contains(r)) {
+                        Trail.addTrail(t, r, prolongedTrails, r.station1(), r.station2());
+                        Trail.addTrail(t, r, prolongedTrails, r.station2(), r.station1());
+                    }
+                }
+
+                if (t.length > longest.length) longest = t;
+            }
+            trailList = prolongedTrails;
+        }
+        return longest;
+    }
+
+
+    private static void addTrail(Trail t, Route r, List<Trail> prolongedTrails, Station correspondingStation1, Station correspondingStation2) {
+        if (t.station2.equals(correspondingStation1)) {
+            ArrayList<Route> rToAdd = new ArrayList<>(t.routes);
+            rToAdd.add(r);
+            prolongedTrails.add(new Trail(t.station1(), correspondingStation2, rToAdd, t.length + r.length()));
+        }
+    }
+
+    /**
+     * getter de station 1
+     *
+     * @return
+     */
+    public Station station1() {
+        return this.length() == 0 ? null : station1;
+    }
+
+    /**
+     * getter station 2
+     *
+     * @return
+     */
+
+    public Station station2() {
+        return this.length() == 0 ? null : station2;
+    }
+
+
+    public int length() {
+        return length;
+    }
+
+    /**
+     * affichage de notre plus long chemin .
+     * @return
+     */
+    @Override
+    public String toString() {
+        //TODO ajouter les points intermédiaires
+        ArrayList<String> stationNames = new ArrayList<>();
+        Station currStation= station1;
+        stationNames.add(currStation.name());
+        for (Route route : routes) {
+            currStation = route.stationOpposite(currStation);
+            stationNames.add(currStation.name());
+        }
+        return String.format("%s (%d)", String.join(" - ", stationNames), length);
+    }
+
+
+}
+
