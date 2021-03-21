@@ -4,7 +4,7 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 import java.util.Map;
-//TEST DE COMMIT
+//CHONB DE IJ
 public class PublicGameState {
 
     private final int ticketsCount;
