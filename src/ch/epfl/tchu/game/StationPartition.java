@@ -9,6 +9,7 @@ public final class StationPartition implements StationConnectivity {
 
 
     private StationPartition(int[] tabOfLinks){
+
         this.links =tabOfLinks.clone() ;
     }
 
@@ -16,7 +17,7 @@ public final class StationPartition implements StationConnectivity {
     public boolean connected(Station s1, Station s2) {
 
         if(s1.id() >= links.length || s2.id() >= links.length) {
-            return s1.id() == s2.id();
+            return (s1.id() == s2.id());
         }else{
             return (links[s1.id()] == links[s2.id()]);
         }
