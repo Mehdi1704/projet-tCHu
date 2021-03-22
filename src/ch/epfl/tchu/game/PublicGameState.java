@@ -13,7 +13,7 @@ public class PublicGameState {
     private final PublicCardState cardState;
     private final PlayerId currentPlayerId;
     private final Map<PlayerId,PublicPlayerState> playerState;
-    //private final PlayerId lastPlayer;
+    private final PlayerId lastPlayer;
 
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                             Map<PlayerId,PublicPlayerState> playerState, PlayerId lastPlayer){
@@ -25,7 +25,7 @@ public class PublicGameState {
         this.cardState = cardState;
         this.currentPlayerId = currentPlayerId;
         this.playerState = playerState;
-        //this.lastPlayer = lastPlayer;
+        this.lastPlayer = lastPlayer;
     }
 
     /**
@@ -94,7 +94,8 @@ public class PublicGameState {
      * car le dernier tour n'a pas commencé
      */
     public PlayerId lastPlayer(){
-        if (playerState.get(currentPlayerId()).carCount() <= 2) return currentPlayerId();
-        else return null;
+        return lastPlayer;
+        //if (playerState.get(currentPlayerId()).carCount() <= 2) return currentPlayerId();
+        //else return null;
     }
 }

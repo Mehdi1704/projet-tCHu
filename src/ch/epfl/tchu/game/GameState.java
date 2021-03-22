@@ -15,12 +15,12 @@ public class GameState  extends PublicGameState{
 
     private GameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                       Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
-        super(ticketsCount, cardState, currentPlayerId, playerState, lastPlayer);
+        super(ticketsCount, cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
          this.ticketsCount = ticketsCount;
-         this.PublicCardState cardState = cardState;
-         this.PlayerId currentPlayerId = currentPlayerId;
-         this.Map<PlayerId, PlayerState> playerState = playerState;
-         this.PlayerId lastPlayer = lastPlayer;
+         this.cardState = cardState;
+         this.currentPlayerId = currentPlayerId;
+         this.playerState = playerState;
+         this.lastPlayer = lastPlayer;
         
     }
 }
