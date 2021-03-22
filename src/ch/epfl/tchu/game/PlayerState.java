@@ -86,15 +86,17 @@ public class PlayerState extends PublicPlayerState{
                     possibleAdditionalCards.add(c1);
             }
         }
-        //TODO Donne l'union des cartes du joueur et des cartes jouables
-        // Vérifier
-        List<SortedBag<Card>> finalList = new ArrayList<>(possibleAdditionalCards.build().subsetsOfSize(additionalCardsCount));
+        SortedBag<Card> buildedCards = possibleAdditionalCards.build();
+        List<SortedBag<Card>> finalList= new ArrayList<>();
+        if (buildedCards.size() >= additionalCardsCount){
+            finalList = new ArrayList<>(buildedCards.subsetsOfSize(additionalCardsCount));
+        }
         finalList.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
         return finalList;
     }
 //TODO Vérifier que les cartes sont en possession du joueur, ne pas le faire pour l'instant
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards){
-        List<Route> newRoutes = routes;
+        List<Route> newRoutes = new ArrayList<>(routes);
         newRoutes.add(route);
         return new PlayerState(this.tickets,this.cards.difference(claimCards),newRoutes);
     }
@@ -110,7 +112,7 @@ public class PlayerState extends PublicPlayerState{
 
         StationPartition.Builder stationPartitonProfonde = new StationPartition.Builder(indexMax + 1);
 
-        for(Route r : routes ){
+        for(Route r : routes){
             stationPartitonProfonde.connect(r.station1(), r.station2());
         }
 
