@@ -28,8 +28,8 @@ public class GameState  extends PublicGameState{
    /* public static GameState initial(SortedBag<Ticket> tickets, Random rng){
 
         return new GameState();
-    }*/
 
+    }*/
 
 
 
