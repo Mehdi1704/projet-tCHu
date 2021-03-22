@@ -19,7 +19,7 @@ public class PublicGameState {
     // et NullPointerException si l'un des autres arguments (lastPlayer excepté!) est nul.
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                             Map<PlayerId,PublicPlayerState> playerState, PlayerId lastPlayer){
-        Preconditions.checkArgument(ticketsCount >= 0);
+        Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == 2);
         if (cardState==null || currentPlayerId==null || playerState==null){
             throw new NullPointerException();
         }
@@ -76,26 +76,27 @@ public class PublicGameState {
      * @param playerId
      * @return
      */
-    //TODO
+    //TODO verifier
     public PublicPlayerState playerState(PlayerId playerId){
-        return playerState.put(playerId, this.currentPlayerState());
+        return playerState.get(playerId);
     }
 
     /**
      * Retourne la partie publique de l'état du joueur courant
      * @return
      */
-    //TODO
+    //TODO verifier
     public PublicPlayerState currentPlayerState(){
-        return playerState.put(currentPlayerId(), new PublicPlayerState(ticketsCount(), 0, claimedRoutes()));
+        return playerState.get(currentPlayerId());
     }
 
     /**
      * Retourne la totalité des routes dont l'un ou l'autre des joueurs s'est emparé
      * @return
      */
-    //TODO
+    //TODO faire
     public List<Route> claimedRoutes(){
+
         return null;
     }
 
