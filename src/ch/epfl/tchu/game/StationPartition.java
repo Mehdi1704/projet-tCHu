@@ -39,8 +39,7 @@ public final class StationPartition implements StationConnectivity {
         }
 
         public Builder connect(Station s1, Station s2){
-            int temp  = representative(s1.id());
-            tabBuilderOfPartition[s2.id()] = temp;
+            tabBuilderOfPartition[representative(s1.id())] = representative(s2.id());
             return this;
         }
 
