@@ -5,6 +5,8 @@ import ch.epfl.tchu.Preconditions;
 import java.util.List;
 import java.util.Map;
 
+import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
+
 public class PublicGameState {
 
     private final int ticketsCount;
@@ -35,14 +37,31 @@ public class PublicGameState {
     public int ticketsCount(){
         return ticketsCount;
     }
+
+    /**
+     * Retourne vrai si la pioche n'est pas vide
+     * @return
+     */
     public boolean canDrawTickets(){
-        return false;
+        return ticketsCount!=0;
     }
+
+    /**
+     * Retourne la partie publique de l'état des cartes wagon/locomotive
+     * @return
+     */
     public PublicCardState cardState(){
-        return new PublicCardState(null,0,0);
+        return new PublicCardState(cardState.faceUpCards(),cardState.deckSize(), cardState.discardsSize());
     }
+
+    /**
+     * retourne vrai ssi il est possible de tirer des cartes,
+     * c-à-d si la pioche et la défausse contiennent entre elles au moins 5 cartes
+     * @return
+     */
     public boolean canDrawCards(){
-        return false;
+        int totalCards = cardState.deckSize() + cardState.discardsSize();
+        return (totalCards >= INITIAL_TICKETS_COUNT);
     }
     /**
      * Retourne l'identité du joueur actuel
@@ -51,16 +70,41 @@ public class PublicGameState {
     public PlayerId currentPlayerId(){
         return currentPlayerId;
     }
+
+    /**
+     * Retourne la partie publique de l'état du joueur d'identité donnée
+     * @param playerId
+     * @return
+     */
     public PublicPlayerState playerState(PlayerId playerId){
-        return null;
+        playerId.next();
+        return new PublicPlayerState(ticketsCount, currentPlayerState().cardCount(), claimedRoutes());
     }
+
+    /**
+     * Retourne la partie publique de l'état du joueur courant
+     * @return
+     */
     public PublicPlayerState currentPlayerState(){
-        return null;
+        return new PublicPlayerState(ticketsCount, currentPlayerState().cardCount(), claimedRoutes());
     }
+
+    /**
+     * Retourne la totalité des routes dont l'un ou l'autre des joueurs s'est emparé
+     * @return
+     */
     public List<Route> claimedRoutes(){
         return null;
     }
+
+    /**
+     * Retourne l'identité du dernier joueur,
+     * ou null si elle n'est pas encore connue
+     * car le dernier tour n'a pas commencé
+     * @return
+     */
     public PlayerId lastPlayer(){
-        return null;
+        //TODO null i le dernier tour n'a pas commencé
+        return lastPlayer;
     }
 }
