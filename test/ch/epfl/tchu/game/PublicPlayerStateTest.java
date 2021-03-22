@@ -3,178 +3,98 @@ package ch.epfl.tchu.game;
 import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class StationPartitionTest {
+class PublicPlayerStateTest {
+    private static final int TOTAL_CAR_COUNT = 40;
+
     @Test
-    void stationPartitionInitiallyConnectsStationsWithThemselvesOnly() {
-        var stations = new ChMap().ALL_STATIONS;
+    void publicPlayerStateConstructorFailsWithNegativeTicketOrCardCount() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new PublicPlayerState(-1, +1, List.of());
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            new PublicPlayerState(+1, -1, List.of());
+        });
+    }
 
-        var partition = new StationPartition.Builder(stations.size())
-                .build();
-        for (var s1 : stations) {
-            for (var s2 : stations) {
-                var same = s1.equals(s2);
-                assertEquals(same, partition.connected(s1, s2));
+    @Test
+    void publicPlayerStateTicketCountReturnsTicketCount() {
+        for (int t = 0; t < 10; t++) {
+            var state = new PublicPlayerState(t, 0, List.of());
+            assertEquals(t, state.ticketCount());
+        }
+    }
+
+    @Test
+    void publicPlayerStateCardCountReturnsCardCount() {
+        for (int c = 0; c < 10; c++) {
+            var state = new PublicPlayerState(0, c, List.of());
+            assertEquals(c, state.cardCount());
+        }
+    }
+
+    @Test
+    void publicPlayerStateRoutesReturnsRoutes() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var routes = randomRoutes(rng);
+            var state = new PublicPlayerState(0, 0, routes);
+            assertEquals(routes, state.routes());
+        }
+    }
+
+    @Test
+    void publicPlayerStateCarCountReturnsWorks() {
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var routes = randomRoutes(rng);
+            var routesLength = 0;
+            for (var route : routes) routesLength += route.length();
+
+            var state = new PublicPlayerState(0, 0, routes);
+            assertEquals(TOTAL_CAR_COUNT - routesLength, state.carCount());
+        }
+    }
+
+    @Test
+    void publicPlayerStateClaimPointsWorks() {
+        var rng = TestRandomizer.newRandom();
+        var claimPoints = new int[]{Integer.MIN_VALUE, 1, 2, 4, 7, 10, 15};
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var routes = randomRoutes(rng);
+            var points = 0;
+            for (var route : routes) points += claimPoints[route.length()];
+
+            var state = new PublicPlayerState(0, 0, routes);
+            assertEquals(points, state.claimPoints());
+        }
+    }
+
+    private static List<Route> randomRoutes(Random rng) {
+        var shuffledRoutes = new ArrayList<>(new ChRoutes().ALL_ROUTES);
+        Collections.shuffle(shuffledRoutes, rng);
+
+        var maxRoutesCount = rng.nextInt(TOTAL_CAR_COUNT);
+        var routes = new ArrayList<Route>(maxRoutesCount);
+        var routesLength = 0;
+        for (var route : shuffledRoutes.subList(0, maxRoutesCount)) {
+            var totalLength = routesLength + route.length();
+            if (totalLength <= TOTAL_CAR_COUNT) {
+                routes.add(route);
+                routesLength = totalLength;
             }
         }
+        return Collections.unmodifiableList(routes);
     }
 
-    @Test
-    void stationPartitionBuilderConnectIsIdempotent() {
-        var stations = new ChMap().ALL_STATIONS;
-        var s0 = stations.get(0);
-        var s1 = stations.get(1);
-        var partition = new StationPartition.Builder(stations.size())
-                .connect(s0, s0)
-                .connect(s1, s1)
-                .connect(s0, s1)
-                .connect(s1, s0)
-                .build();
-
-        assertTrue(partition.connected(s0, s0));
-        assertTrue(partition.connected(s1, s1));
-        assertTrue(partition.connected(s0, s1));
-        assertTrue(partition.connected(s1, s0));
-    }
-
-    @Test
-    void stationPartitionWorksOnGivenExample() {
-        var stations = reducedChStations();
-        var partition = new StationPartition.Builder(stations.size())
-                .connect(stations.get(5), stations.get(2))  // Lausanne - Fribourg
-                .connect(stations.get(0), stations.get(3))  // Berne - Interlaken
-                .connect(stations.get(0), stations.get(2))  // Berne - Fribourg
-                .connect(stations.get(7), stations.get(10)) // Neuchâtel - Soleure
-                .connect(stations.get(10), stations.get(8)) // Soleure - Olten
-                .connect(stations.get(6), stations.get(13)) // Lucerne - Zoug
-                .connect(stations.get(13), stations.get(9)) // Zoug - Schwyz
-                .connect(stations.get(9), stations.get(6))  // Schwyz - Lucerne
-                .connect(stations.get(9), stations.get(11)) // Schwyz - Wassen
-                .build();
-
-        assertTrue(partition.connected(stations.get(5), stations.get(3)));   // Lausanne - Interlaken
-        assertTrue(partition.connected(stations.get(6), stations.get(11)));  // Lucerne - Wassen
-        assertTrue(partition.connected(stations.get(13), stations.get(11))); // Zoug - Wassen
-        assertTrue(partition.connected(stations.get(9), stations.get(11)));  // Schwyz - Wassen
-
-        assertFalse(partition.connected(stations.get(0), stations.get(6)));  // Berne - Lucerne
-    }
-
-    @Test
-    void stationPartitionWorksOnKnownExample1() {
-        var chMap = new ChMap();
-
-        var routes = Arrays.asList(
-                chMap.BRI_LOC_1, chMap.BRI_SIO_1, chMap.MAR_SIO_1, chMap.LAU_MAR_1,
-                chMap.GEN_LAU_1, chMap.GEN_YVE_1, chMap.LCF_YVE_1, chMap.DEL_LCF_1,
-                chMap.DEL_SOL_1, chMap.OLT_SOL_1, chMap.BAL_OLT_1, chMap.BER_LUC_1,
-                chMap.SCE_WIN_1);
-        var maxId = routes.stream()
-                .flatMap(r -> r.stations().stream())
-                .mapToInt(Station::id)
-                .max()
-                .orElse(0);
-
-        Random rng = TestRandomizer.newRandom();
-        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
-            Collections.shuffle(routes, rng);
-            var pb = new StationPartition.Builder(maxId + 1);
-            routes.forEach(r -> pb.connect(r.station1(), r.station2()));
-            var p = pb.build();
-
-            assertTrue(p.connected(chMap.LOC, chMap.BAL));
-            assertTrue(p.connected(chMap.BER, chMap.LUC));
-            assertFalse(p.connected(chMap.BER, chMap.SOL));
-            assertFalse(p.connected(chMap.LAU, chMap.LUC));
-            assertFalse(p.connected(chMap.ZUR, chMap.KRE));
-            assertTrue(p.connected(chMap.ZUR, chMap.ZUR));
-        }
-    }
-
-    @Test
-    void stationPartitionWorksOnKnownExample2() {
-        var chMap = new ChMap();
-
-        var routes = Arrays.asList(
-                chMap.DE2_SCE_1, chMap.SCE_WIN_2, chMap.WIN_ZUR_1, chMap.ZOU_ZUR_1,
-                chMap.SCZ_ZOU_1, chMap.SCZ_WAS_1, chMap.BEL_WAS_1, chMap.BEL_LUG_1,
-                chMap.COI_WAS_1, chMap.COI_SAR_1, chMap.SAR_VAD_1, chMap.AT2_VAD_1,
-                chMap.BRU_COI_1, chMap.BRU_IT2_1);
-        var maxId = routes.stream()
-                .flatMap(r -> r.stations().stream())
-                .mapToInt(Station::id)
-                .max()
-                .orElse(0);
-
-        Random rng = TestRandomizer.newRandom();
-        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
-            Collections.shuffle(routes, rng);
-            var pb = new StationPartition.Builder(maxId + 1);
-            routes.forEach(r -> pb.connect(r.station1(), r.station2()));
-            var p = pb.build();
-
-            assertTrue(p.connected(chMap.LUG, chMap.DE2));
-            assertTrue(p.connected(chMap.AT2, chMap.IT2));
-            assertFalse(p.connected(chMap.ZUR, chMap.AT1));
-            assertFalse(p.connected(chMap.ZUR, chMap.AT1));
-        }
-    }
-
-    @Test
-    void stationPartitionWorksOnKnownExample3() {
-        var chMap = new ChMap();
-
-        var routes = Arrays.asList(
-                chMap.DE4_KRE_1, chMap.KRE_WIN_1, chMap.WIN_ZUR_2, chMap.BAD_ZUR_1,
-                chMap.ZOU_ZUR_2, chMap.LUC_ZOU_2, chMap.INT_LUC_1, chMap.BRI_INT_1,
-                chMap.BER_INT_1, chMap.BER_FRI_1, chMap.BER_NEU_1, chMap.LCF_NEU_1,
-                chMap.FR3_LCF_1, chMap.BER_SOL_1, chMap.BAL_DEL_1, chMap.BAL_DE1_1);
-        var maxId = routes.stream()
-                .flatMap(r -> r.stations().stream())
-                .mapToInt(Station::id)
-                .max()
-                .orElse(0);
-
-        Random rng = TestRandomizer.newRandom();
-        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
-            Collections.shuffle(routes, rng);
-            var pb = new StationPartition.Builder(maxId + 1);
-            routes.forEach(r -> pb.connect(r.station1(), r.station2()));
-            var p = pb.build();
-
-            assertTrue(p.connected(chMap.BRI, chMap.FR3));
-            assertTrue(p.connected(chMap.DE4, chMap.FR3));
-            assertTrue(p.connected(chMap.BRI, chMap.DE4));
-            assertTrue(p.connected(chMap.BAD, chMap.SOL));
-            assertTrue(p.connected(chMap.BAL, chMap.DE1));
-            assertFalse(p.connected(chMap.BAL, chMap.SOL));
-        }
-    }
-
-    private static List<Station> reducedChStations() {
-        return List.of(
-                new Station(0, "Berne"),
-                new Station(1, "Delémont"),
-                new Station(2, "Fribourg"),
-                new Station(3, "Interlaken"),
-                new Station(4, "La Chaux-de-Fonds"),
-                new Station(5, "Lausanne"),
-                new Station(6, "Lucerne"),
-                new Station(7, "Neuchâtel"),
-                new Station(8, "Olten"),
-                new Station(9, "Schwyz"),
-                new Station(10, "Soleure"),
-                new Station(11, "Wassen"),
-                new Station(12, "Yverdon"),
-                new Station(13, "Zoug"),
-                new Station(14, "Zürich"));
-
-    }
-
-    private static final class ChMap {
+    private static final class ChRoutes {
         //region Stations
         final Station BAD = new Station(0, "Baden");
         final Station BAL = new Station(1, "Bâle");
@@ -210,7 +130,6 @@ class StationPartitionTest {
         final Station YVE = new Station(31, "Yverdon");
         final Station ZOU = new Station(32, "Zoug");
         final Station ZUR = new Station(33, "Zürich");
-
         final Station DE1 = new Station(34, "Allemagne");
         final Station DE2 = new Station(35, "Allemagne");
         final Station DE3 = new Station(36, "Allemagne");
@@ -228,16 +147,6 @@ class StationPartitionTest {
         final Station FR2 = new Station(48, "France");
         final Station FR3 = new Station(49, "France");
         final Station FR4 = new Station(50, "France");
-
-        final List<Station> DE = List.of(DE1, DE2, DE3, DE4, DE5);
-        final List<Station> AT = List.of(AT1, AT2, AT3);
-        final List<Station> IT = List.of(IT1, IT2, IT3, IT4, IT5);
-        final List<Station> FR = List.of(FR1, FR2, FR3, FR4);
-
-        final List<Station> ALL_STATIONS = List.of(
-                BAD, BAL, BEL, BER, BRI, BRU, COI, DAV, DEL, FRI, GEN, INT, KRE, LAU, LCF, LOC, LUC,
-                LUG, MAR, NEU, OLT, PFA, SAR, SCE, SCZ, SIO, SOL, STG, VAD, WAS, WIN, YVE, ZOU, ZUR,
-                DE1, DE2, DE3, DE4, DE5, AT1, AT2, AT3, IT1, IT2, IT3, IT4, IT5, FR1, FR2, FR3, FR4);
         //endregion
 
         //region Routes
@@ -329,88 +238,21 @@ class StationPartitionTest {
         final Route WIN_ZUR_2 = new Route("WIN_ZUR_2", WIN, ZUR, 1, Route.Level.OVERGROUND, Color.VIOLET);
         final Route ZOU_ZUR_1 = new Route("ZOU_ZUR_1", ZOU, ZUR, 1, Route.Level.OVERGROUND, Color.GREEN);
         final Route ZOU_ZUR_2 = new Route("ZOU_ZUR_2", ZOU, ZUR, 1, Route.Level.OVERGROUND, Color.RED);
+
         final List<Route> ALL_ROUTES = List.of(
-                AT1_STG_1, AT2_VAD_1, BAD_BAL_1, BAD_OLT_1, BAD_ZUR_1, BAL_DE1_1,
-                BAL_DEL_1, BAL_OLT_1, BEL_LOC_1, BEL_LUG_1, BEL_LUG_2, BEL_WAS_1,
-                BEL_WAS_2, BER_FRI_1, BER_FRI_2, BER_INT_1, BER_LUC_1, BER_LUC_2,
-                BER_NEU_1, BER_SOL_1, BRI_INT_1, BRI_IT5_1, BRI_LOC_1, BRI_SIO_1,
-                BRI_WAS_1, BRU_COI_1, BRU_DAV_1, BRU_IT2_1, COI_DAV_1, COI_SAR_1,
-                COI_WAS_1, DAV_AT3_1, DAV_IT1_1, DAV_SAR_1, DE2_SCE_1, DE3_KRE_1,
-                DE4_KRE_1, DE5_STG_1, DEL_FR4_1, DEL_LCF_1, DEL_SOL_1, FR1_MAR_1,
-                FR2_GEN_1, FR3_LCF_1, FRI_LAU_1, FRI_LAU_2, GEN_LAU_1, GEN_LAU_2,
-                GEN_YVE_1, INT_LUC_1, IT3_LUG_1, IT4_LOC_1, KRE_SCE_1, KRE_STG_1,
-                KRE_WIN_1, LAU_MAR_1, LAU_NEU_1, LCF_NEU_1, LCF_YVE_1, LOC_LUG_1,
-                LUC_OLT_1, LUC_SCZ_1, LUC_ZOU_1, LUC_ZOU_2, MAR_SIO_1, NEU_SOL_1,
-                NEU_YVE_1, OLT_SOL_1, OLT_ZUR_1, PFA_SAR_1, PFA_SCZ_1, PFA_STG_1,
-                PFA_ZUR_1, SAR_VAD_1, SCE_WIN_1, SCE_WIN_2, SCE_ZUR_1, SCZ_WAS_1,
-                SCZ_WAS_2, SCZ_ZOU_1, SCZ_ZOU_2, STG_VAD_1, STG_WIN_1, STG_ZUR_1,
+                AT1_STG_1, AT2_VAD_1, BAD_BAL_1, BAD_OLT_1, BAD_ZUR_1, BAL_DE1_1, BAL_DEL_1,
+                BAL_OLT_1, BEL_LOC_1, BEL_LUG_1, BEL_LUG_2, BEL_WAS_1, BEL_WAS_2, BER_FRI_1,
+                BER_FRI_2, BER_INT_1, BER_LUC_1, BER_LUC_2, BER_NEU_1, BER_SOL_1, BRI_INT_1,
+                BRI_IT5_1, BRI_LOC_1, BRI_SIO_1, BRI_WAS_1, BRU_COI_1, BRU_DAV_1, BRU_IT2_1,
+                COI_DAV_1, COI_SAR_1, COI_WAS_1, DAV_AT3_1, DAV_IT1_1, DAV_SAR_1, DE2_SCE_1,
+                DE3_KRE_1, DE4_KRE_1, DE5_STG_1, DEL_FR4_1, DEL_LCF_1, DEL_SOL_1, FR1_MAR_1,
+                FR2_GEN_1, FR3_LCF_1, FRI_LAU_1, FRI_LAU_2, GEN_LAU_1, GEN_LAU_2, GEN_YVE_1,
+                INT_LUC_1, IT3_LUG_1, IT4_LOC_1, KRE_SCE_1, KRE_STG_1, KRE_WIN_1, LAU_MAR_1,
+                LAU_NEU_1, LCF_NEU_1, LCF_YVE_1, LOC_LUG_1, LUC_OLT_1, LUC_SCZ_1, LUC_ZOU_1,
+                LUC_ZOU_2, MAR_SIO_1, NEU_SOL_1, NEU_YVE_1, OLT_SOL_1, OLT_ZUR_1, PFA_SAR_1,
+                PFA_SCZ_1, PFA_STG_1, PFA_ZUR_1, SAR_VAD_1, SCE_WIN_1, SCE_WIN_2, SCE_ZUR_1,
+                SCZ_WAS_1, SCZ_WAS_2, SCZ_ZOU_1, SCZ_ZOU_2, STG_VAD_1, STG_WIN_1, STG_ZUR_1,
                 WIN_ZUR_1, WIN_ZUR_2, ZOU_ZUR_1, ZOU_ZUR_2);
-        //endregion
-
-        //region Tickets
-        final Ticket BAL_BER = new Ticket(BAL, BER, 5);
-        final Ticket BAL_BRI = new Ticket(BAL, BRI, 10);
-        final Ticket BAL_STG = new Ticket(BAL, STG, 8);
-        final Ticket BER_COI = new Ticket(BER, COI, 10);
-        final Ticket BER_LUG = new Ticket(BER, LUG, 12);
-        final Ticket BER_SCZ = new Ticket(BER, SCZ, 5);
-        final Ticket BER_ZUR = new Ticket(BER, ZUR, 6);
-        final Ticket FRI_LUC = new Ticket(FRI, LUC, 5);
-        final Ticket GEN_BAL = new Ticket(GEN, BAL, 13);
-        final Ticket GEN_BER = new Ticket(GEN, BER, 8);
-        final Ticket GEN_SIO = new Ticket(GEN, SIO, 10);
-        final Ticket GEN_ZUR = new Ticket(GEN, ZUR, 14);
-        final Ticket INT_WIN = new Ticket(INT, WIN, 7);
-        final Ticket KRE_ZUR = new Ticket(KRE, ZUR, 3);
-        final Ticket LAU_INT = new Ticket(LAU, INT, 7);
-        final Ticket LAU_LUC = new Ticket(LAU, LUC, 8);
-        final Ticket LAU_STG = new Ticket(LAU, STG, 13);
-        final Ticket LCF_BER = new Ticket(LCF, BER, 3);
-        final Ticket LCF_LUC = new Ticket(LCF, LUC, 7);
-        final Ticket LCF_ZUR = new Ticket(LCF, ZUR, 8);
-        final Ticket LUC_VAD = new Ticket(LUC, VAD, 6);
-        final Ticket LUC_ZUR = new Ticket(LUC, ZUR, 2);
-        final Ticket LUG_COI = new Ticket(LUG, COI, 10);
-        final Ticket NEU_WIN = new Ticket(NEU, WIN, 9);
-        final Ticket OLT_SCE = new Ticket(OLT, SCE, 5);
-        final Ticket SCE_MAR = new Ticket(SCE, MAR, 15);
-        final Ticket SCE_STG = new Ticket(SCE, STG, 4);
-        final Ticket SCE_ZOU = new Ticket(SCE, ZOU, 3);
-        final Ticket STG_BRU = new Ticket(STG, BRU, 9);
-        final Ticket WIN_SCZ = new Ticket(WIN, SCZ, 3);
-        final Ticket ZUR_BAL = new Ticket(ZUR, BAL, 4);
-        final Ticket ZUR_BRU = new Ticket(ZUR, BRU, 11);
-        final Ticket ZUR_LUG = new Ticket(ZUR, LUG, 9);
-        final Ticket ZUR_VAD = new Ticket(ZUR, VAD, 6);
-
-        final Ticket BER_C = ticketToNeighbors(List.of(BER), 6, 11, 8, 5);
-        final Ticket COI_C = ticketToNeighbors(List.of(COI), 6, 3, 5, 12);
-        final Ticket LUG_C = ticketToNeighbors(List.of(LUG), 12, 13, 2, 14);
-        final Ticket ZUR_C = ticketToNeighbors(List.of(ZUR), 3, 7, 11, 7);
-
-        final Ticket DE_C = ticketToNeighbors(DE, 0, 5, 13, 5);
-        final Ticket AT_C = ticketToNeighbors(AT, 5, 0, 6, 14);
-        final Ticket IT_C = ticketToNeighbors(IT, 13, 6, 0, 11);
-        final Ticket FR_C = ticketToNeighbors(FR, 5, 14, 11, 0);
-
-        final List<Ticket> ALL_TICKETS = List.of(
-                BAL_BER, BAL_BRI, BAL_STG, BER_COI, BER_LUG, BER_SCZ,
-                BER_ZUR, FRI_LUC, GEN_BAL, GEN_BER, GEN_SIO, GEN_ZUR,
-                INT_WIN, KRE_ZUR, LAU_INT, LAU_LUC, LAU_STG, LCF_BER,
-                LCF_LUC, LCF_ZUR, LUC_VAD, LUC_ZUR, LUG_COI, NEU_WIN,
-                OLT_SCE, SCE_MAR, SCE_STG, SCE_ZOU, STG_BRU, WIN_SCZ,
-                ZUR_BAL, ZUR_BRU, ZUR_LUG, ZUR_VAD,
-                BER_C, COI_C, LUG_C, ZUR_C,
-                DE_C, DE_C, AT_C, AT_C, IT_C, IT_C, FR_C, FR_C);
-
-        private Ticket ticketToNeighbors(List<Station> from, int de, int at, int it, int fr) {
-            var trips = new ArrayList<Trip>();
-            if (de != 0) trips.addAll(Trip.all(from, DE, de));
-            if (at != 0) trips.addAll(Trip.all(from, AT, at));
-            if (it != 0) trips.addAll(Trip.all(from, IT, it));
-            if (fr != 0) trips.addAll(Trip.all(from, FR, fr));
-            return new Ticket(trips);
-        }
         //endregion
     }
 }
