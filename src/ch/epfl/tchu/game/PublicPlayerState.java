@@ -60,7 +60,6 @@ public class PublicPlayerState {
      * @return
      */
     public int carCount(){
-
         return carCount;
     }
 
@@ -69,7 +68,6 @@ public class PublicPlayerState {
      * @return
      */
     public int claimPoints(){
-
         return claimPoints;
     }
 }

@@ -76,23 +76,25 @@ public class PublicGameState {
      * @param playerId
      * @return
      */
+    //TODO
     public PublicPlayerState playerState(PlayerId playerId){
-        playerId.next();
-        return new PublicPlayerState(ticketsCount, currentPlayerState().cardCount(), claimedRoutes());
+        return playerState.put(playerId, this.currentPlayerState());
     }
 
     /**
      * Retourne la partie publique de l'état du joueur courant
      * @return
      */
+    //TODO
     public PublicPlayerState currentPlayerState(){
-        return new PublicPlayerState(ticketsCount, currentPlayerState().cardCount(), claimedRoutes());
+        return playerState.put(currentPlayerId(), new PublicPlayerState(ticketsCount(), 0, claimedRoutes()));
     }
 
     /**
      * Retourne la totalité des routes dont l'un ou l'autre des joueurs s'est emparé
      * @return
      */
+    //TODO
     public List<Route> claimedRoutes(){
         return null;
     }
@@ -104,7 +106,7 @@ public class PublicGameState {
      * @return
      */
     public PlayerId lastPlayer(){
-        //TODO null i le dernier tour n'a pas commencé
+        //TODO null si le dernier tour n'a pas commencé
         return lastPlayer;
     }
 }
