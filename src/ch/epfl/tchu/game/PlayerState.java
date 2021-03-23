@@ -33,45 +33,49 @@ public class PlayerState extends PublicPlayerState{
         return new PlayerState(SortedBag.of(), initialCards, List.of());
     }
     /**
-     *
+     * Retourne les billets du joueur
      */
     public SortedBag<Ticket> tickets(){
         return tickets;
     }
     /**
-     *
+     * Retourne un état identique au récepteur,
+     * si ce n'est que le joueur possède en plus les billets donnés
      */
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets){
         return new PlayerState(this.tickets.union(newTickets),this.cards,this.routes);
     }
     /**
-     *
+     * Retourne les cartes wagon/locomotive du joueur
      */
     public SortedBag<Card> cards(){
         return cards;
     }
     /**
-     *
+     * Retourne un état identique au récepteur,
+     * si ce n'est que le joueur possède en plus la carte donnée
      */
     public PlayerState withAddedCard(Card card){
         SortedBag<Card> newCard = SortedBag.of(card);
         return withAddedCards(newCard);
     }
     /**
-     *
+     * Retourne un état identique au récepteur,
+     * si ce n'est que le joueur possède en plus les cartes données
      */
     public PlayerState withAddedCards(SortedBag<Card> additionalCards){
         return new PlayerState(this.tickets, this.cards.union(additionalCards), this.routes);
     }
     /**
-     *
+     * Retourne vrai si le joueur peut s'emparer de la route donnée
      */
     public boolean canClaimRoute(Route route){
         return route.length() <= carCount() && !possibleClaimCards(route).isEmpty();
     }
 
     /**
-     * Retourne la liste de tous les ensembles de cartes que le joueur pourrait utiliser pour prendre possession de la route donnée
+     * Retourne la liste de tous les ensembles de cartes que le joueur
+     * pourrait utiliser pour prendre possession de la route donnée
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route){
         Preconditions.checkArgument(route.length() <= carCount());
@@ -84,7 +88,9 @@ public class PlayerState extends PublicPlayerState{
         return listOfCards;
     }
     /**
-     *
+     * Retourne la liste de tous les ensembles de cartes que le joueur
+     * pourrait utiliser pour s'emparer d'un tunnel,
+     * trié par ordre croissant du nombre de cartes locomotives
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount,
                                                          SortedBag<Card> initialCards,
@@ -110,7 +116,8 @@ public class PlayerState extends PublicPlayerState{
         return finalList;
     }
     /**
-     *
+     * Retourne un état identique au récepteur,
+     * si ce n'est que le joueur s'est de plus emparé de la route donnée au moyen des cartes données
      */
     //TODO Vérifier que les cartes sont en possession du joueur, ne pas le faire pour l'instant
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards){
@@ -119,7 +126,7 @@ public class PlayerState extends PublicPlayerState{
         return new PlayerState(this.tickets,this.cards.difference(claimCards),newRoutes);
     }
     /**
-     *
+     * Retourne le nombre de points obtenus par le joueur grâce à ses billets
      */
     public int ticketPoints(){
         int indexMax = 0;
@@ -136,7 +143,7 @@ public class PlayerState extends PublicPlayerState{
         return ticketPt;
     }
     /**
-     *
+     * Retourne la totalité des points obtenus par le joueur à la fin de la partie
      */
     public int finalPoints(){
         return claimPoints()+ticketPoints();

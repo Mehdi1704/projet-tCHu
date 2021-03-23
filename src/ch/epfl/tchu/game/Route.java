@@ -24,9 +24,7 @@ public final class  Route {
     private final Color color ;
 
     /**
-     *
-     * contructeur de la classe initialisant nos valeurs .
-     *
+     * constructeur de la classe initialisant nos valeurs .*
      */
 
     public Route(String id, Station station1, Station station2, int length, Level level, Color color){
@@ -43,8 +41,7 @@ public final class  Route {
     }
 
     /**
-     * nos getter de la classe .
-     * @return
+     * nos getter de la classe
      */
     public String id() {
         return id;
@@ -72,7 +69,6 @@ public final class  Route {
 
     /**
      * methode retournant une liste composée de station1 et station2
-     * @return
      */
     public List<Station> stations(){
         return (List.of(station1,station2));
@@ -80,8 +76,6 @@ public final class  Route {
 
     /**
      * methode retournant la station opposée à celle qui est passé en argument.
-     * @param station
-     * @return
      */
     public Station stationOpposite(Station station){
         Preconditions.checkArgument(station.equals(station1)||station.equals(station2));
@@ -96,10 +90,7 @@ public final class  Route {
      *
      *  retourne la liste de tous les ensembles de cartes qui pourraient être joués pour pouvoir
      *  s'emparer de la route (tunnel)
-     * @return
      */
-
-
     public List<SortedBag<Card>> possibleClaimCards(){
 
         ArrayList<SortedBag<Card>> tempListOfPossibleClaimCards = new ArrayList<>();
@@ -137,9 +128,7 @@ public final class  Route {
     }
 
     /**
-     *
      * retourne le nombre de carte additionnel à jouer pour pouvoir s'emparer de la route(tunnel)
-     *
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards){
         Preconditions.checkArgument((drawnCards.size() == ADDITIONAL_TUNNEL_CARDS) && level.equals(Level.UNDERGROUND));
@@ -156,7 +145,6 @@ public final class  Route {
 
     /**
      * retourne le nombre de points de construction associé a la longueur de la route .
-     * @return
      */
     public int claimPoints(){
         return (Constants.ROUTE_CLAIM_POINTS.get(this.length));
