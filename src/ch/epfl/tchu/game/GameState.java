@@ -7,29 +7,26 @@ import java.util.Random;
 
 public class GameState  extends PublicGameState{
 
-    private final int ticketsCount;
-    private final Ticket ticket;
-    private final CardState cardState;
-    private final PlayerId currentPlayerId;
-    private final Map<PlayerId, PlayerState> playerState;
-    private final PlayerId lastPlayer;
 
-    private GameState(int ticketsCount, CardState cardState, PlayerId currentPlayerId,
-                      Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer,Ticket ticket) {
-        super(ticketsCount, cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
-         this.ticketsCount = ticketsCount;
+    private final Deck<Ticket> ticket;
+    private final CardState cardState;
+    private final Map<PlayerId, PlayerState> playerState;
+
+
+    private GameState(Deck<Ticket> ticket, CardState cardState, PlayerId currentPlayerId,
+                      Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
+        super(ticket.size(), cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
+
          this.cardState = cardState;
-         this.currentPlayerId = currentPlayerId;
          this.playerState = playerState;
-         this.lastPlayer = lastPlayer;
          this.ticket = ticket;
     }
 
-   /* public static GameState initial(SortedBag<Ticket> tickets, Random rng){
+    public static GameState initial(SortedBag<Ticket> tickets, Random rng){
 
         return new GameState();
 
-    }*/
+    }
 
 
 
