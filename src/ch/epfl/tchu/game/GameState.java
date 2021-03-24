@@ -4,6 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -83,16 +84,97 @@ public class GameState  extends PublicGameState{
 
      }
 
-     //TODO doit on retirer les cartes aussi dans carteState ?
+
+    /**
+     * Retourne l'état complet du joueur d'identité donnée, et pas seulement sa partie publique
+     */
+    @Override
+    public PlayerState playerState(PlayerId playerId){
+        return playerState.get(playerId);
+    }
+
+    /**
+     * Retourne l'état complet du joueur courant, et pas seulement sa partie publique
+     */
+    @Override
+    public PlayerState currentPlayerState(){
+        return playerState.get(currentPlayerId());
+    }
+
+    /**
+     * Retourne un état identique au récepteur mais dans lequel les billets donnés ont été ajoutés
+     * à la main du joueur donné; lève IllegalArgumentException si le joueur en question possède déjà au moins un billet.
+     */
+    public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets){
+        Preconditions.checkArgument(playerState.get(playerId).ticketCount() < 1);
+
+
+        List<Ticket> tampOfListOfCards = chosenTickets.toList();
+        //Deck<Ticket> deckOfChosenTickets = tampOfListOfCards;
+        //return new Deck<>(tampOfListOfCards);
+        //TODO
+        return new GameState(ticket,cardState,currentPlayerId(),playerState,lastPlayer());
+    }
+
+    /**
+     * Retourne un état identique au récepteur, mais dans lequel le joueur courant a tiré les billets drawnTickets
+     * du sommet de la pioche, et choisi de garder ceux contenus dans chosenTicket ; lève IllegalArgumentException
+     * si l'ensemble des billets gardés n'est pas inclus dans celui des billets tirés
+     */
+    //TODO doit on retirer les cartes aussi dans carteState ?
 
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets){
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
-       // PlayerState newPlayerState= (PlayerState) currentPlayerState();
-       // newPlayerState.withAddedTickets(chosenTickets);
-    //TODO a changer
+        // PlayerState newPlayerState= (PlayerState) currentPlayerState();
+        // newPlayerState.withAddedTickets(chosenTickets);
+        //TODO a changer
         return (new GameState(ticket.withoutTopCards(drawnTickets.size()), cardState, currentPlayerId(),
                 playerState,lastPlayer()));
 
     }
+
+    /**
+     * Retourne un état identique au récepteur si ce n'est que la carte face retournée à l'emplacement donné a été placée
+     * dans la main du joueur courant, et remplacée par celle au sommet de la pioche
+     */
+    public GameState withDrawnFaceUpCard(int slot){
+        Preconditions.checkArgument(canDrawCards());
+        PlayerState newPlayerState = currentPlayerState().withAddedCard(cardState.faceUpCards().get(slot));
+        CardState newCardState = cardState.withDrawnFaceUpCard(slot);
+        //TODO a vérifier
+        playerState.put(currentPlayerId(),newPlayerState);
+        return new GameState(this.ticket,newCardState,currentPlayerId(),playerState,lastPlayer());
+    }
+
+    /**
+     * Retourne un état identique au récepteur si ce n'est que la carte du sommet
+     * de la pioche a été placée dans la main du joueur courant
+     */
+    public GameState withBlindlyDrawnCard(){
+        Preconditions.checkArgument(canDrawCards());
+        PlayerState newPlayerState = currentPlayerState().withAddedCard(cardState.topDeckCard());
+        CardState newCardState = cardState.withoutTopDeckCard();
+        //TODO a vérifier
+        playerState.put(currentPlayerId(),newPlayerState);
+        return new GameState(this.ticket,newCardState,currentPlayerId(),playerState,lastPlayer());
+    }
+
+    /**
+     * Retourne un état identique au récepteur mais dans lequel le joueur
+     * courant s'est emparé de la route donnée au moyen des cartes données
+     */
+    public GameState withClaimedRoute(Route route, SortedBag<Card> cards){
+        List<Route> newRoutes = currentPlayerState().routes();
+        newRoutes.add(route);
+        PlayerState newPlayerState = new PlayerState(
+                currentPlayerState().tickets(),
+                currentPlayerState().cards().difference(cards),
+                newRoutes);
+        //TODO a vérifier
+        playerState.put(currentPlayerId(),newPlayerState);
+        CardState newCardState = cardState.withMoreDiscardedCards(cards);
+        return new GameState(this.ticket,newCardState,currentPlayerId(),playerState,lastPlayer());
+    }
+
 
 }
