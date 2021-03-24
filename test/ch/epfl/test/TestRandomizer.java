@@ -7,14 +7,15 @@ public final class TestRandomizer {
     public final static long SEED = 2021;
 
     public final static int RANDOM_ITERATIONS = 1_000;
-    public static final Random NON_RANDOM = new Random(){
+
+    public static Random newRandom() {
+        return new Random(SEED);
+    }
+
+    public static final Random NON_RANDOM = new Random() {
         @Override
         public int nextInt(int i) {
             return i-1;
         }
     };
-
-    public static Random newRandom() {
-        return new Random(SEED);
-    }
 }
