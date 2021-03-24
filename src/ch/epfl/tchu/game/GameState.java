@@ -220,9 +220,15 @@ public class GameState  extends PublicGameState{
      */
     //TODO
     public GameState forNextTurn(){
-        return null;
+       PlayerId lastPlayer = lastPlayer();
+        if (lastTurnBegins() == true){
+            lastPlayer = currentPlayerId();
+        }
+        return new GameState(ticket,
+                cardState,
+                currentPlayerId().next(),
+                playerState,
+                lastPlayer );
     }
-
-
 
 }
