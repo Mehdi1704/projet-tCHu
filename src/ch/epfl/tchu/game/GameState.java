@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;//4
@@ -187,7 +188,7 @@ public class GameState  extends PublicGameState{
      * courant s'est emparé de la route donnée au moyen des cartes données
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards){
-        List<Route> newRoutes = currentPlayerState().routes();
+        List<Route> newRoutes = new ArrayList<>(currentPlayerState().routes());
         newRoutes.add(route);
         PlayerState newPlayerState = new PlayerState(
                 currentPlayerState().tickets(),
