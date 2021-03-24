@@ -95,7 +95,5 @@ public class PublicGameState {
      */
     public PlayerId lastPlayer(){
         return lastPlayer;
-        //if (playerState.get(currentPlayerId()).carCount() <= 2) return currentPlayerId();
-        //else return null;
     }
 }
