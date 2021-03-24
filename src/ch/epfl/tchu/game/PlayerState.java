@@ -26,7 +26,7 @@ public class PlayerState extends PublicPlayerState{
     }
 
     /**
-     *
+     * Retourne l'état initial d'un joueur auquel les cartes initiales données ont été distribuées
      */
     public static PlayerState initial(SortedBag<Card> initialCards){
         Preconditions.checkArgument(initialCards.size() == INITIAL_CARDS_COUNT);

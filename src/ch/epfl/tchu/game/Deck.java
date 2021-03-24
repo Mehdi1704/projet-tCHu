@@ -11,7 +11,7 @@ import static java.util.Collections.shuffle;
 public final class Deck<C extends Comparable<C>> {
 
     private final List<C> listOfCards ;
-    private final int ZERO_COUNT =0;
+    private final int ZERO_COUNT = 0;
 
     /**
      * constructeur privé initialisant notre liste de carte.
