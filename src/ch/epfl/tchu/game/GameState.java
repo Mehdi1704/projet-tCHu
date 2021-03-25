@@ -183,9 +183,13 @@ public class GameState  extends PublicGameState{
                 lastPlayer());
     }
 
+
     /**
      * Retourne un état identique au récepteur mais dans lequel le joueur
      * courant s'est emparé de la route donnée au moyen des cartes données
+     * @param route route prise par le joueur
+     * @param cards carte que l
+     * @return le nouveau GameState
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards){
         List<Route> newRoutes = new ArrayList<>(currentPlayerState().routes());
@@ -208,6 +212,11 @@ public class GameState  extends PublicGameState{
     /**
      * Retourne vrai si l'identité du dernier joueur est actuellement inconnue
      * et que le joueur courant n'a plus que deux wagons ou moins
+     */
+
+    /**
+     *
+     * @return
      */
     public boolean lastTurnBegins(){
         return ((lastPlayer()==null) && (playerState.get(currentPlayerId()).carCount() <= 2));
