@@ -24,6 +24,15 @@ public class GameState  extends PublicGameState{
          this.ticket = ticket;
     }
 
+
+    /**
+     *methode retournant l'état initial d'une partie dans laquelle la pioche des billets
+     * contient : tickets , et la pioche des cartes contient les cartes,sauf les 8 premieres
+     * distribuées aux joueurs
+     *
+     * lespioches sont mélangées ,
+     * on choisi au hasard l'identité du premier joueur.
+     */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng){
         Map<PlayerId, PlayerState> playerState = new EnumMap<>(PlayerId.class);
         Deck<Ticket> ticketShuffled = Deck.of(tickets,rng);
@@ -44,12 +53,18 @@ public class GameState  extends PublicGameState{
                 null);
 
     }
-
+    /**
+     * methode qui retourne les count billets du sommet de la pioche.
+     *
+     */
     public SortedBag<Ticket> topTickets(int count){
         Preconditions.checkArgument(0 <= count && count <= ticket.size());
         return (ticket.topCards(count));
     }
-
+    /**
+     *
+     * methode qui retourne un état identique au récepteur, mais sans les count billets du sommet de la pioche.
+     */
      public GameState withoutTopTickets(int count){
         Preconditions.checkArgument(0 <= count && count <= ticket.size());
         return new GameState(ticket.withoutTopCards(count),
@@ -58,12 +73,19 @@ public class GameState  extends PublicGameState{
                 playerState,
                 lastPlayer());
      }
-
+    /**
+     *  retourne la carte au sommet de la pioche
+     *
+     */
      public Card topCard(){
         Preconditions.checkArgument(!cardState.isDeckEmpty());
         return (cardState.topDeckCard());
      }
-
+    /**
+     *
+     *retourne un état identique au récepteur mais sans la carte au sommet de la pioche
+     *
+     */
      public GameState withoutTopCard(){
          Preconditions.checkArgument(!cardState.isDeckEmpty());
          return new GameState(ticket,
@@ -73,7 +95,11 @@ public class GameState  extends PublicGameState{
                  lastPlayer() );
 
      }
-
+    /**
+     *
+     *retourne un état identique au récepteur mais avec les cartes données ajoutées à la défausse
+     *
+     */
      public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards){
          return new GameState(ticket,
                  cardState.withMoreDiscardedCards(discardedCards),
@@ -81,7 +107,11 @@ public class GameState  extends PublicGameState{
                  playerState,
                  lastPlayer());
      }
-
+    /**
+     *retourne un état identique au récepteur sauf si la pioche de cartes est vide,
+     *  dans ce cas elle est recréée(la pioche) à partir de la défausse
+     *
+     */
      public GameState withCardsDeckRecreatedIfNeeded(Random rng){
         //TODO aloulou ya miboun
          CardState newCardState = cardState;
