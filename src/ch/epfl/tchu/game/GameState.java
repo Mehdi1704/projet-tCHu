@@ -182,7 +182,7 @@ public class GameState  extends PublicGameState{
         CardState newCardState = cardState.withDrawnFaceUpCard(slot);
         Map<PlayerId, PlayerState> newMap = new HashMap<>(playerState);
         newMap.put(currentPlayerId(),newPlayerState);
-        return new GameState(this.ticket,
+        return new GameState(ticket,
                 newCardState,
                 currentPlayerId(),
                 newMap,
