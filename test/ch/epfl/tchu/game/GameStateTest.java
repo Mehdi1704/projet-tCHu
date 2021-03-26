@@ -22,8 +22,8 @@ public class GameStateTest {
         ));
         GameState gamestate = GameState.initial(tickets, TestRandomizer.NON_RANDOM);
 
-        assertEquals(SortedBag.of(4, Card.LOCOMOTIVE), gamestate.playerState(PlayerId.PLAYER_1).cards());
-        assertEquals(SortedBag.of(4, Card.LOCOMOTIVE), gamestate.playerState(PlayerId.PLAYER_2).cards());
+        assertEquals(SortedBag.of(4, Card.BLACK), gamestate.playerState(PlayerId.PLAYER_1).cards());
+        assertEquals(SortedBag.of(4, Card.BLACK), gamestate.playerState(PlayerId.PLAYER_2).cards());
 
         assertEquals(PlayerId.PLAYER_2, gamestate.currentPlayerId());
         assertEquals(null, gamestate.lastPlayer());
