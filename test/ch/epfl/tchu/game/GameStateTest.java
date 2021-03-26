@@ -121,7 +121,7 @@ public class GameStateTest {
 
         GameState gameState = GameState.initial(tickets, TestRandomizer.NON_RANDOM);
         assertEquals(tickets, gameState.topTickets(2));
-        assertEquals(SortedBag.of(ChMap.tickets().get(1)), gameState.topTickets(2).get(1));
+        assertEquals(SortedBag.of(ChMap.tickets().get(0)), gameState.topTickets(1));
         assertEquals(SortedBag.of(), gameState.topTickets(0));
     }
 
@@ -184,8 +184,12 @@ public class GameStateTest {
         ));
 
         GameState gameState = GameState.initial(tickets, TestRandomizer.newRandom());
-        assertEquals(Deck.of(Constants.ALL_CARDS, TestRandomizer.newRandom()).withoutTopCards(8+5).topCard(),
-                gameState.topCard());
+        assertEquals(Deck.of(Constants.ALL_CARDS, TestRandomizer
+                        .newRandom())
+                        .withoutTopCards(8)
+                        .withoutTopCards(5)
+                        .topCard()
+                ,gameState.topCard());
     }
 
     //--------------------------------------------topCard()-------------------------------------------

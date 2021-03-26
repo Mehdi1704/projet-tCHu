@@ -110,16 +110,16 @@ public class GameState  extends PublicGameState{
     /**
      * Retourne un état identique au récepteur sauf si la pioche de cartes est vide,
      * dans ce cas elle est recréée (la pioche) à partir de la défausse
-     *
      */
     //TODO test
      public GameState withCardsDeckRecreatedIfNeeded(Random rng){
-         if(cardState.isDeckEmpty()) cardState.withDeckRecreatedFromDiscards(rng);
+         if(cardState.isDeckEmpty())
          return new GameState(ticket,
-                 cardState,
+                 cardState.withDeckRecreatedFromDiscards(rng),
                  currentPlayerId(),
                  playerState,
                  lastPlayer());
+         else return this;
      }
 
     /**
