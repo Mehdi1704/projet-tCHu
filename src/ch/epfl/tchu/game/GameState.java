@@ -7,6 +7,8 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;//4
+import static ch.epfl.tchu.game.PlayerId.*;
+
 
 public class GameState  extends PublicGameState{
 
@@ -36,20 +38,17 @@ public class GameState  extends PublicGameState{
     //TODO test
     public static GameState initial(SortedBag<Ticket> tickets, Random rng){
         Map<PlayerId, PlayerState> playerState = new EnumMap<>(PlayerId.class);
-        Deck<Ticket> ticketShuffled = Deck.of(tickets,rng);
-        Deck<Card> ourDeck;
-        ourDeck=Deck.of(Constants.ALL_CARDS, rng);
+        Deck<Ticket> ticketShuffled = Deck.of(tickets, rng);
+        Deck<Card> ourDeck = Deck.of(Constants.ALL_CARDS, rng);
 
-        playerState.put(PlayerId.PLAYER_1,
-                PlayerState.initial(ourDeck.topCards(INITIAL_CARDS_COUNT)));
+        playerState.put(PLAYER_1, PlayerState.initial(ourDeck.topCards(INITIAL_CARDS_COUNT)));
         ourDeck = ourDeck.withoutTopCards(INITIAL_CARDS_COUNT);
-        playerState.put(PlayerId.PLAYER_2,
-                PlayerState.initial(ourDeck.topCards(INITIAL_CARDS_COUNT)));
+        playerState.put(PLAYER_2, PlayerState.initial(ourDeck.topCards(INITIAL_CARDS_COUNT)));
         ourDeck = ourDeck.withoutTopCards(INITIAL_CARDS_COUNT);
 
         return new GameState(ticketShuffled,
                 CardState.of(ourDeck),
-                PlayerId.ALL.get(rng.nextInt(NUMBER_OF_PLAYER)),
+                ALL.get(rng.nextInt(NUMBER_OF_PLAYER)),
                 playerState,
                 null);
 
@@ -64,8 +63,7 @@ public class GameState  extends PublicGameState{
         return (ticket.topCards(count));
     }
     /**
-     *
-     * methode qui retourne un état identique au récepteur, mais sans les count billets du sommet de la pioche.
+     * Methode qui retourne un état identique au récepteur, mais sans les count billets du sommet de la pioche.
      */
      public GameState withoutTopTickets(int count){
         Preconditions.checkArgument(0 <= count && count <= ticket.size());
@@ -76,7 +74,7 @@ public class GameState  extends PublicGameState{
                 lastPlayer());
      }
     /**
-     *  retourne la carte au sommet de la pioche
+     * Retourne la carte au sommet de la pioche
      *
      */
     //TODO test
@@ -85,8 +83,7 @@ public class GameState  extends PublicGameState{
         return (cardState.topDeckCard());
      }
     /**
-     *
-     *retourne un état identique au récepteur mais sans la carte au sommet de la pioche
+     * Retourne un état identique au récepteur mais sans la carte au sommet de la pioche
      *
      */
     //TODO test
@@ -100,8 +97,7 @@ public class GameState  extends PublicGameState{
 
      }
     /**
-     *
-     *retourne un état identique au récepteur mais avec les cartes données ajoutées à la défausse
+     * Retourne un état identique au récepteur mais avec les cartes données ajoutées à la défausse
      *
      */
      public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards){
@@ -113,20 +109,17 @@ public class GameState  extends PublicGameState{
      }
     /**
      * Retourne un état identique au récepteur sauf si la pioche de cartes est vide,
-     *  dans ce cas elle est recréée(la pioche) à partir de la défausse
+     * dans ce cas elle est recréée (la pioche) à partir de la défausse
      *
      */
     //TODO test
      public GameState withCardsDeckRecreatedIfNeeded(Random rng){
-         CardState newCardState = cardState;
-         if(cardState.isDeckEmpty()){
-             newCardState = cardState.withDeckRecreatedFromDiscards(rng);
-         }
+         if(cardState.isDeckEmpty()) cardState.withDeckRecreatedFromDiscards(rng);
          return new GameState(ticket,
-                    newCardState,
-                    currentPlayerId(),
-                    playerState,
-                    lastPlayer());
+                 cardState,
+                 currentPlayerId(),
+                 playerState,
+                 lastPlayer());
      }
 
     /**

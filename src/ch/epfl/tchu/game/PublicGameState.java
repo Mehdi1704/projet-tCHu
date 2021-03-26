@@ -2,10 +2,12 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
+import static ch.epfl.tchu.game.PlayerId.*;
 
 public class PublicGameState {
 
@@ -46,7 +48,7 @@ public class PublicGameState {
      * Retourne la partie publique de l'état des cartes wagon/locomotive
      */
     public PublicCardState cardState(){
-        return new PublicCardState(cardState.faceUpCards(),cardState.deckSize(), cardState.discardsSize());
+        return cardState;
     }
 
     /**
@@ -85,7 +87,9 @@ public class PublicGameState {
      */
     //TODO verifier
     public List<Route> claimedRoutes(){
-        return playerState.get(currentPlayerId()).routes();
+        List<Route> newClaimedRoutes = new ArrayList<>(playerState.get(currentPlayerId).routes());
+        newClaimedRoutes.addAll(playerState.get(currentPlayerId.next()).routes());
+        return newClaimedRoutes;
     }
 
     /**
