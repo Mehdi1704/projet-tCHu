@@ -25,8 +25,12 @@ public class GameStateTest {
         assertEquals(SortedBag.of(4, Card.LOCOMOTIVE), gamestate.playerState(PlayerId.PLAYER_1).cards());
         assertEquals(SortedBag.of(4, Card.LOCOMOTIVE), gamestate.playerState(PlayerId.PLAYER_2).cards());
 
-        assertEquals(PlayerId.PLAYER_1, gamestate.currentPlayerId());
+        assertEquals(PlayerId.PLAYER_2, gamestate.currentPlayerId());
+        assertEquals(null, gamestate.lastPlayer());
         assertEquals(tickets, gamestate.topTickets(tickets.size()));
+        assertEquals(Constants.ALL_CARDS.size()-8-5, gamestate.cardState().deckSize());
+        assertEquals(5, gamestate.cardState().faceUpCards().size());
+        assertEquals(0, gamestate.cardState().discardsSize());
     }
 
     @Test
@@ -42,8 +46,12 @@ public class GameStateTest {
         assertEquals(SortedBag.of(List.of(Card.BLACK, Card.BLACK, Card.VIOLET, Card.LOCOMOTIVE)),
                 gamestate.playerState(PlayerId.PLAYER_2).cards());
 
-        assertEquals( PlayerId.ALL.get(TestRandomizer.newRandom().nextInt(1)), gamestate.currentPlayerId());
+        assertEquals( PlayerId.ALL.get(TestRandomizer.newRandom().nextInt(2)), gamestate.currentPlayerId());
+        assertEquals(null, gamestate.lastPlayer());
         assertEquals(tickets, gamestate.topTickets(tickets.size()));
+        assertEquals(Constants.ALL_CARDS.size()-8-5, gamestate.cardState().deckSize());
+        assertEquals(5, gamestate.cardState().faceUpCards().size());
+        assertEquals(0, gamestate.cardState().discardsSize());
     }
 
     //---------------------------------------------currentPlayerId()----------------------------------------
@@ -54,11 +62,11 @@ public class GameStateTest {
         ));
 
         GameState gameState = GameState.initial(tickets, TestRandomizer.newRandom());
-        PlayerState playerState1 = new PlayerState(SortedBag.of(), gameState.playerState(gameState.currentPlayerId()).cards(), List.of());
+        PlayerState playerState = new PlayerState(SortedBag.of(), gameState.playerState(gameState.currentPlayerId()).cards(), List.of());
 
-        assertEquals(playerState1.cards(), gameState.currentPlayerState().cards());
-        assertEquals(playerState1.tickets(), gameState.currentPlayerState().tickets());
-        assertEquals(playerState1.routes(), gameState.currentPlayerState().routes());
+        assertEquals(playerState.cards(), gameState.currentPlayerState().cards());
+        assertEquals(playerState.tickets(), gameState.currentPlayerState().tickets());
+        assertEquals(playerState.routes(), gameState.currentPlayerState().routes());
         assertEquals(0, gameState.currentPlayerState().tickets().size());
     }
 
@@ -407,7 +415,7 @@ public class GameStateTest {
         assertEquals(Card.YELLOW, gameState.cardState().faceUpCard(3));
         assertEquals(5, gameState.cardState().faceUpCards().size());
         assertEquals(Card.GREEN, gameState.topCard());
-        assertEquals(SortedBag.of(List.of(Card.VIOLET, Card.BLUE, Card.WHITE, Card.LOCOMOTIVE)),
+        assertEquals(SortedBag.of(List.of(Card.BLACK, Card.BLACK, Card.VIOLET, Card.LOCOMOTIVE)),
                 gameState.currentPlayerState().cards());
         assertEquals(97, gameState.cardState().deckSize());
 
@@ -415,7 +423,7 @@ public class GameStateTest {
 
         assertEquals(Card.GREEN, gameState.cardState().faceUpCard(3));
         assertEquals(5, gameState.cardState().faceUpCards().size());
-        assertEquals(SortedBag.of(List.of(Card.VIOLET, Card.BLUE, Card.WHITE, Card.LOCOMOTIVE, Card.YELLOW)),
+        assertEquals(SortedBag.of(List.of(Card.BLACK, Card.BLACK, Card.VIOLET, Card.LOCOMOTIVE, Card.YELLOW)),
                 gameState.currentPlayerState().cards());
         assertEquals(96, gameState.cardState().deckSize());
     }
@@ -472,14 +480,14 @@ public class GameStateTest {
         GameState gameState = GameState.initial(tickets, TestRandomizer.newRandom());
 
         assertEquals(Card.GREEN, gameState.topCard());
-        assertEquals(SortedBag.of(List.of(Card.VIOLET, Card.BLUE, Card.WHITE, Card.LOCOMOTIVE)),
+        assertEquals(SortedBag.of(List.of(Card.BLACK, Card.BLACK, Card.VIOLET, Card.LOCOMOTIVE)),
                 gameState.currentPlayerState().cards());
         assertEquals(97, gameState.cardState().deckSize());
 
         gameState = gameState.withBlindlyDrawnCard();
 
         assertEquals(Card.ORANGE, gameState.topCard());
-        assertEquals(SortedBag.of(List.of(Card.VIOLET, Card.BLUE, Card.WHITE, Card.LOCOMOTIVE, Card.GREEN)),
+        assertEquals(SortedBag.of(List.of(Card.BLACK, Card.BLACK, Card.VIOLET, Card.LOCOMOTIVE, Card.GREEN)),
                 gameState.currentPlayerState().cards());
         assertEquals(96, gameState.cardState().deckSize());
     }
@@ -499,7 +507,7 @@ public class GameStateTest {
         gameState = gameState.withClaimedRoute(ChMap.routes().get(1), SortedBag.of(Card.RED));
         assertEquals(1, gameState.cardState().discardsSize());
         assertEquals(List.of(ChMap.routes().get(1)), gameState.currentPlayerState().routes());
-        assertEquals(List.of(), gameState.playerState(PlayerId.PLAYER_2).routes());
+        assertEquals(List.of(), gameState.playerState(PlayerId.PLAYER_1).routes());
     }
 
     //-------------------------------------------lastTurnBegins()------------------------------------------------
@@ -547,12 +555,12 @@ public class GameStateTest {
 
         GameState gameState = GameState.initial(tickets, TestRandomizer.newRandom());
 
-        assertEquals(PlayerId.PLAYER_1, gameState.currentPlayerId());
+        assertEquals(PlayerId.PLAYER_2, gameState.currentPlayerId());
         assertEquals(null, gameState.lastPlayer());
 
         gameState = gameState.forNextTurn();
 
-        assertEquals(PlayerId.PLAYER_2, gameState.currentPlayerId());
+        assertEquals(PlayerId.PLAYER_1, gameState.currentPlayerId());
         assertEquals(null, gameState.lastPlayer());
     }
 
@@ -581,12 +589,12 @@ public class GameStateTest {
         assertTrue(gameState.lastTurnBegins());
 
 
-        assertEquals(PlayerId.PLAYER_1, gameState.currentPlayerId());
+        assertEquals(PlayerId.PLAYER_2, gameState.currentPlayerId());
         assertEquals(null, gameState.lastPlayer());
 
         gameState = gameState.forNextTurn();
 
-        assertEquals(PlayerId.PLAYER_2, gameState.currentPlayerId());
-        assertEquals(PlayerId.PLAYER_1, gameState.lastPlayer());
+        assertEquals(PlayerId.PLAYER_1, gameState.currentPlayerId());
+        assertEquals(PlayerId.PLAYER_2, gameState.lastPlayer());
     }
 }
