@@ -11,9 +11,12 @@ public final class Trail {
 
     /**
      * contructeur privé de notre classe
+     *
+     * @param station1
+     * @param station2
+     * @param routes
+     * @param length
      */
-
-
     private Trail(Station station1, Station station2, List<Route> routes, int length) {
 
         this.station1 = station1;
@@ -24,8 +27,10 @@ public final class Trail {
 
     /**
      * methode longest retournant le trail le plus long en fonction d'une liste de routes donner
+     *
+     * @param routes
+     * @return
      */
-
     public static Trail longest(List<Route> routes) {
         Trail longest = new Trail(null, null, List.of(), 0);
 
@@ -56,6 +61,14 @@ public final class Trail {
     }
 
 
+    /**
+     *
+     * @param t
+     * @param r
+     * @param prolongedTrails
+     * @param correspondingStation1
+     * @param correspondingStation2
+     */
     private static void addTrail(Trail t, Route r, List<Trail> prolongedTrails, Station correspondingStation1, Station correspondingStation2) {
         if (t.station2.equals(correspondingStation1)) {
             ArrayList<Route> rToAdd = new ArrayList<>(t.routes);
@@ -78,25 +91,28 @@ public final class Trail {
      *
      * @return
      */
-
     public Station station2() {
         return this.length() == 0 ? null : station2;
     }
 
 
+    /**
+     * @return
+     */
     public int length() {
         return length;
     }
 
     /**
-     * affichage de notre plus long chemin .
+     * affichage de notre plus long chemin
+     *
      * @return
      */
     @Override
     public String toString() {
         //TODO ajouter les points intermédiaires
         ArrayList<String> stationNames = new ArrayList<>();
-        Station currStation= station1;
+        Station currStation = station1;
         stationNames.add(currStation.name());
         for (Route route : routes) {
             currStation = route.stationOpposite(currStation);

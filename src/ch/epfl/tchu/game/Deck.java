@@ -10,45 +10,58 @@ import static java.util.Collections.shuffle;
 
 public final class Deck<C extends Comparable<C>> {
 
-    private final List<C> listOfCards ;
+    private final List<C> listOfCards;
     private final int ZERO_COUNT = 0;
 
     /**
      * constructeur privé initialisant notre liste de carte.
+     *
+     * @param listOfCards
      */
-    private Deck(List<C> listOfCards){
+    private Deck(List<C> listOfCards) {
 
-        this.listOfCards= List.copyOf(listOfCards);
+        this.listOfCards = List.copyOf(listOfCards);
     }
 
     /**
      * la méthode de construction retournant un deck de cartes qui ont été mélangés .
+     *
+     * @param cards
+     * @param rng
+     * @param <C>
+     * @return
      */
-    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng){
+    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
 
         List<C> tampOfListOfCards = cards.toList();
-        shuffle(tampOfListOfCards,rng);
+        shuffle(tampOfListOfCards, rng);
         return new Deck<>(tampOfListOfCards);
     }
 
     /**
-     *  methode qui retourne la taille du tas, c-à-d le nombre de cartes qu'il contient
+     * methode qui retourne la taille du tas, c-à-d le nombre de cartes qu'il contient
+     *
+     * @return
      */
-    public int size(){
+    public int size() {
         return (listOfCards.size());
     }
 
     /**
      * methode qui retourne vrai si et seulement si le tas est vide.
+     *
+     * @return
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return (listOfCards.isEmpty());
     }
 
     /**
      * methode qui retourne la carte au sommet du tas
+     *
+     * @return
      */
-    public C topCard(){
+    public C topCard() {
         Preconditions.checkArgument(!listOfCards.isEmpty());
         C topCard = listOfCards.get(0);
         return (topCard);
@@ -56,33 +69,41 @@ public final class Deck<C extends Comparable<C>> {
 
     /**
      * methode qui retourne un tas identique au récepteur mais sans la carte au sommet
+     *
+     * @return
      */
-    public Deck<C> withoutTopCard(){
+    public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!listOfCards.isEmpty());
-        List<C> listWithoutTopCard = listOfCards.subList(1,listOfCards.size());
+        List<C> listWithoutTopCard = listOfCards.subList(1, listOfCards.size());
         return new Deck<>(listWithoutTopCard);
     }
 
     /**
      * methode qui retourne un multiensemble contenant les count cartes se trouvant au sommet du tas
      * en utilisant un builder.
+     *
+     * @param count
+     * @return
      */
-    public SortedBag<C> topCards(int count){
+    public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(ZERO_COUNT <= count && count <= listOfCards.size());
         SortedBag.Builder<C> topCards = new SortedBag.Builder<>();
-        for (int i = 0; i < count ; i++) {
+        for (int i = 0; i < count; i++) {
             topCards.add(listOfCards.get(i));
         }
-        return topCards.build() ;
+        return topCards.build();
 
     }
 
     /**
      * methode qui retourne un tas identique au récepteur mais sans les count cartes du sommet.
+     *
+     * @param count
+     * @return
      */
-    public Deck<C> withoutTopCards(int count){
+    public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(ZERO_COUNT <= count && count <= listOfCards.size());
-        return new Deck<>(listOfCards.subList(count,listOfCards.size()));
+        return new Deck<>(listOfCards.subList(count, listOfCards.size()));
 
     }
 }

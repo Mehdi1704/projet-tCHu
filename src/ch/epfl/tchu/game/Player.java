@@ -7,12 +7,15 @@ import java.util.Map;
 
 public interface Player {
 
-  public enum TurnKind {
+    /**
+     *
+     */
+    public enum TurnKind {
         DRAW_TICKETS,
         DRAW_CARDS,
         CLAIM_ROUTE;
 
-        public static final List<TurnKind> ALL =List.of(TurnKind.values());
+        public static final List<TurnKind> ALL = List.of(TurnKind.values());
     }
 
     void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames);
@@ -36,7 +39,6 @@ public interface Player {
     SortedBag<Card> initialClaimCards();
 
     SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
-
 
 
 }

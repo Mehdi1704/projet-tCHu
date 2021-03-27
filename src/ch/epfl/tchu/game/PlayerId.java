@@ -2,6 +2,9 @@ package ch.epfl.tchu.game;
 
 import java.util.List;
 
+/**
+ *
+ */
 public enum PlayerId {
 
     PLAYER_1,
@@ -10,9 +13,13 @@ public enum PlayerId {
     public static final List<PlayerId> ALL = List.of(PlayerId.values());
     public static final int COUNT = ALL.size();
 
-    public PlayerId next(){
+    /**
+     *
+     * @return
+     */
+    public PlayerId next() {
 
-        return(this.equals(PLAYER_1) ?  PLAYER_2 : PLAYER_1);
+        return (this.equals(PLAYER_1) ? PLAYER_2 : PLAYER_1);
 
     }
 }

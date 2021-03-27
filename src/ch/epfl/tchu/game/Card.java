@@ -2,6 +2,9 @@ package ch.epfl.tchu.game;
 
 import java.util.List;
 
+/**
+ *
+ */
 public enum Card {
     BLACK(Color.BLACK),
     VIOLET(Color.VIOLET),
@@ -13,22 +16,34 @@ public enum Card {
     WHITE(Color.WHITE),
     LOCOMOTIVE(null);
 
-    private final Color color ;
+    private final Color color;
     public static final List<Card> ALL = List.of(Card.values());
     public static final int COUNT = ALL.size();
-    public static final List<Card> CARS = List.of(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
+    public static final List<Card> CARS = List.of(BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE);
 
-    Card(Color color){
-        this.color=color;
+    /**
+     *
+     * @param color
+     */
+    Card(Color color) {
+        this.color = color;
     }
 
 
-
+    /**
+     *
+     * @return
+     */
     public Color color() {
         return this.color;
     }
 
-    public static Card of(Color color){
+    /**
+     *
+     * @param color
+     * @return
+     */
+    public static Card of(Color color) {
         return Card.valueOf(color.name());
 
 

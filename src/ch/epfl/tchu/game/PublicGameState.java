@@ -14,13 +14,13 @@ public class PublicGameState {
     private final int ticketsCount;
     private final PublicCardState cardState;
     private final PlayerId currentPlayerId;
-    private final Map<PlayerId,PublicPlayerState> playerState;
+    private final Map<PlayerId, PublicPlayerState> playerState;
     private final PlayerId lastPlayer;
 
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
-                            Map<PlayerId,PublicPlayerState> playerState, PlayerId lastPlayer){
+                           Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
         Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == 2);
-        if (cardState==null || currentPlayerId==null){
+        if (cardState == null || currentPlayerId == null) {
             throw new NullPointerException();
         }
         this.ticketsCount = ticketsCount;
@@ -32,61 +32,79 @@ public class PublicGameState {
 
     /**
      * Retourne la taille de la pioche de billets
+     *
+     * @return
      */
-    public int ticketsCount(){
+    public int ticketsCount() {
         return ticketsCount;
     }
 
     /**
      * Retourne vrai si la pioche n'est pas vide
+     *
+     * @return
      */
-    public boolean canDrawTickets(){
-        return ticketsCount!=0;
+    public boolean canDrawTickets() {
+        return ticketsCount != 0;
     }
 
     /**
      * Retourne la partie publique de l'état des cartes wagon/locomotive
+     *
+     * @return
      */
-    public PublicCardState cardState(){
+    public PublicCardState cardState() {
         return cardState;
     }
 
     /**
-     * retourne vrai ssi il est possible de tirer des cartes,
+     * Retourne vrai ssi il est possible de tirer des cartes,
      * c-à-d si la pioche et la défausse contiennent entre elles au moins 5 cartes
+     *
+     * @return
      */
-    public boolean canDrawCards(){
+    public boolean canDrawCards() {
         int totalCards = cardState.deckSize() + cardState.discardsSize();
         return (totalCards >= INITIAL_TICKETS_COUNT);
     }
+
     /**
      * Retourne l'identité du joueur actuel
+     *
+     * @return
      */
-    public PlayerId currentPlayerId(){
+    public PlayerId currentPlayerId() {
         return currentPlayerId;
     }
 
     /**
      * Retourne la partie publique de l'état du joueur d'identité donnée
+     *
+     * @param playerId
+     * @return
      */
     //TODO verifier
-    public PublicPlayerState playerState(PlayerId playerId){
+    public PublicPlayerState playerState(PlayerId playerId) {
         return playerState.get(playerId);
     }
 
     /**
      * Retourne la partie publique de l'état du joueur courant
+     *
+     * @return
      */
     //TODO verifier
-    public PublicPlayerState currentPlayerState(){
+    public PublicPlayerState currentPlayerState() {
         return playerState.get(currentPlayerId());
     }
 
     /**
      * Retourne la totalité des routes dont l'un ou l'autre des joueurs s'est emparé
+     *
+     * @return
      */
     //TODO verifier
-    public List<Route> claimedRoutes(){
+    public List<Route> claimedRoutes() {
         List<Route> newClaimedRoutes = new ArrayList<>(playerState.get(currentPlayerId).routes());
         newClaimedRoutes.addAll(playerState.get(currentPlayerId.next()).routes());
         return newClaimedRoutes;
@@ -96,8 +114,10 @@ public class PublicGameState {
      * Retourne l'identité du dernier joueur,
      * ou null si elle n'est pas encore connue
      * car le dernier tour n'a pas commencé
+     *
+     * @return
      */
-    public PlayerId lastPlayer(){
+    public PlayerId lastPlayer() {
         return lastPlayer;
     }
 }
