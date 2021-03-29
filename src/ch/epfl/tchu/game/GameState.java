@@ -184,7 +184,7 @@ public class GameState extends PublicGameState {
         Preconditions.checkArgument(playerState.get(playerId).tickets().isEmpty());
         PlayerState newPlayerState = currentPlayerState().withAddedTickets(chosenTickets);
         Map<PlayerId, PlayerState> newMap = new HashMap<>(playerState);
-        newMap.put(currentPlayerId(), newPlayerState);
+        newMap.put(playerId, newPlayerState);
         return new GameState(ticket,
                 cardState,
                 currentPlayerId(),
