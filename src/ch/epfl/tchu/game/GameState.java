@@ -33,7 +33,6 @@ public class GameState extends PublicGameState {
         this.ticket = ticket;
     }
 
-
     /**
      * methode retournant l'état initial d'une partie dans laquelle la pioche des billets
      * contient : tickets , et la pioche des cartes contient les cartes,sauf les 8 premieres
@@ -46,7 +45,6 @@ public class GameState extends PublicGameState {
      * @param rng
      * @return
      */
-    //TODO test
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
         Map<PlayerId, PlayerState> playerState = new EnumMap<>(PlayerId.class);
         Deck<Ticket> ticketShuffled = Deck.of(tickets, rng);
@@ -71,7 +69,6 @@ public class GameState extends PublicGameState {
      * @param count
      * @return
      */
-    //TODO test
     public SortedBag<Ticket> topTickets(int count) {
         Preconditions.checkArgument(0 <= count && count <= ticket.size());
         return (ticket.topCards(count));
@@ -97,7 +94,6 @@ public class GameState extends PublicGameState {
      *
      * @return
      */
-    //TODO test
     public Card topCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
         return (cardState.topDeckCard());
@@ -108,7 +104,6 @@ public class GameState extends PublicGameState {
      *
      * @return
      */
-    //TODO test
     public GameState withoutTopCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
         return new GameState(ticket,
@@ -140,7 +135,6 @@ public class GameState extends PublicGameState {
      * @param rng
      * @return
      */
-    //TODO test
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
         if (cardState.isDeckEmpty())
             return new GameState(ticket,
@@ -220,7 +214,6 @@ public class GameState extends PublicGameState {
      * @param slot
      * @return
      */
-    //TODO test
     public GameState withDrawnFaceUpCard(int slot) {
         Preconditions.checkArgument(canDrawCards());
         PlayerState newPlayerState = currentPlayerState().withAddedCard(cardState.faceUpCards().get(slot));
@@ -240,7 +233,6 @@ public class GameState extends PublicGameState {
      *
      * @return
      */
-    //TODO test
     public GameState withBlindlyDrawnCard() {
         Preconditions.checkArgument(canDrawCards());
         PlayerState newPlayerState = currentPlayerState().withAddedCard(cardState.topDeckCard());
