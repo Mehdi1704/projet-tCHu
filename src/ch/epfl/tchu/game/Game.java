@@ -26,7 +26,12 @@ public final class Game{
         p1.setInitialTicketChoice(tickets);
         p2.setInitialTicketChoice(tickets);
 
-        //chooseInitialTickets(tickets);
+        p1.chooseInitialTickets();
+        receiveInfoForBothPlayers(players, info1.keptTickets(1));
+        p2.chooseInitialTickets();
+        receiveInfoForBothPlayers(players, info2.keptTickets(1));
+
+
     }
     private static void receiveInfoForBothPlayers(Map<PlayerId, Player> players, String info){
         players.get(PlayerId.PLAYER_1).receiveInfo(info);
