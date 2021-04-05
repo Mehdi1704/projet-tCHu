@@ -56,13 +56,13 @@ public final class Game{
      * en appelant la méthode updateState de chacun d'eux.
      * @param players
      * @param newState
-     * @param ownState
      */
-    private static void updateStateForBothPlayers(Map<PlayerId, Player> players,PublicGameState newState,
-                                                  PlayerState ownState){
-        players.get(PlayerId.PLAYER_1).updateState(newState,ownState);
-        players.get(PlayerId.PLAYER_2).updateState(newState,ownState);
-
+    private static void updateStateForBothPlayers(Map<PlayerId, Player> players,GameState newState){
+        for (Map.Entry<PlayerId, Player> entry : players.entrySet()){
+            entry.getValue().updateState(newState,newState.playerState(entry.getKey()));
+        }
+        //TODO A voir
+        //players.forEach((k,v) -> v.updateState(newState,newState.playerState(k)));
     }
 
 }
