@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
+import static ch.epfl.tchu.game.Player.TurnKind.*;
+
 
 public final class Game{
 
@@ -51,7 +53,37 @@ public final class Game{
         // receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).keptTickets(3));
         // receiveInfoForBothPlayers(players, playerInformation.get(gameState.()).keptTickets(3));
 
+
+        //-------------------------- commencement de la partie ----------------------------
+
+        Player currentPlayer = null;
+        Info information ;
+        Player.TurnKind typeAction = currentPlayer.nextTurn(); 
+       //
+
+        switch(typeAction) {
+
+            case DRAW_TICKETS :
+
+                break ;
+            case DRAW_CARDS :
+
+                break ;
+
+            case CLAIM_ROUTE :
+
+
+                break ;
+
+        }
+
+
+
+
+
+
     }
+
 
     /**
      *

@@ -56,7 +56,7 @@ public interface Player {
     SortedBag<Ticket> chooseInitialTickets();
 
     /**
-     *qui est appelée au début du tour d'un joueur,
+     * qui est appelée au début du tour d'un joueur,
      *  pour savoir quel type d'action il désire effectuer durant ce tour,
      * @return
      */
