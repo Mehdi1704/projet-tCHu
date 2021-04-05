@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
+import static ch.epfl.tchu.game.Constants.IN_GAME_TICKETS_COUNT;
 import static ch.epfl.tchu.game.Player.TurnKind.*;
 
 
@@ -59,11 +60,14 @@ public final class Game{
         Player currentPlayer = null;
         Info information ;
         Player.TurnKind typeAction = currentPlayer.nextTurn(); 
-       //
 
+       // receiveInfoForBothPlayers(players,);
         switch(typeAction) {
 
             case DRAW_TICKETS :
+                //currentPlayer.chooseTickets(gameState.topTickets(3));
+                gameState = gameState.withChosenAdditionalTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT),
+                        currentPlayer.chooseTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT)));
 
                 break ;
             case DRAW_CARDS :
