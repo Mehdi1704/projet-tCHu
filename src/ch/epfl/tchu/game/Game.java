@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 public final class Game{
+    //salut
     public static final int PLAYERS_COUNT = 2;
     public static void play(Map<PlayerId, Player> players, Map<PlayerId,
                             String> playerNames, SortedBag<Ticket> tickets, Random rng){
