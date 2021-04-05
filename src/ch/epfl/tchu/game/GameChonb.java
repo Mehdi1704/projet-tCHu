@@ -40,21 +40,16 @@ public final class GameChonb{
 
         // Les joueurs gardent les tickets qu'ils choisissent
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()){
-
+            playersTickets.put(entry.getKey(),entry.getValue().chooseInitialTickets());
+            gameState = gameState.withInitiallyChosenTickets(entry.getKey(),playersTickets.get(entry.getKey()));
         }
+        players.forEach( (key,value)-> receiveInfoForBothPlayers(players,
+                playerInformation.get(key).keptTickets(playersTickets.get(key).size())));
 
         //p1.chooseInitialTickets();
         //p2.chooseInitialTickets();
-
-
-
-        receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).keptTickets(3));
+        // receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).keptTickets(3));
         // receiveInfoForBothPlayers(players, playerInformation.get(gameState.()).keptTickets(3));
-
-
-
-
-
 
     }
 

@@ -22,22 +22,19 @@ public final class Game{
         GameState gameState = GameState.initial(tickets,rng);
 
         playerNames.forEach((player,info) -> playerInformation.put(player, new Info(info)));
-/*
-        var info1 = new Info(playerNames.get(PlayerId.PLAYER_1));
-        var info2 = new Info(playerNames.get(PlayerId.PLAYER_2));
-*/
+
         players.forEach((key,value) -> value.initPlayers(key,playerNames));
 
         receiveInfoForBothPlayers(players,playerInformation.get(gameState.currentPlayerId()).willPlayFirst());
 
         //TODO lambda
-
+/*
         p1.setInitialTicketChoice(tickets);
         p2.setInitialTicketChoice(tickets);
 
         p1.chooseInitialTickets();
         p2.chooseInitialTickets();
-
+*/
 
 
         receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).keptTickets(3));
