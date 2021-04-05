@@ -36,7 +36,7 @@ public final class GameChonb{
             gameState = gameState.withoutTopTickets(INITIAL_TICKETS_COUNT);
         }
 
-        updateStateForBothPlayers(players, gameState, gameState.currentPlayerState());
+        updateStateForBothPlayers(players, gameState);
 
         // Les joueurs gardent les tickets qu'ils choisissent
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()){
@@ -68,13 +68,13 @@ public final class GameChonb{
      * en appelant la méthode updateState de chacun d'eux.
      * @param players
      * @param newState
-     * @param ownState
      */
-    private static void updateStateForBothPlayers(Map<PlayerId, Player> players,PublicGameState newState,
-                                                  PlayerState ownState){
-        players.get(PlayerId.PLAYER_1).updateState(newState,ownState);
-        players.get(PlayerId.PLAYER_2).updateState(newState,ownState);
-
+    private static void updateStateForBothPlayers(Map<PlayerId, Player> players,GameState newState){
+        for (Map.Entry<PlayerId, Player> entry : players.entrySet()){
+            entry.getValue().updateState(newState,newState.playerState(entry.getKey()));
+        }
+        //TODO A voir
+        //players.forEach((k,v) -> v.updateState(newState,newState.playerState(k)));
     }
 
 }
