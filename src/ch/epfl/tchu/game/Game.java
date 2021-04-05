@@ -21,19 +21,16 @@ public final class Game{
         Map<PlayerId,Info> playerInformation = new EnumMap<>(PlayerId.class);
         GameState gameState = GameState.initial(tickets,rng);
 
+        playerNames.forEach((player,info) -> playerInformation.put(player, new Info(info)));
+/*
         var info1 = new Info(playerNames.get(PlayerId.PLAYER_1));
         var info2 = new Info(playerNames.get(PlayerId.PLAYER_2));
-
-/*
-        Player p1 = players.get(PlayerId.PLAYER_1);
-        Player p2 = players.get(PlayerId.PLAYER_2);
-       */
-
-        players.forEach((k,v) -> v.initPlayers(k,playerNames));
+*/
+        players.forEach((key,value) -> value.initPlayers(key,playerNames));
 
         receiveInfoForBothPlayers(players,playerInformation.get(gameState.currentPlayerId()).willPlayFirst());
-        //TODO lambda
 
+        //TODO lambda
 
         p1.setInitialTicketChoice(tickets);
         p2.setInitialTicketChoice(tickets);
