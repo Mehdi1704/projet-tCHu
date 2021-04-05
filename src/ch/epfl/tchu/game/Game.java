@@ -8,13 +8,12 @@ import java.util.Map;
 import java.util.Random;
 
 public final class Game{
-    //salut
     public static final int PLAYERS_COUNT = 2;
     public static void play(Map<PlayerId, Player> players, Map<PlayerId,
                             String> playerNames, SortedBag<Ticket> tickets, Random rng){
         Preconditions.checkArgument(players.size()==PLAYERS_COUNT && playerNames.size()==PLAYERS_COUNT);
-        //String p1Name = playerNames.get(PlayerId.PLAYER_1);
-        //String p2Name = playerNames.get(PlayerId.PLAYER_2);
+       // String p1Name = playerNames.get(PlayerId.PLAYER_1);
+       // String p2Name = playerNames.get(PlayerId.PLAYER_2);
         var info1 = new Info(playerNames.get(PlayerId.PLAYER_1));
         var info2 = new Info(playerNames.get(PlayerId.PLAYER_2));
         Player p1 = players.get(PlayerId.PLAYER_1);
