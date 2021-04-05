@@ -33,9 +33,9 @@ public interface Player {
     void receiveInfo(String info);
 
     /**
-     *qui est appelée chaque fois que l'état du jeu a changé,
-     *  pour informer le joueur de la composante publique de ce nouvel état,
-     *  newState, ainsi que de son propre état, ownState,
+     *  qui est appelée chaque fois que l'état du jeu a changé,
+     *  pour informer le joueur de la composante publique de ce nouvel état,newState,
+     *  ainsi que de son propre état, ownState,
      * @param newState
      * @param ownState
      */
