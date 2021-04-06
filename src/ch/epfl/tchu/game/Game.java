@@ -86,76 +86,69 @@ public final class Game{
                     int actualDrawSlot = currentPlayer.drawSlot();          // Slot que le joueur va tirer 2 fois
                     updateStateForBothPlayers(players, gameState);
                     if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)){          // Tire des face up cards
-                        GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
-                                .withDrawnFaceUpCard(currentPlayer.drawSlot());
+                        gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
+                                             .withDrawnFaceUpCard(currentPlayer.drawSlot());
 
                         Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
-                        updateStateForBothPlayers(players, newGameState);
+                        updateStateForBothPlayers(players, gameState);
                         receiveInfoForBothPlayers(players,information.drewVisibleCard(pickedCard));
                     }
                     else if (actualDrawSlot == Constants.DECK_SLOT){          // Tire du Deck
-                        GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
-                                .withBlindlyDrawnCard();
+                        gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
+                                             .withBlindlyDrawnCard();
 
-                        updateStateForBothPlayers(players, newGameState);
+                        updateStateForBothPlayers(players, gameState);
                         receiveInfoForBothPlayers(players,information.drewBlindCard());
                     }
                 }
                 break ;
             case CLAIM_ROUTE :
+                // Initialisation
                 Route chosenRoute = currentPlayer.claimedRoute();
-                // Cartes possibles à jouer
-                List<SortedBag<Card>> listOfCards = gameState.playerState(gameState.currentPlayerId())
-                        .possibleClaimCards(chosenRoute);
-                //TODO condition nécessaire?
-                if (listOfCards.contains(currentPlayer.initialClaimCards())){   // Verifie si le joueur joue les bonnes cartes
-                    if (chosenRoute.level().equals(Route.Level.OVERGROUND)){    // Route en surface
+                SortedBag<Card> playerClaimCards = currentPlayer.initialClaimCards();
 
-                        // Ajout de la route et retrait des cartes
-                        GameState newGameState =  gameState.withClaimedRoute(chosenRoute, currentPlayer.initialClaimCards());
+                if (chosenRoute.level().equals(Route.Level.OVERGROUND)){    // Route en surface
 
-                        // Affichage et mise à jour
-                        //TODO update necessaire?
-                        updateStateForBothPlayers(players, newGameState);
-                        receiveInfoForBothPlayers(players,information
-                                .claimedRoute(chosenRoute, currentPlayer.initialClaimCards()));
+                    // Ajout de la route et retrait des cartes
+                    gameState = gameState.withClaimedRoute(chosenRoute, playerClaimCards);
+                    // Affichage et mise à jour
+                    updateStateForBothPlayers(players, gameState);
+                    receiveInfoForBothPlayers(players,information
+                            .claimedRoute(chosenRoute, playerClaimCards));
+                }
+                else if (chosenRoute.level().equals(Route.Level.UNDERGROUND)){    // Route en tunnel
 
-                    } else if (chosenRoute.level().equals(Route.Level.UNDERGROUND)){    // Route en tunnel
-
-                        // Affichage pour le tunnel
-                        receiveInfoForBothPlayers(players,information
-                                .attemptsTunnelClaim(chosenRoute,currentPlayer.initialClaimCards()));
-
-                        SortedBag<Card> playerClaimCards = currentPlayer.initialClaimCards();
-                        SortedBag.Builder<Card> drawnCardsBuilder = new SortedBag.Builder<>();
-                        for (int i = 0 ; i < ADDITIONAL_TUNNEL_CARDS ; i++){
-                            drawnCardsBuilder.add(gameState.withCardsDeckRecreatedIfNeeded(rng).topCard());
-                        }
-                        SortedBag<Card> drawnCards = drawnCardsBuilder.build();
-
-                        GameState newGameState = gameState.withoutTopCard().withoutTopCard().withoutTopCard().withMoreDiscardedCards(drawnCards);
-                        int addClaimCardsCount = chosenRoute.additionalClaimCardsCount(playerClaimCards, drawnCards);
-                        // Affichage des cartes additionnelles tirées
-                        receiveInfoForBothPlayers(players,information
-                                .drewAdditionalCards(drawnCards, addClaimCardsCount));
-                        // Cartes que le joueur peut jouer
-                        List<SortedBag<Card>> playableCards = gameState.currentPlayerState().possibleAdditionalCards(
-                                addClaimCardsCount,playerClaimCards,drawnCards);
-                        // Cartes que le joueur va jouer
-                        SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
-                        if (playedAddCards.isEmpty()){    // Tentative échouée
-                            //TODO joueur reprend ses cartes
-                            receiveInfoForBothPlayers(players,information.didNotClaimRoute(chosenRoute));
-                        }else{                            // Tentative réussie
-                            //TODO joueur prend la route et perd ses cartes
-                            receiveInfoForBothPlayers(players,information.claimedRoute(chosenRoute,playedAddCards.union(playerClaimCards)));
-                        }
-
-
+                    // Affichage pour le tunnel
+                    receiveInfoForBothPlayers(players,information
+                            .attemptsTunnelClaim(chosenRoute,playerClaimCards));
+                    // Création des DrawnCards
+                    SortedBag.Builder<Card> drawnCardsBuilder = new SortedBag.Builder<>();
+                    for (int i = 0 ; i < ADDITIONAL_TUNNEL_CARDS ; i++){
+                        drawnCardsBuilder.add(gameState.withCardsDeckRecreatedIfNeeded(rng).topCard());
                     }
-                }else{
-                    //Tentative de s'emparer de la route échouée
-                    receiveInfoForBothPlayers(players,information.didNotClaimRoute(chosenRoute));
+                    SortedBag<Card> drawnCards = drawnCardsBuilder.build();
+                    int addClaimCardsCount = chosenRoute.additionalClaimCardsCount(playerClaimCards, drawnCards);
+
+                    gameState = gameState.withoutTopCard().withoutTopCard().withoutTopCard().withMoreDiscardedCards(drawnCards);
+                    updateStateForBothPlayers(players, gameState);
+                    // Affichage des cartes additionnelles tirées
+                    receiveInfoForBothPlayers(players,information
+                            .drewAdditionalCards(drawnCards, addClaimCardsCount));
+                    // Cartes que le joueur peut jouer
+                    List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
+                                .possibleAdditionalCards(addClaimCardsCount,playerClaimCards,drawnCards);
+                    // Cartes que le joueur va jouer
+                    SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
+                    if (playedAddCards.isEmpty()){    // Tentative échouée
+                        //TODO joueur reprend ses cartes
+                        updateStateForBothPlayers(players, gameState);
+                        receiveInfoForBothPlayers(players,information.didNotClaimRoute(chosenRoute));
+                    }else{                            // Tentative réussie
+                        // Ajout de la route et retrait des cartes
+                        gameState =  gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
+                        updateStateForBothPlayers(players, gameState);
+                        receiveInfoForBothPlayers(players,information.claimedRoute(chosenRoute,playedAddCards.union(playerClaimCards)));
+                    }
                 }
                 break ;
         }
