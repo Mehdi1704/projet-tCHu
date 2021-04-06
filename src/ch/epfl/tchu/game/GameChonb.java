@@ -69,18 +69,18 @@ public final class GameChonb{
                     int actualDrawSlot = currentPlayer.drawSlot();          // Slot que le joueur va tirer 2 fois
                     updateStateForBothPlayers(players, gameState);
                     if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)){          // Tire des face up cards
-                        GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
+                        gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                 .withDrawnFaceUpCard(currentPlayer.drawSlot());
 
                         Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
-                        updateStateForBothPlayers(players, newGameState);
+                        updateStateForBothPlayers(players, gameState);
                         receiveInfoForBothPlayers(players,information.drewVisibleCard(pickedCard));
                     }
                     else if (actualDrawSlot == Constants.DECK_SLOT){          // Tire du Deck
-                        GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
+                        gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                 .withBlindlyDrawnCard();
 
-                        updateStateForBothPlayers(players, newGameState);
+                        updateStateForBothPlayers(players, gameState);
                         receiveInfoForBothPlayers(players,information.drewBlindCard());
                     }
                 }
@@ -95,6 +95,7 @@ public final class GameChonb{
                     if (chosenRoute.level().equals(Route.Level.OVERGROUND)){    // Route en surface
 
                         // Ajout de la route et retrait des cartes
+                        //TODO wagons utilisés?
                         GameState newGameState =  gameState.withClaimedRoute(chosenRoute, currentPlayer.initialClaimCards());
 
                         // Affichage et mise à jour
