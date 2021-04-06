@@ -55,8 +55,8 @@ public final class GameChonb{
 
         //-------------------------- commencement de la partie ----------------------------
 
-        Player currentPlayer = null;
-        Info information ;
+        Player currentPlayer = players.get(gameState.currentPlayerId());
+        Info information = playerInformation.get(gameState.currentPlayerId());
         Player.TurnKind typeAction = currentPlayer.nextTurn();
         //
         switch(typeAction) {
@@ -74,14 +74,14 @@ public final class GameChonb{
 
                         Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
                         updateStateForBothPlayers(players, newGameState);
-                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer).drewVisibleCard(pickedCard));
+                        receiveInfoForBothPlayers(players,information.drewVisibleCard(pickedCard));
                     }
                     else if (actualDrawSlot == Constants.DECK_SLOT){          // Tire du Deck
                         GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                 .withBlindlyDrawnCard();
 
                         updateStateForBothPlayers(players, newGameState);
-                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer).drewBlindCard());
+                        receiveInfoForBothPlayers(players,information.drewBlindCard());
                     }
                 }
                 break ;
@@ -100,15 +100,15 @@ public final class GameChonb{
                         // Affichage et mise à jour
                         //TODO update necessaire?
                         updateStateForBothPlayers(players, newGameState);
-                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer)
+                        receiveInfoForBothPlayers(players,information
                                 .claimedRoute(chosenRoute, currentPlayer.initialClaimCards()));
 
                     } else if (chosenRoute.level().equals(Route.Level.UNDERGROUND)){    // Route en tunnel
 
                         // Affichage pour le tunnel
-                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer)
+                        receiveInfoForBothPlayers(players,information
                                 .attemptsTunnelClaim(chosenRoute,currentPlayer.initialClaimCards()));
-                        //TODO creation de drawn cards
+
                         SortedBag<Card> playerClaimCards = currentPlayer.initialClaimCards();
                         SortedBag.Builder<Card> drawnCardsBuilder = new SortedBag.Builder<>();
                         for (int i = 0 ; i < ADDITIONAL_TUNNEL_CARDS ; i++){
@@ -119,19 +119,26 @@ public final class GameChonb{
                         GameState newGameState = gameState.withoutTopCard().withoutTopCard().withoutTopCard().withMoreDiscardedCards(drawnCards);
                         int addClaimCardsCount = chosenRoute.additionalClaimCardsCount(playerClaimCards, drawnCards);
                         // Affichage des cartes additionnelles tirées
-                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer)
+                        receiveInfoForBothPlayers(players,information
                                 .drewAdditionalCards(drawnCards, addClaimCardsCount));
-
-                        SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(
-                                gameState.currentPlayerState().possibleAdditionalCards(
-                                        addClaimCardsCount,playerClaimCards,drawnCards));
-
+                        // Cartes que le joueur peut jouer
+                        List<SortedBag<Card>> playableCards = gameState.currentPlayerState().possibleAdditionalCards(
+                                                              addClaimCardsCount,playerClaimCards,drawnCards);
+                        // Cartes que le joueur va jouer
+                        SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
+                        if (playedAddCards.isEmpty()){    // Tentative échouée
+                            //TODO joueur reprend ses cartes
+                            receiveInfoForBothPlayers(players,information.didNotClaimRoute(chosenRoute));
+                        }else{                            // Tentative réussie
+                            //TODO joueur prend la route et perd ses cartes
+                            receiveInfoForBothPlayers(players,information.claimedRoute(chosenRoute,playedAddCards.union(playerClaimCards)));
+                        }
 
 
                     }
                 }else{
                     //Tentative de s'emparer de la route échouée
-                    receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer).didNotClaimRoute(chosenRoute));
+                    receiveInfoForBothPlayers(players,information.didNotClaimRoute(chosenRoute));
                     }
                 break ;
 
