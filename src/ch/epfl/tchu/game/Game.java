@@ -57,21 +57,31 @@ public final class Game{
 
         //-------------------------- commencement de la partie ----------------------------
 
-        Player currentPlayer = null;
-        Info information ;
-        Player.TurnKind typeAction = currentPlayer.nextTurn(); 
+        Player currentPlayer = players.get(gameState.currentPlayerId());
+        Info information = playerInformation.get(gameState.currentPlayerId());
+        Player.TurnKind typeAction = players.get(gameState.currentPlayerId()).nextTurn();
 
-       // receiveInfoForBothPlayers(players,);
+        receiveInfoForBothPlayers(players,information.canPlay());
+
         switch(typeAction) {
 
             case DRAW_TICKETS :
-                //currentPlayer.chooseTickets(gameState.topTickets(3));
+
+                receiveInfoForBothPlayers(players,information.drewTickets(IN_GAME_TICKETS_COUNT));
+
+                receiveInfoForBothPlayers(players,
+                     information.keptTickets(currentPlayer.chooseTickets((gameState.topTickets(IN_GAME_TICKETS_COUNT))).size()));
+
                 gameState = gameState.withChosenAdditionalTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT),
                         currentPlayer.chooseTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT)));
+
 
                 break ;
             case DRAW_CARDS :
 
+
+
+                
                 break ;
 
             case CLAIM_ROUTE :
