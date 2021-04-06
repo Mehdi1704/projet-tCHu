@@ -59,21 +59,22 @@ public final class Game{
 
         Player currentPlayer = players.get(gameState.currentPlayerId());
         Info information = playerInformation.get(gameState.currentPlayerId());
-        Player.TurnKind typeAction = players.get(gameState.currentPlayerId()).nextTurn();
 
         receiveInfoForBothPlayers(players,information.canPlay());
 
-        switch(typeAction) {
+        switch(players.get(gameState.currentPlayerId()).nextTurn()) {
 
             case DRAW_TICKETS :
 
                 receiveInfoForBothPlayers(players,information.drewTickets(IN_GAME_TICKETS_COUNT));
 
+                SortedBag<Ticket> playerTickets = currentPlayer.chooseTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT));
+
                 receiveInfoForBothPlayers(players,
                      information.keptTickets(currentPlayer.chooseTickets((gameState.topTickets(IN_GAME_TICKETS_COUNT))).size()));
 
                 gameState = gameState.withChosenAdditionalTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT),
-                        currentPlayer.chooseTickets(gameState.topTickets(IN_GAME_TICKETS_COUNT)));
+                        playerTickets);
 
 
                 break ;
@@ -81,7 +82,7 @@ public final class Game{
 
 
 
-                
+
                 break ;
 
             case CLAIM_ROUTE :
@@ -90,6 +91,12 @@ public final class Game{
                 break ;
 
         }
+
+
+
+
+
+
 
     }
 
