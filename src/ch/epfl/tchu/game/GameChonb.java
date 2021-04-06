@@ -8,6 +8,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 
+import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
 import static ch.epfl.tchu.game.Player.TurnKind.*;
 
@@ -64,9 +65,26 @@ public final class GameChonb{
 
                 break ;
             case DRAW_CARDS :
+                for (int i = 0 ; i < 2 ; i++){
+                    int actualDrawSlot = currentPlayer.drawSlot();          // Slot que le joueur va tirer 2 fois
+                    updateStateForBothPlayers(players, gameState);
+                    if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)){          // Tire des face up cards
+                        GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
+                                .withDrawnFaceUpCard(currentPlayer.drawSlot());
 
+                        Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
+                        updateStateForBothPlayers(players, newGameState);
+                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer).drewVisibleCard(pickedCard));
+                    }
+                    else if (actualDrawSlot == Constants.DECK_SLOT){          // Tire du Deck
+                        GameState newGameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
+                                .withBlindlyDrawnCard();
+
+                        updateStateForBothPlayers(players, newGameState);
+                        receiveInfoForBothPlayers(players,playerInformation.get(currentPlayer).drewBlindCard());
+                    }
+                }
                 break ;
-
             case CLAIM_ROUTE :
 
 
