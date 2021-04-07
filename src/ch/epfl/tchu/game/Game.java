@@ -141,7 +141,7 @@ public final class Game{
                     }
                     break;
             }
-            gameState.forNextTurn();
+          gameState = gameState.forNextTurn();
         }
 
         //-------------------------------------- Fin de la partie ------------------------------------------------------
