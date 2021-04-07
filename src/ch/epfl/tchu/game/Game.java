@@ -45,20 +45,20 @@ public final class Game{
         //----------------------------- Commencement de la partie ------------------------------------------------------
 
         receiveInfoForBothPlayers(players,playerInformation.get(gameState.currentPlayerId()).canPlay());
+        boolean lastTurnBegan = false;
+        while (!gameState.currentPlayerId().equals(gameState.lastPlayer()) || !lastTurnBegan){
 
-        //TODO condition de fin de partie a verifier
-
-        while (!gameState.currentPlayerId().equals(gameState.lastPlayer())){
-
-            Player currentPlayer = players.get(gameState.currentPlayerId());   // initialisation du joueur actuel
-            Info information = playerInformation.get(gameState.currentPlayerId()); // initialisation information du joueur
-
-            updateStateForBothPlayers(players, gameState);
-
-            if(gameState.lastTurnBegins()){
+            if(gameState.currentPlayerId().equals(gameState.lastPlayer())){
                 int carCount = gameState.playerState(gameState.lastPlayer()).carCount();
                 receiveInfoForBothPlayers(players,playerInformation.get(gameState.lastPlayer()).lastTurnBegins(carCount));
+                lastTurnBegan = true;
             }
+
+
+            Player currentPlayer = players.get(gameState.currentPlayerId());        // initialisation du joueur actuel
+            Info information = playerInformation.get(gameState.currentPlayerId());  // initialisation information du joueur
+
+            updateStateForBothPlayers(players, gameState);
 
             switch (players.get(gameState.currentPlayerId()).nextTurn()) {
 
@@ -69,7 +69,6 @@ public final class Game{
                             currentPlayer.chooseTickets((gameState.topTickets(IN_GAME_TICKETS_COUNT))).size()));
                     gameState = gameState.withChosenAdditionalTickets(
                                 gameState.topTickets(IN_GAME_TICKETS_COUNT), playerTickets);
-                    //TODO update?
                     break;
 
                 case DRAW_CARDS:
@@ -78,7 +77,7 @@ public final class Game{
                         updateStateForBothPlayers(players, gameState);
                         if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)) {          // Tire des face up cards
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
-                                    .withDrawnFaceUpCard(currentPlayer.drawSlot());
+                                    .withDrawnFaceUpCard(actualDrawSlot);
 
                             Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
                             updateStateForBothPlayers(players, gameState);
@@ -114,51 +113,60 @@ public final class Game{
                             SortedBag.Builder<Card> drawnCardsBuilder = new SortedBag.Builder<>();
                             for (int i = 0; i < ADDITIONAL_TUNNEL_CARDS; i++) {
                                 drawnCardsBuilder.add(gameState.withCardsDeckRecreatedIfNeeded(rng).topCard());
+                                gameState = gameState.withCardsDeckRecreatedIfNeeded(rng).withoutTopCard();
                             }
                             SortedBag<Card> drawnCards = drawnCardsBuilder.build();
+                            gameState = gameState.withMoreDiscardedCards(drawnCards);
                             int addClaimCardsCount = chosenRoute.additionalClaimCardsCount(playerClaimCards, drawnCards);
-
-                            gameState = gameState.withoutTopCard().withoutTopCard().withoutTopCard().withMoreDiscardedCards(drawnCards);
                             updateStateForBothPlayers(players, gameState);
                             // Affichage des cartes additionnelles tirées
                             receiveInfoForBothPlayers(players, information
                                     .drewAdditionalCards(drawnCards, addClaimCardsCount));
-                            // Cartes que le joueur peut jouer
-                            List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
-                                    .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
-                            // Cartes que le joueur va jouer
-                            SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
-                            if (playedAddCards.isEmpty()) {    // Tentative échouée
+                            if (addClaimCardsCount == 0){
+                                // Ajout de la route et retrait des cartes initiales
+                                gameState = gameState.withClaimedRoute(chosenRoute, playerClaimCards);
                                 updateStateForBothPlayers(players, gameState);
-                                receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
-                            } else {                            // Tentative réussie
-                                // Ajout de la route et retrait des cartes
-                                gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
-                                updateStateForBothPlayers(players, gameState);
-                                receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
+                                receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playerClaimCards));
+                            }else {
+                                // Cartes que le joueur peut jouer
+                                List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
+                                        .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
+                                // Cartes que le joueur va jouer
+                                SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
+                                if (playedAddCards==null) {    // Tentative échouée
+                                    updateStateForBothPlayers(players, gameState);
+                                    receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
+                                } else {                            // Tentative réussie
+                                    // Ajout de la route et retrait des cartes
+                                    gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
+                                    updateStateForBothPlayers(players, gameState);
+                                    receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
+                                }
                             }
                             break;
                     }
                     break;
-            }
-          gameState = gameState.forNextTurn();
+            }gameState = gameState.forNextTurn();
+
         }
 
         //-------------------------------------- Fin de la partie ------------------------------------------------------
 
         // Informe les joueurs du résultat final de la partie
         updateStateForBothPlayers(players,gameState);
-        GameState finalGameState = gameState ;
-
-        // Map avec les points du joueur
+        // Initialisation:
+        // Map des chemins les plus longs
+        Map<PlayerId,Trail> playerLongestTrails = new EnumMap<>(PlayerId.class);
+        // Map des points des joueurs
         Map<PlayerId, Integer> playerPoints = new EnumMap<>(PlayerId.class);
-        playerPoints.forEach( (k,v) -> playerPoints.put(k,finalGameState.playerState(k).finalPoints()));
-
+        for ( Map.Entry<PlayerId, Player> entry : players.entrySet() ) {
+            playerLongestTrails.put(entry.getKey(),Trail.longest(gameState.playerState(entry.getKey()).routes()));
+            playerPoints.put(entry.getKey(),gameState.playerState(entry.getKey()).finalPoints());
+        }
         // Determine le chemin le plus long et attribue le bonus
-        longestDeclaration(players, playerPoints, playerInformation, gameState);
-
+        longestDeclaration(players, playerPoints, playerInformation, playerLongestTrails);
         // Determine la victoire d'un joueur ou une égalité
-        winnerDeclaration(players,playerNames,playerPoints,playerInformation);
+        winnerDeclaration(players, playerNames, playerPoints, playerInformation);
     }
 
     /**
@@ -191,15 +199,12 @@ public final class Game{
      * @param players Map des joueurs
      * @param playerPoints Map des points des joueurs
      * @param playerInformation Map des informations des joueurs
-     * @param gameState Dernier etat de jeu
+     * @param playerLongestTrails Map des chemins les plus longs
      */
     private static void longestDeclaration(Map<PlayerId, Player> players,
                                            Map<PlayerId, Integer> playerPoints,
                                            Map<PlayerId, Info> playerInformation,
-                                           GameState gameState){
-
-        Map<PlayerId,Trail> playerLongestTrails = new EnumMap<>(PlayerId.class);
-        playerLongestTrails.forEach( (k,v) -> playerLongestTrails.put(k,Trail.longest(gameState.playerState(k).routes()))); // en fonction du joueur
+                                           Map<PlayerId,Trail> playerLongestTrails){
 
         int conditionTrail = Integer.compare(playerLongestTrails.get(PlayerId.PLAYER_1).length(),playerLongestTrails.get(PlayerId.PLAYER_2).length());
 

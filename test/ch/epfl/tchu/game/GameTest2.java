@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GameTest {
+public class GameTest2 {
     Random rng = TestRandomizer.newRandom();
     Map<PlayerId, String> playerNames = Map.of(PlayerId.PLAYER_1, "PlayerONE", PlayerId.PLAYER_2, "PlayerTWO");
 
@@ -59,7 +59,8 @@ public class GameTest {
     }
 
     @Test
-    void playCheckWithRoutes() {
+    void
+    playCheckWithRoutes() {
         List<Route> claimableRoutes = List.copyOf(ChMap.routes());
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
 
