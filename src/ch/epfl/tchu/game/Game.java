@@ -45,15 +45,7 @@ public final class Game{
         //----------------------------- Commencement de la partie ------------------------------------------------------
 
         receiveInfoForBothPlayers(players,playerInformation.get(gameState.currentPlayerId()).canPlay());
-        boolean lastTurnBegan = false;
-        while (!gameState.currentPlayerId().equals(gameState.lastPlayer()) || !lastTurnBegan){
-
-            if(gameState.currentPlayerId().equals(gameState.lastPlayer())){
-                int carCount = gameState.playerState(gameState.lastPlayer()).carCount();
-                receiveInfoForBothPlayers(players,playerInformation.get(gameState.lastPlayer()).lastTurnBegins(carCount));
-                lastTurnBegan = true;
-            }
-
+        while (true ){
 
             Player currentPlayer = players.get(gameState.currentPlayerId());        // initialisation du joueur actuel
             Info information = playerInformation.get(gameState.currentPlayerId());  // initialisation information du joueur
@@ -146,7 +138,17 @@ public final class Game{
                             break;
                     }
                     break;
-            }gameState = gameState.forNextTurn();
+            }
+
+            if(gameState.currentPlayerId().equals(gameState.lastPlayer())){
+                break;
+            }
+            if(gameState.lastTurnBegins()){
+                int carCount = gameState.playerState(gameState.currentPlayerId()).carCount();
+                receiveInfoForBothPlayers(players,playerInformation.get(gameState.currentPlayerId())
+                        .lastTurnBegins(carCount));
+            }
+            gameState = gameState.forNextTurn();
 
         }
 
