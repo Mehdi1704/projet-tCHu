@@ -18,12 +18,12 @@ public final class CardState extends PublicCardState {
     private final List<Card> faceUpCards;
 
     /**
-     * constructeur principal privee appelant le constructeur de la classe PublicCardState
+     * Constructeur principal privé appelant le constructeur de la classe PublicCardState
      * initialisant nos parametres
      *
-     * @param faceUpCards
-     * @param deck
-     * @param deckDiscard
+     * @param faceUpCards Cartes face visible
+     * @param deck Cartes de la pioche
+     * @param deckDiscard Cartes de la défausse
      */
     private CardState(List<Card> faceUpCards, Deck<Card> deck, SortedBag<Card> deckDiscard) {
         super(faceUpCards, deck.size(), deckDiscard.size());
@@ -36,7 +36,8 @@ public final class CardState extends PublicCardState {
      * retourne un etat de carte où les 5 cartes disposées faces visibles sont les 5 premières du tas passé en argument,
      * la pioche est quant à elle constituée des cartes du tas restantes, et la défausse est vide
      *
-     * @param deck
+     * @throws IllegalArgumentException S'il y a moins de cartes face visible que dans le Deck
+     * @param deck Cartes de la pioche
      * @return
      */
     public static CardState of(Deck<Card> deck) {
@@ -48,6 +49,7 @@ public final class CardState extends PublicCardState {
      * Methode retournant un ensemble de cartes identique à l'exception de que la carte face
      * visible de l'index slot va être remplacé par celle se trouvant au sommet de la pioche
      *
+     * @throws IllegalArgumentException
      * @param slot
      * @return
      */
@@ -64,6 +66,7 @@ public final class CardState extends PublicCardState {
     /**
      * methode qui retourne la carte se trouvant au sommet de la pioche
      *
+     * @throws IllegalArgumentException
      * @return
      */
     public Card topDeckCard() {
@@ -74,6 +77,7 @@ public final class CardState extends PublicCardState {
     /**
      * methode retournant un ensemble de cartes identique au recpeteur mais sans la carte au sommet de la pioche .
      *
+     * @throws IllegalArgumentException
      * @return
      */
     public CardState withoutTopDeckCard() {
@@ -86,6 +90,7 @@ public final class CardState extends PublicCardState {
      * si ce n'est que les cartes de la défausse ont été mélangées et placées à la place de la pioche
      * et une defausse vide.
      *
+     * @throws IllegalArgumentException
      * @param rng
      * @return
      */
