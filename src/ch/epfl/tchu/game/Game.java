@@ -198,23 +198,42 @@ public final class Game {
                                            Map<PlayerId,Trail> playerLongestTrails){
 
         int conditionTrail = Integer.compare(playerLongestTrails.get(PlayerId.PLAYER_1).length(),playerLongestTrails.get(PlayerId.PLAYER_2).length());
-        //TODO a optimiser
+        //TODO a optimiser (aloulou a fait )
         switch (conditionTrail) {
             case (0):        // Meme longueur
-                receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_1).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_1)));
-                receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_2).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_2)));
-                playerPoints.replace(PlayerId.PLAYER_1 , playerPoints.get(PlayerId.PLAYER_1)+ LONGEST_TRAIL_BONUS_POINTS);
-                playerPoints.replace(PlayerId.PLAYER_2 , playerPoints.get(PlayerId.PLAYER_2)+ LONGEST_TRAIL_BONUS_POINTS);
+                annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
+                annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
+
+                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_1).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_1)));
+                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_2).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_2)));
+                // playerPoints.replace(PlayerId.PLAYER_1 , playerPoints.get(PlayerId.PLAYER_1)+ LONGEST_TRAIL_BONUS_POINTS);
+                // playerPoints.replace(PlayerId.PLAYER_2 , playerPoints.get(PlayerId.PLAYER_2)+ LONGEST_TRAIL_BONUS_POINTS);
                 break;
             case (1):        // Joueur 1 a le bonus
-                receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_1).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_1)));
-                playerPoints.replace(PlayerId.PLAYER_1 , playerPoints.get(PlayerId.PLAYER_1)+ LONGEST_TRAIL_BONUS_POINTS);
+                annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
+
+
+                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_1).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_1)));
+               // playerPoints.replace(PlayerId.PLAYER_1 , playerPoints.get(PlayerId.PLAYER_1)+ LONGEST_TRAIL_BONUS_POINTS);
                 break;
             case (-1):        // Joueur 2 a le bonus
-                receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_2).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_2)));
-                playerPoints.replace(PlayerId.PLAYER_2 , playerPoints.get(PlayerId.PLAYER_2)+ LONGEST_TRAIL_BONUS_POINTS);
+
+                annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
+
+                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_2).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_2)));
+                // playerPoints.replace(PlayerId.PLAYER_2 , playerPoints.get(PlayerId.PLAYER_2)+ LONGEST_TRAIL_BONUS_POINTS);
                 break;
         }
+    }
+
+    private static void annexeLongestDeclaration(Map<PlayerId, Player> players,
+                                                 Map<PlayerId, Integer> playerPoints,
+                                                 Map<PlayerId, Info> playerInformation,
+                                                 Map<PlayerId,Trail> playerLongestTrails,
+                                                 PlayerId playerID){
+        receiveInfoForBothPlayers(players,playerInformation.get(playerID).getsLongestTrailBonus(playerLongestTrails.get(playerID)));
+        playerPoints.replace(playerID , playerPoints.get(playerID)+ LONGEST_TRAIL_BONUS_POINTS);
+
     }
 
     /**
