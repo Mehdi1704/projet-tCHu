@@ -67,8 +67,8 @@ public interface Player {
      * qui est appelée lorsque le joueur a décidé de tirer des billets supplémentaires en cours de partie,
      * afin de lui communiquer les billets tirés et de savoir lesquels il garde,
      *
-     * @param options les billets que l'on garde.
-     * @return
+     * @param options les billets qu'on propose
+     * @return les billets que l'on garde.
      */
     SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);
 
