@@ -12,23 +12,24 @@ import static ch.epfl.tchu.game.Constants.*;
 
 public final class Game {
 
+    public static final int DRAW_CARDS_COUNT = 2;
     public static final int PLAYERS_COUNT = 2;
 
     /**
-     * methode permettant le déroulement de la partie :
+     * Methode permettant le déroulement de la partie :
      *
-     *  1 phase : l'initialisation de l'etat du jeu,distribution des cartes, détermination du premier joueur
-     *  et distribution des tickets ainsi que du choix de ces derniers .
+     * Phase 1: l'initialisation de l'etat du jeu, distribution des cartes, détermination du premier joueur
+     *  et distribution des tickets ainsi que du choix de ces derniers.
      *
-     * 2 phase : début de partie ou les joueurs vont à tour de rôle effectuer diverses actions,
+     * Phase 2: début de partie ou les joueurs vont à tour de rôle effectuer diverses actions,
      *  soit piocher,et sélectionner des tickets , soit piocher des cartes , soit tenter de s'emparer d'une route.
      *
-     *  3 phase : détermination du nombre de points de chaque joueur , et donc détermination du vainqueur .
+     * Phase 3: détermination du nombre de points de chaque joueur , et donc détermination du vainqueur .
      *
-     * @param players map des joueurs
-     * @param playerNames map des noms de nos joueurs
-     * @param tickets les tickets que l'on va utiliser durant la partie
-     * @param rng variable permettant, de mélanger les cartes,et de choisir le joueur qui joue en premier,
+     * @param players Map des joueurs
+     * @param playerNames Map des noms de nos joueurs
+     * @param tickets Tickets que l'on va utiliser durant la partie
+     * @param rng Variable permettant, de mélanger les cartes,et de choisir le joueur qui joue en premier,
      *           tout cela de manière aléatoire
      */
     public static void play(Map<PlayerId, Player> players, Map<PlayerId,
@@ -79,7 +80,7 @@ public final class Game {
                     break;
 
                 case DRAW_CARDS:
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < DRAW_CARDS_COUNT; i++) {
                         int actualDrawSlot = currentPlayer.drawSlot();          // Slot que le joueur va tirer 2 fois
                         updateStateForBothPlayers(players, gameState);
                         if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)) {          // Tire des face up cards
@@ -184,8 +185,7 @@ public final class Game {
      * @param info Type d'information transmis
      */
     private static void receiveInfoForBothPlayers(Map<PlayerId, Player> players, String info){
-        players.get(PlayerId.PLAYER_1).receiveInfo(info);
-        players.get(PlayerId.PLAYER_2).receiveInfo(info);
+        players.forEach((k,v) -> v.receiveInfo(info));
     }
 
     /**
@@ -195,10 +195,7 @@ public final class Game {
      * @param newState Nouvel état de jeu
      */
     private static void updateStateForBothPlayers(Map<PlayerId, Player> players,GameState newState){
-        for (Map.Entry<PlayerId, Player> entry : players.entrySet()){
-            entry.getValue().updateState(newState,newState.playerState(entry.getKey()));
-        }
-        //players.forEach((k,v) -> v.updateState(newState,newState.playerState(k)));
+        players.forEach((k,v) -> v.updateState(newState,newState.playerState(k)));
     }
 
     /**
