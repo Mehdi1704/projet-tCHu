@@ -14,6 +14,23 @@ public final class Game {
 
     public static final int PLAYERS_COUNT = 2;
 
+    /**
+     * methode permettant le déroulement de la partie :
+     *
+     *  1 phase : l'initialisation de l'etat du jeu,distribution des cartes, détermination du premier joueur
+     *  et distribution des tickets ainsi que du choix de ces derniers .
+     *
+     * 2 phase : début de partie ou les joueurs vont à tour de rôle effectuer diverses actions,
+     *  soit piocher,et sélectionner des tickets , soit piocher des cartes , soit tenter de s'emparer d'une route.
+     *
+     *  3 phase : détermination du nombre de points de chaque joueur , et donc détermination du vainqueur .
+     *
+     * @param players map des joueurs
+     * @param playerNames map des noms de nos joueurs
+     * @param tickets les tickets que l'on va utiliser durant la partie
+     * @param rng variable permettant, de mélanger les cartes,et de choisir le joueur qui joue en premier,
+     *           tout cela de manière aléatoire
+     */
     public static void play(Map<PlayerId, Player> players, Map<PlayerId,
                             String> playerNames, SortedBag<Ticket> tickets, Random rng){
 
@@ -198,30 +215,16 @@ public final class Game {
                                            Map<PlayerId,Trail> playerLongestTrails){
 
         int conditionTrail = Integer.compare(playerLongestTrails.get(PlayerId.PLAYER_1).length(),playerLongestTrails.get(PlayerId.PLAYER_2).length());
-        //TODO a optimiser (aloulou a fait )
         switch (conditionTrail) {
             case (0):        // Meme longueur
                 annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
                 annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
-
-                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_1).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_1)));
-                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_2).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_2)));
-                // playerPoints.replace(PlayerId.PLAYER_1 , playerPoints.get(PlayerId.PLAYER_1)+ LONGEST_TRAIL_BONUS_POINTS);
-                // playerPoints.replace(PlayerId.PLAYER_2 , playerPoints.get(PlayerId.PLAYER_2)+ LONGEST_TRAIL_BONUS_POINTS);
                 break;
             case (1):        // Joueur 1 a le bonus
                 annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
-
-
-                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_1).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_1)));
-               // playerPoints.replace(PlayerId.PLAYER_1 , playerPoints.get(PlayerId.PLAYER_1)+ LONGEST_TRAIL_BONUS_POINTS);
                 break;
             case (-1):        // Joueur 2 a le bonus
-
                 annexeLongestDeclaration(players,playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
-
-                // receiveInfoForBothPlayers(players,playerInformation.get(PlayerId.PLAYER_2).getsLongestTrailBonus(playerLongestTrails.get(PlayerId.PLAYER_2)));
-                // playerPoints.replace(PlayerId.PLAYER_2 , playerPoints.get(PlayerId.PLAYER_2)+ LONGEST_TRAIL_BONUS_POINTS);
                 break;
         }
     }
