@@ -3,12 +3,13 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 public final class Station {
-
+//TODO final?
     private int id;
     private String name;
 
     /**
      *
+     * @throws IllegalArgumentException
      * @param id
      * @param name
      */

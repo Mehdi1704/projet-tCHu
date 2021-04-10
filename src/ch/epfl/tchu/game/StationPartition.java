@@ -43,6 +43,7 @@ public final class StationPartition implements StationConnectivity {
 
         /**
          *
+         * @throws IllegalArgumentException
          * @param stationCount
          */
         public Builder(int stationCount) {

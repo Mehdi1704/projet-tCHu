@@ -24,20 +24,28 @@ public final class Route {
     private final Color color;
 
     /**
-     * constructeur de la classe initialisant nos valeurs
+     *
+     *
+     * @throws IllegalArgumentException
+     * @throws NullPointerException
+     * @param id
+     * @param station1
+     * @param station2
+     * @param length
+     * @param level
+     * @param color
      */
-
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
 
         Preconditions.checkArgument((!(station1.equals(station2))) && (length >= Constants.MIN_ROUTE_LENGTH) &&
                 (length <= Constants.MAX_ROUTE_LENGTH));
 
-        this.id = Objects.requireNonNull(id);
+        this.id       = Objects.requireNonNull(id);
         this.station1 = Objects.requireNonNull(station1);
         this.station2 = Objects.requireNonNull(station2);
-        this.length = length;
-        this.level = Objects.requireNonNull(level);
-        this.color = color;
+        this.length   = length;
+        this.level    = Objects.requireNonNull(level);
+        this.color    = color;
     }
 
     /**
@@ -94,6 +102,7 @@ public final class Route {
     /**
      * methode retournant la station opposée à celle qui est passé en argument.
      *
+     * @throws IllegalArgumentException
      * @param station
      * @return
      */
@@ -112,6 +121,7 @@ public final class Route {
      *
      * @return
      */
+    //TODO optimiser aved des lambdas
     public List<SortedBag<Card>> possibleClaimCards() {
 
         ArrayList<SortedBag<Card>> tempListOfPossibleClaimCards = new ArrayList<>();
@@ -151,6 +161,7 @@ public final class Route {
     /**
      * retourne le nombre de carte additionnel à jouer pour pouvoir s'emparer de la route(tunnel)
      *
+     * @throws IllegalArgumentException
      * @param claimCards
      * @param drawnCards
      * @return
@@ -163,7 +174,6 @@ public final class Route {
             if (claimCards.contains(c) || c.equals(Card.LOCOMOTIVE)) {
                 count += 1;
             }
-
         }
         return count;
     }

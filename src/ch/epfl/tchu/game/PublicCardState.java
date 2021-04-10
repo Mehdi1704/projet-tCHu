@@ -15,7 +15,13 @@ public class PublicCardState {
      * constructeur public permettant d'initialiser nos variables .
      * une Liste de carde qui represente les 5 cartes face visible
      * la taille de notre pioche ( c a d le nombre de carte)
-     * la taille de notre defausse (c a d le nombre de carte )*
+     * la taille de notre defausse (c a d le nombre de carte )
+     *
+     * @throws IllegalArgumentException
+     * @param faceUpCards
+     * @param deckSize
+     * @param discardsSize
+     *
      */
 
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize) {
@@ -50,6 +56,7 @@ public class PublicCardState {
     /**
      * methode retourne la carte face visible se trouvant à l'index slot.*
      *
+     * @throws IndexOutOfBoundsException
      * @param slot
      * @return
      */

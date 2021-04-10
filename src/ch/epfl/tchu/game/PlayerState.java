@@ -28,6 +28,7 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne l'état initial d'un joueur auquel les cartes initiales données ont été distribuées
      *
+     * @throws IllegalArgumentException
      * @param initialCards
      * @return
      */
@@ -102,6 +103,7 @@ public class PlayerState extends PublicPlayerState {
      * Retourne la liste de tous les ensembles de cartes que le joueur
      * pourrait utiliser pour prendre possession de la route donnée
      *
+     * @throws IllegalArgumentException
      * @param route
      * @return
      */
@@ -121,6 +123,7 @@ public class PlayerState extends PublicPlayerState {
      * pourrait utiliser pour s'emparer d'un tunnel,
      * trié par ordre croissant du nombre de cartes locomotives
      *
+     * @throws IllegalArgumentException
      * @param additionalCardsCount
      * @param initialCards
      * @param drawnCards
@@ -129,6 +132,7 @@ public class PlayerState extends PublicPlayerState {
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount,
                                                          SortedBag<Card> initialCards,
                                                          SortedBag<Card> drawnCards) {
+        //TODO constantes
         Preconditions.checkArgument(1 <= additionalCardsCount && additionalCardsCount <= ADDITIONAL_TUNNEL_CARDS);
         Preconditions.checkArgument(!initialCards.isEmpty() && initialCards.toSet().size() <= 2);
         Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS);
@@ -170,6 +174,7 @@ public class PlayerState extends PublicPlayerState {
      *
      * @return
      */
+    //TODO optimiser?
     public int ticketPoints() {
         int indexMax = 0;
         for (Route r : routes) {

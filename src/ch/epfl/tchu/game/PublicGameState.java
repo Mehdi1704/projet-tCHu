@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
-import static ch.epfl.tchu.game.PlayerId.*;
 
 public class PublicGameState {
 
@@ -17,6 +16,16 @@ public class PublicGameState {
     private final Map<PlayerId, PublicPlayerState> playerState;
     private final PlayerId lastPlayer;
 
+    /**
+     *
+     * @throws IllegalArgumentException
+     * @throws NullPointerException
+     * @param ticketsCount
+     * @param cardState
+     * @param currentPlayerId
+     * @param playerState
+     * @param lastPlayer
+     */
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                            Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
         Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == 2);
@@ -83,7 +92,6 @@ public class PublicGameState {
      * @param playerId
      * @return
      */
-    //TODO verifier
     public PublicPlayerState playerState(PlayerId playerId) {
         return playerState.get(playerId);
     }
@@ -93,7 +101,6 @@ public class PublicGameState {
      *
      * @return
      */
-    //TODO verifier
     public PublicPlayerState currentPlayerState() {
         return playerState.get(currentPlayerId());
     }
@@ -103,7 +110,6 @@ public class PublicGameState {
      *
      * @return
      */
-    //TODO verifier
     public List<Route> claimedRoutes() {
         List<Route> newClaimedRoutes = new ArrayList<>(playerState.get(currentPlayerId).routes());
         newClaimedRoutes.addAll(playerState.get(currentPlayerId.next()).routes());

@@ -279,6 +279,7 @@ public class GameState extends PublicGameState {
      * @return booleen
      */
     public boolean lastTurnBegins() {
+        //TODO carcount constante
         return ((lastPlayer() == null) && (playerState.get(currentPlayerId()).carCount() <= 2));
     }
 

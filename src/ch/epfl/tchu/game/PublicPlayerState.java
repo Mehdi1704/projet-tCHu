@@ -6,9 +6,6 @@ import java.util.List;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
-/**
- *
- */
 public class PublicPlayerState {
 
     private final int ticketCount;
@@ -17,6 +14,14 @@ public class PublicPlayerState {
     private final int carCount;
     private final int claimPoints;
 
+    /**
+     *
+     *
+     * @throws IllegalArgumentException
+     * @param ticketCount
+     * @param cardCount
+     * @param routes
+     */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
         this.ticketCount = ticketCount;
@@ -28,7 +33,7 @@ public class PublicPlayerState {
             totalCars -= r.length();
             totalPoints += r.claimPoints();
         }
-        this.carCount = totalCars;
+        this.carCount    = totalCars;
         this.claimPoints = totalPoints;
     }
 

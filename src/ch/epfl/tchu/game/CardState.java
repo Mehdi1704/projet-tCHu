@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
-import static java.util.Collections.shuffle;
 
 public final class CardState extends PublicCardState {
 
@@ -27,18 +26,19 @@ public final class CardState extends PublicCardState {
      */
     private CardState(List<Card> faceUpCards, Deck<Card> deck, SortedBag<Card> deckDiscard) {
         super(faceUpCards, deck.size(), deckDiscard.size());
-        this.deck = deck;
+        this.deck        = deck;
         this.deckDiscard = deckDiscard;
         this.faceUpCards = faceUpCards;
     }
 
     /**
-     * retourne un etat de carte où les 5 cartes disposées faces visibles sont les 5 premières du tas passé en argument,
-     * la pioche est quant à elle constituée des cartes du tas restantes, et la défausse est vide
+     * Retourne un etat de carte où les 5 cartes disposées faces visibles
+     * sont les 5 premières du tas passé en argument, la pioche est quant à elle
+     * constituée des cartes du tas restantes, et la défausse est vide
      *
-     * @throws IllegalArgumentException S'il y a moins de cartes face visible que dans le Deck
+     * @throws IllegalArgumentException S'il y a plus de cartes face visible que dans le Deck
      * @param deck Cartes de la pioche
-     * @return
+     * @return Un nouveau CardState
      */
     public static CardState of(Deck<Card> deck) {
         Preconditions.checkArgument(deck.size() >= FACE_UP_CARDS_COUNT);
@@ -49,9 +49,10 @@ public final class CardState extends PublicCardState {
      * Methode retournant un ensemble de cartes identique à l'exception de que la carte face
      * visible de l'index slot va être remplacé par celle se trouvant au sommet de la pioche
      *
-     * @throws IllegalArgumentException
-     * @param slot
-     * @return
+     * @throws IndexOutOfBoundsException Si l'index n'est pas compris dans les cartes visibles
+     * @throws IllegalArgumentException Si la pioche est vide
+     * @param slot Index de la carte face visible
+     * @return Un nouvel etat avec la carte remplacée
      */
     public CardState withDrawnFaceUpCard(int slot) {
         Objects.checkIndex(slot, FACE_UP_CARDS_COUNT);
@@ -66,8 +67,8 @@ public final class CardState extends PublicCardState {
     /**
      * methode qui retourne la carte se trouvant au sommet de la pioche
      *
-     * @throws IllegalArgumentException
-     * @return
+     * @throws IllegalArgumentException Si la pioche est vide
+     * @return La carte du sommet de la pioche
      */
     public Card topDeckCard() {
         Preconditions.checkArgument(!isDeckEmpty());
@@ -75,10 +76,11 @@ public final class CardState extends PublicCardState {
     }
 
     /**
-     * methode retournant un ensemble de cartes identique au recpeteur mais sans la carte au sommet de la pioche .
+     * methode retournant un ensemble de cartes identique au recpeteur
+     * mais sans la carte au sommet de la pioche
      *
-     * @throws IllegalArgumentException
-     * @return
+     * @throws IllegalArgumentException Si la pioche est vide
+     * @return Un nouvel etat sans la carte du sommet de la pioche
      */
     public CardState withoutTopDeckCard() {
         Preconditions.checkArgument(!isDeckEmpty());
@@ -87,12 +89,12 @@ public final class CardState extends PublicCardState {
 
     /**
      * methode qui retourne un ensemble de cartes identique au recpeteur
-     * si ce n'est que les cartes de la défausse ont été mélangées et placées à la place de la pioche
-     * et une defausse vide.
+     * si ce n'est que les cartes de la défausse ont été mélangées et placées
+     * à la place de la pioche et une defausse vide.
      *
-     * @throws IllegalArgumentException
-     * @param rng
-     * @return
+     * @throws IllegalArgumentException Si la pioche n'est pas vide
+     * @param rng variable aléatoire
+     * @return Un nouvel etat remplacant la pioche par la défausse
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(isDeckEmpty());
@@ -100,11 +102,11 @@ public final class CardState extends PublicCardState {
     }
 
     /**
-     * methode qui retourne un ensemble de carte indentique au recpeteur
-     * mais en ajoutant via la methode union un ensemble de carte à la defausse .
+     * methode qui retourne un ensemble de carte identique au récpeteur
+     * mais en ajoutant un ensemble de cartes à la defausse
      *
-     * @param additionalDiscards
-     * @return
+     * @param additionalDiscards Cartes à ajouter à la défausse
+     * @return Un nouvel état avec une défaussse modifiée
      */
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
         return new CardState(faceUpCards, deck, deckDiscard.union(additionalDiscards));

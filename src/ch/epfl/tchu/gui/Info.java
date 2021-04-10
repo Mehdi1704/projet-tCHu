@@ -232,7 +232,7 @@ public final class Info {
      */
     private static String cardsNames(SortedBag<Card> cards) {
 
-        ArrayList<String> listOfNames = new ArrayList<String>();
+        ArrayList<String> listOfNames = new ArrayList<>();
         for (Card c : cards.toSet()) {
             int nbOfCards = cards.countOf(c);
             listOfNames.add(nbOfCards + " " + cardName(c, nbOfCards));
