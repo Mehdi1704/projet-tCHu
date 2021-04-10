@@ -10,12 +10,12 @@ public final class Trail {
     private final int length;
 
     /**
-     * contructeur privé de notre classe
+     * Contructeur privé de notre classe
      *
-     * @param station1
-     * @param station2
-     * @param routes
-     * @param length
+     * @param station1 station de depart
+     * @param station2 station d'arrivée
+     * @param routes liste de routes
+     * @param length longueur du chemin
      */
     private Trail(Station station1, Station station2, List<Route> routes, int length) {
 
@@ -26,10 +26,10 @@ public final class Trail {
     }
 
     /**
-     * methode longest retournant le trail le plus long en fonction d'une liste de routes donner
+     * Methode retournant le chemin de routes le plus long
      *
-     * @param routes
-     * @return
+     * @param routes Liste de route à analyser
+     * @return Le chemin le plus long
      */
     public static Trail longest(List<Route> routes) {
         Trail longest = new Trail(null, null, List.of(), 0);
@@ -62,12 +62,13 @@ public final class Trail {
 
 
     /**
+     * Methode permettant d'ajouter un chemin supplementaire à la liste de chemins
      *
-     * @param t
-     * @param r
-     * @param prolongedTrails
-     * @param correspondingStation1
-     * @param correspondingStation2
+     * @param t chemin a ajouter
+     * @param r route a ajouter
+     * @param prolongedTrails liste de chemins a prolonger
+     * @param correspondingStation1 pour verifier la compatibilité
+     * @param correspondingStation2 marque la fin du chemin
      */
     private static void addTrail(Trail t, Route r, List<Trail> prolongedTrails, Station correspondingStation1, Station correspondingStation2) {
         if (t.station2.equals(correspondingStation1)) {
@@ -78,18 +79,18 @@ public final class Trail {
     }
 
     /**
-     * getter de station 1
+     * Getter
      *
-     * @return
+     * @return station 1
      */
     public Station station1() {
         return this.length() == 0 ? null : station1;
     }
 
     /**
-     * getter station 2
+     * Getter
      *
-     * @return
+     * @return station 2
      */
     public Station station2() {
         return this.length() == 0 ? null : station2;
@@ -97,16 +98,18 @@ public final class Trail {
 
 
     /**
-     * @return
+     * Getter
+     *
+     * @return longueur du chemin
      */
     public int length() {
         return length;
     }
 
     /**
-     * affichage de notre plus long chemin
+     * Affichage de notre plus long chemin
      *
-     * @return
+     * @return String representant les stations par lequel passe le chemin et sa longueur
      */
     @Override
     public String toString() {

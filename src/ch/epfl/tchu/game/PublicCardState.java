@@ -11,16 +11,14 @@ public class PublicCardState {
     private final int deckSize;
     private final int discardsSize;
 
-    /***
-     * constructeur public permettant d'initialiser nos variables .
-     * une Liste de carde qui represente les 5 cartes face visible
-     * la taille de notre pioche ( c a d le nombre de carte)
-     * la taille de notre defausse (c a d le nombre de carte )
+    /**
+     * Constructeur public permettant d'initialiser les cartes à l'etat connu
      *
-     * @throws IllegalArgumentException
-     * @param faceUpCards
-     * @param deckSize
-     * @param discardsSize
+     * @throws IllegalArgumentException si il n'y a pas le nombre voulu de cartes visibles,
+     *                                  si la pioche ou la défausse ont une taille négative
+     * @param faceUpCards les 5 cartes face visible
+     * @param deckSize nombre de cartes de la pioche
+     * @param discardsSize nombre de cartes de la défausse
      *
      */
 
@@ -29,8 +27,8 @@ public class PublicCardState {
         Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT &&
                 deckSize >= 0 &&
                 discardsSize >= 0);
-        this.faceUpCards = List.copyOf(faceUpCards);
-        this.deckSize = deckSize;
+        this.faceUpCards  = List.copyOf(faceUpCards);
+        this.deckSize     = deckSize;
         this.discardsSize = discardsSize;
     }
 

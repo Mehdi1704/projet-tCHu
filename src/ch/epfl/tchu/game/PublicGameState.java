@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
+import static java.util.Objects.requireNonNull;
 
 public class PublicGameState {
 
@@ -17,11 +18,12 @@ public class PublicGameState {
     private final PlayerId lastPlayer;
 
     /**
+     * Constructeur public d'un Public Game State
      *
      * @throws IllegalArgumentException
-     * @throws NullPointerException
-     * @param ticketsCount
-     * @param cardState
+     * @throws NullPointerException si cardState ou currentPlayerId est null
+     * @param ticketsCount nombre de tickets
+     * @param cardState etat de cartes
      * @param currentPlayerId
      * @param playerState
      * @param lastPlayer
@@ -29,14 +31,12 @@ public class PublicGameState {
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                            Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
         Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == 2);
-        if (cardState == null || currentPlayerId == null) {
-            throw new NullPointerException();
-        }
-        this.ticketsCount = ticketsCount;
-        this.cardState = cardState;
-        this.currentPlayerId = currentPlayerId;
-        this.playerState = playerState;
-        this.lastPlayer = lastPlayer;
+
+        this.ticketsCount    = ticketsCount;
+        this.cardState       = requireNonNull(cardState);
+        this.currentPlayerId = requireNonNull(currentPlayerId);
+        this.playerState     = playerState;
+        this.lastPlayer      = lastPlayer;
     }
 
     /**

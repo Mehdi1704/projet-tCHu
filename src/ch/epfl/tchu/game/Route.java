@@ -24,7 +24,7 @@ public final class Route {
     private final Color color;
 
     /**
-     *
+     * Constructeur public de route
      *
      * @throws IllegalArgumentException
      * @throws NullPointerException

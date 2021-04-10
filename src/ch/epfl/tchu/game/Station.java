@@ -4,8 +4,8 @@ import ch.epfl.tchu.Preconditions;
 
 public final class Station {
 //TODO final?
-    private int id;
-    private String name;
+    private final int id;
+    private final String name;
 
     /**
      *
