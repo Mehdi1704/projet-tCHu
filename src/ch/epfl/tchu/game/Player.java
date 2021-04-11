@@ -10,7 +10,7 @@ public interface Player {
     /**
      * représente les trois types d'actions qu'un joueur de tCHu peut effectuer durant un tour .
      */
-    public enum TurnKind {
+     enum TurnKind {
         DRAW_TICKETS,
         DRAW_CARDS,
         CLAIM_ROUTE;
@@ -28,7 +28,7 @@ public interface Player {
     /**
      * qui est appelée chaque fois qu'une information doit être communiquée au joueur au cours de la partie;
      * cette information est donnée sous la forme d'une chaîne de caractères, généralement produite par la classe Info
-     * @param info
+     * @param info information que l'on doit passé au joueur .
      */
     void receiveInfo(String info);
 
@@ -36,21 +36,21 @@ public interface Player {
      *  qui est appelée chaque fois que l'état du jeu a changé,
      *  pour informer le joueur de la composante publique de ce nouvel état,newState,
      *  ainsi que de son propre état, ownState,
-     * @param newState
-     * @param ownState
+     * @param newState nouvel état du jeu .
+     * @param ownState état du joueur .
      */
     void updateState(PublicGameState newState, PlayerState ownState);
 
     /**
      *     *qui est appelée au début de la partie pour communiquer au joueur les cinq billets qui lui ont été distribués,
-     * @param tickets
+     * @param tickets les billets qui vont être distribués en debut de partie.
      */
     void setInitialTicketChoice(SortedBag<Ticket> tickets);
-
+    //TODO pourquoi des return ? (bouchon de patron)
 
     /**
      * qui est appelée au début de la partie pour demander au joueur lesquels des billets
-     * qu'on lui a distribué initialement (via la méthode précédente) il garde,
+     * qu'on lui a distribué initialement (via la méthode précédente) il garde
      * @return
      */
     SortedBag<Ticket> chooseInitialTickets();

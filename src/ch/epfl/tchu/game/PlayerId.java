@@ -15,7 +15,7 @@ public enum PlayerId {
 
     /**
      *
-     * @return
+     * @return le joueur suivant .
      */
     public PlayerId next() {
 

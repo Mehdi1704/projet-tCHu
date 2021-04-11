@@ -9,9 +9,9 @@ public final class Station {
 
     /**
      *
-     * @throws IllegalArgumentException
-     * @param id
-     * @param name
+     * @throws IllegalArgumentException si l'identificateur de la station est négatif .
+     * @param id identificateur de la station
+     * @param name le nom de la station
      */
     public Station(int id, String name) {
         Preconditions.checkArgument(id >= 0);
@@ -21,7 +21,7 @@ public final class Station {
 
     /**
      *
-     * @return
+     * @return l'id (identification)
      */
     public int id() {
         return id;
@@ -29,7 +29,7 @@ public final class Station {
 
     /**
      *
-     * @return
+     * @return le nom
      */
     public String name() {
         return name;
@@ -37,7 +37,7 @@ public final class Station {
 
     /**
      *
-     * @return
+     * @return  le nom
      */
     @Override
     public String toString() {

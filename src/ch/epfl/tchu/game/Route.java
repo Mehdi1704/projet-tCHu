@@ -26,14 +26,14 @@ public final class Route {
     /**
      * Constructeur public de route
      *
-     * @throws IllegalArgumentException
-     * @throws NullPointerException
-     * @param id
-     * @param station1
-     * @param station2
-     * @param length
-     * @param level
-     * @param color
+     * @throws IllegalArgumentException  lève IllegalArgumentException si on a une valeur qui n'est pas attendue
+     * @throws NullPointerException leve NullPointerException si on essaye d'utiliser null alors qu'un objet est necessaire
+     * @param id identificateur de la route
+     * @param station1 station 1
+     * @param station2 station2
+     * @param length taille de la route
+     * @param level niveau de la route ( soit normal soit tunnel )
+     * @param color couleur de la route
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
 
@@ -49,42 +49,42 @@ public final class Route {
     }
 
     /**
-     * @return
+     * @return retourne l'identificateur de la route
      */
     public String id() {
         return id;
     }
 
     /**
-     * @return
+     * @return retourne la station 1 de la route
      */
     public Station station1() {
         return station1;
     }
 
     /**
-     * @return
+     * @return retourne la station 2 de la route
      */
     public Station station2() {
         return station2;
     }
 
     /**
-     * @return
+     * @return retourne la taille de la route
      */
     public int length() {
         return length;
     }
 
     /**
-     * @return
+     * @return retourne le niveau de la route
      */
     public Level level() {
         return level;
     }
 
     /**
-     * @return
+     * @return retourne la couleur de la route
      */
     public Color color() {
         return color;
@@ -93,7 +93,7 @@ public final class Route {
     /**
      * methode retournant une liste composée de station1 et station2
      *
-     * @return
+     * @return retourne une liste composée de station 1 et station 2
      */
     public List<Station> stations() {
         return (List.of(station1, station2));
@@ -102,9 +102,9 @@ public final class Route {
     /**
      * methode retournant la station opposée à celle qui est passé en argument.
      *
-     * @throws IllegalArgumentException
-     * @param station
-     * @return
+     * @throws IllegalArgumentException lève IllegalArgumentException si station n'est ni egale a station1 ou station2
+     * @param station station
+     * @return la station opposée à celle qui est passé en argument ( station )
      */
     public Station stationOpposite(Station station) {
         Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
@@ -119,7 +119,8 @@ public final class Route {
      * retourne la liste de tous les ensembles de cartes qui pourraient être joués pour pouvoir
      * s'emparer de la route (tunnel)
      *
-     * @return
+     * @return retourne la liste de tous les ensembles de cartes qui pourraient être joués
+     * pour pouvoir s'emparer de la route (tunnel)
      */
     //TODO optimiser aved des lambdas
     public List<SortedBag<Card>> possibleClaimCards() {
@@ -161,10 +162,12 @@ public final class Route {
     /**
      * retourne le nombre de carte additionnel à jouer pour pouvoir s'emparer de la route(tunnel)
      *
-     * @throws IllegalArgumentException
-     * @param claimCards
-     * @param drawnCards
-     * @return
+     * @throws IllegalArgumentException lève IllegalArgumentException si le nombre de cartes tirées
+     * de la pioches est différent de 3, et si la route n'est pas un tunnel
+     *
+     * @param claimCards cartes qu'on va utiliser pour s'emparer de la route .
+     * @param drawnCards cartes tirées de la pioche .(permettant de les comparer a claimCards )
+     * @return le nombre de carte additionnel à jouer pour pouvoir s'emparer de la route(tunnel)
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((drawnCards.size() == ADDITIONAL_TUNNEL_CARDS) && level.equals(Level.UNDERGROUND));
@@ -181,7 +184,7 @@ public final class Route {
     /**
      * retourne le nombre de points de construction associé a la longueur de la route .
      *
-     * @return
+     * @return retourne le nombre de points de construction associé a la longueur de la route .
      */
     public int claimPoints() {
         return (Constants.ROUTE_CLAIM_POINTS.get(this.length));

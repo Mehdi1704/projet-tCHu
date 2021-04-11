@@ -29,8 +29,8 @@ public class PlayerState extends PublicPlayerState {
      * Retourne l'état initial d'un joueur auquel les cartes initiales données ont été distribuées
      *
      * @throws IllegalArgumentException
-     * @param initialCards
-     * @return
+     * @param initialCards les cartes initiales .
+     * @return nouvel état de PlayerState auquel les cartes initiales données ont été distribuées au joueur .
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
         Preconditions.checkArgument(initialCards.size() == INITIAL_CARDS_COUNT);
@@ -40,7 +40,7 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne les billets du joueur
      *
-     * @return
+     * @return les billets du joueur
      */
     public SortedBag<Ticket> tickets() {
         return tickets;
@@ -50,8 +50,8 @@ public class PlayerState extends PublicPlayerState {
      * Retourne un état identique au récepteur,
      * si ce n'est que le joueur possède en plus les billets donnés
      *
-     * @param newTickets
-     * @return
+     * @param newTickets nouveaux billets à ajouter
+     * @return nouvel état de PlayerState oû le joueur possède en plus newTickets .
      */
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
         return new PlayerState(this.tickets.union(newTickets), this.cards, this.routes);
@@ -60,7 +60,7 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne les cartes wagon/locomotive du joueur
      *
-     * @return
+     * @return les cartes wagon/locomotive du joueur
      */
     public SortedBag<Card> cards() {
         return cards;
@@ -70,8 +70,8 @@ public class PlayerState extends PublicPlayerState {
      * Retourne un état identique au récepteur,
      * si ce n'est que le joueur possède en plus la carte donnée
      *
-     * @param card
-     * @return
+     * @param card carte à ajouter au joueur
+     * @return nouvel état de playerState dans lequel on ajoute card .
      */
     public PlayerState withAddedCard(Card card) {
         SortedBag<Card> newCard = SortedBag.of(card);
@@ -82,8 +82,8 @@ public class PlayerState extends PublicPlayerState {
      * Retourne un état identique au récepteur,
      * si ce n'est que le joueur possède en plus les cartes données
      *
-     * @param additionalCards
-     * @return
+     * @param additionalCards cartes à ajouter .
+     * @return nouvel état de playerState dans lequel on ajoute additionalCards
      */
     public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
         return new PlayerState(this.tickets, this.cards.union(additionalCards), this.routes);
@@ -92,8 +92,8 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne vrai si le joueur peut s'emparer de la route donnée
      *
-     * @param route
-     * @return
+     * @param route route qu'on souhaite capturer
+     * @return vrai si on peut la capturer .
      */
     public boolean canClaimRoute(Route route) {
         return route.length() <= carCount() && !possibleClaimCards(route).isEmpty();
@@ -104,8 +104,9 @@ public class PlayerState extends PublicPlayerState {
      * pourrait utiliser pour prendre possession de la route donnée
      *
      * @throws IllegalArgumentException
-     * @param route
-     * @return
+     * @param route route qu'on souhaite capturer
+     * @return la liste de tous les ensembles de cartes que le joueur
+     *   pourrait utiliser pour prendre possession de la route
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         Preconditions.checkArgument(route.length() <= carCount());
@@ -123,11 +124,11 @@ public class PlayerState extends PublicPlayerState {
      * pourrait utiliser pour s'emparer d'un tunnel,
      * trié par ordre croissant du nombre de cartes locomotives
      *
-     * @throws IllegalArgumentException
-     * @param additionalCardsCount
-     * @param initialCards
-     * @param drawnCards
-     * @return
+     *  @throws IllegalArgumentException
+     * @param additionalCardsCount nombre de carte Additionnelles
+     * @param initialCards SortedBag des cartes initiales
+     * @param drawnCards SortedBag des cartes piochées
+     * @return liste de tous les ensembles de cartes que le joueur pourrait utiliser pour s'emparer d'un tunnel.
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount,
                                                          SortedBag<Card> initialCards,
@@ -158,9 +159,9 @@ public class PlayerState extends PublicPlayerState {
      * Retourne un état identique au récepteur,
      * si ce n'est que le joueur s'est de plus emparé de la route donnée au moyen des cartes données
      *
-     * @param route
-     * @param claimCards
-     * @return
+     * @param route qui a été emparer
+     * @param claimCards cartes utilisées pour la carpure de la route.
+     * @return un nouvel état de PlayerState , ou le joueur a pris possession de route au moyen de claimCards .
      */
     //TODO Vérifier que les cartes sont en possession du joueur, ne pas le faire pour l'instant
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
@@ -172,7 +173,7 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne le nombre de points obtenus par le joueur grâce à ses billets
      *
-     * @return
+     * @return nombre de points obtenus par le joueur grâce à ses billets
      */
     //TODO optimiser?
     public int ticketPoints() {
@@ -197,7 +198,7 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne la totalité des points obtenus par le joueur à la fin de la partie
      *
-     * @return
+     * @return la totalité des points du joueur à la fin de la partie(sans le bonus)
      */
     public int finalPoints() {
         return claimPoints() + ticketPoints();

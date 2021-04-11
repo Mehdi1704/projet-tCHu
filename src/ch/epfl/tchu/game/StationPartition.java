@@ -9,8 +9,7 @@ public final class StationPartition implements StationConnectivity {
 
 
     /**
-     *
-     * @param tabOfLinks
+     * @param tabOfLinks tableau d'entier represantant les lien entre les stations
      */
     private StationPartition(int[] tabOfLinks) {
 
@@ -19,9 +18,9 @@ public final class StationPartition implements StationConnectivity {
 
     /**
      *
-     * @param s1
-     * @param s2
-     * @return
+     * @param s1 station 1
+     * @param s2 station 2
+     * @return retourne vrai si la station 1 et la station 2 sont reliées
      */
     @Override
     public boolean connected(Station s1, Station s2) {
@@ -34,7 +33,7 @@ public final class StationPartition implements StationConnectivity {
     }
 
     /**
-     *
+     * builder permettant de construire  le tableau des liens entres les différentes stations /gares .
      */
     public static final class Builder {
 
@@ -42,9 +41,9 @@ public final class StationPartition implements StationConnectivity {
         private final int[] tabBuilderOfPartition;
 
         /**
-         *
-         * @throws IllegalArgumentException
-         * @param stationCount
+         * initialisation du tableau , chaque sation est son propre représentant .
+         * @throws IllegalArgumentException léve IllegalArgumentException si le nombre de station et négatif .
+         * @param stationCount nombres de stations
          */
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
@@ -57,10 +56,11 @@ public final class StationPartition implements StationConnectivity {
         }
 
         /**
+         * le représentant de la station 1 va être relier au représentant de la station 2 .
          *
-         * @param s1
-         * @param s2
-         * @return
+         * @param s1 station 1
+         * @param s2 station 2
+         * @return retourne un tableau oû on connecte la station 1 et la station 2 .
          */
         public Builder connect(Station s1, Station s2) {
             tabBuilderOfPartition[representative(s1.id())] = representative(s2.id());
@@ -69,7 +69,9 @@ public final class StationPartition implements StationConnectivity {
 
         /**
          *
-         * @return
+         * construit un tableau "applatie" des représantant le lien entre chaque station ,via leur représentant .
+         *
+         * @return retourne un tableau "applatie" des représantant de chaque gare/station .
          */
         public StationPartition build() {
             for (int i = 0; i < tabBuilderOfPartition.length; i++) {
@@ -79,9 +81,9 @@ public final class StationPartition implements StationConnectivity {
         }
 
         /**
-         *
-         * @param stationId
-         * @return
+         * methode auxiliaire permettant d'associer a chaque station , la satation qui la représente
+         * @param stationId identificateur de la station
+         * @return retourne l'identificateur de la station passée en paramètre
          */
         private int representative(int stationId) {
             int n = stationId;

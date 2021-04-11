@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.lang.reflect.Array;
+
 import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;//4
@@ -18,11 +18,11 @@ public class GameState extends PublicGameState {
     private static final int NUMBER_OF_PLAYER = 2;
 
     /**
-     * @param ticket
-     * @param cardState
-     * @param currentPlayerId
-     * @param playerState
-     * @param lastPlayer
+     * @param ticket les billets du jeu  .
+     * @param cardState l'état des cartes du jeu .
+     * @param currentPlayerId le joueur actuel .
+     * @param playerState l'état du joueur .
+     * @param lastPlayer le dernier joueur .
      */
     private GameState(Deck<Ticket> ticket, CardState cardState, PlayerId currentPlayerId,
                       Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
@@ -38,12 +38,12 @@ public class GameState extends PublicGameState {
      * contient : tickets , et la pioche des cartes contient les cartes,sauf les 8 premieres
      * distribuées aux joueurs
      * <p>
-     * lespioches sont mélangées ,
+     * les pioches sont mélangées ,
      * on choisi au hasard l'identité du premier joueur.
      *
-     * @param tickets
-     * @param rng
-     * @return
+     * @param tickets les billets du jeu .
+     * @param rng variable permettant le caractère aléatoire de la selection du joueur et de la manière de mélanger .
+     * @return un nouvel état de gameState (l'initialisation de la partie)
      */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
         Map<PlayerId, PlayerState> playerState = new EnumMap<>(PlayerId.class);
@@ -66,8 +66,8 @@ public class GameState extends PublicGameState {
     /**
      * methode qui retourne les count billets du sommet de la pioche.
      *
-     * @param count
-     * @return
+     * @param count nombre de billets auxquels on désire appliquer la méthode.
+     * @return les count billets du sommet de la pioche .
      */
     public SortedBag<Ticket> topTickets(int count) {
         Preconditions.checkArgument(0 <= count && count <= ticket.size());
@@ -77,8 +77,8 @@ public class GameState extends PublicGameState {
     /**
      * Methode qui retourne un état identique au récepteur, mais sans les count billets du sommet de la pioche.
      *
-     * @param count
-     * @return
+     * @param count nombre de billets auxquels on désire appliquer la méthode.
+     * @return un nouvel état de gameState oû on a enlevé count billets du sommet de la pioche .
      */
     public GameState withoutTopTickets(int count) {
         Preconditions.checkArgument(0 <= count && count <= ticket.size());
@@ -92,7 +92,7 @@ public class GameState extends PublicGameState {
     /**
      * Retourne la carte au sommet de la pioche
      *
-     * @return
+     * @return carte au sommet de la pioche .
      */
     public Card topCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
@@ -102,7 +102,7 @@ public class GameState extends PublicGameState {
     /**
      * Retourne un état identique au récepteur mais sans la carte au sommet de la pioche
      *
-     * @return
+     * @return un nouvel état de gameState mais sans la carte au sommet de la pioche
      */
     public GameState withoutTopCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
@@ -117,8 +117,8 @@ public class GameState extends PublicGameState {
     /**
      * Retourne un état identique au récepteur mais avec les cartes données ajoutées à la défausse
      *
-     * @param discardedCards
-     * @return
+     * @param discardedCards cartes à ajouter à la défausse.
+     * @return un nouvel état de gameState mais avec les cartes données ajoutées à la défausse
      */
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards) {
         return new GameState(ticket,
@@ -132,8 +132,8 @@ public class GameState extends PublicGameState {
      * Retourne un état identique au récepteur sauf si la pioche de cartes est vide,
      * dans ce cas elle est recréée (la pioche) à partir de la défausse
      *
-     * @param rng
-     * @return
+     * @param rng variable permettant le caractère aléatoire
+     * @return un nouvel état de gameState ou la pioche est recréée à partir de la défausse si c'est nécessaire
      */
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
         if (cardState.isDeckEmpty())
@@ -148,8 +148,8 @@ public class GameState extends PublicGameState {
     /**
      * Retourne l'état complet du joueur d'identité donnée, et pas seulement sa partie publique
      *
-     * @param playerId
-     * @return
+     * @param playerId identité du joueur
+     * @return l'état du joueur (playerID)
      */
     @Override
     public PlayerState playerState(PlayerId playerId) {
@@ -159,7 +159,7 @@ public class GameState extends PublicGameState {
     /**
      * Retourne l'état complet du joueur courant, et pas seulement sa partie publique
      *
-     * @return
+     * @return état complet du joueur courant
      */
     @Override
     public PlayerState currentPlayerState() {
@@ -170,9 +170,9 @@ public class GameState extends PublicGameState {
      * Retourne un état identique au récepteur mais dans lequel
      * les billets donnés ont été ajoutés à la main du joueur donné
      *
-     * @param playerId
-     * @param chosenTickets
-     * @return
+     * @param playerId  identité du joueur
+     * @param chosenTickets les billets choisis
+     * @return un nouvel état gameState dans lequel les chosenTickets ont été ajoutés à la main de playerId.
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(playerState.get(playerId).tickets().isEmpty());
@@ -190,9 +190,9 @@ public class GameState extends PublicGameState {
      * Retourne un état identique au récepteur, mais dans lequel le joueur courant a tiré les billets drawnTickets
      * du sommet de la pioche, et choisi de garder ceux contenus dans chosenTicket
      *
-     * @param drawnTickets
-     * @param chosenTickets
-     * @return
+     * @param drawnTickets les billets tirés
+     * @param chosenTickets les billets choisis
+     * @return un nouvel état de gameState dans lequel le joueur a choisi de garder chosenTicket parmi drawnTickets
      */
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
@@ -211,8 +211,10 @@ public class GameState extends PublicGameState {
      * Retourne un état identique au récepteur si ce n'est que la carte face retournée à l'emplacement donné a été placée
      * dans la main du joueur courant, et remplacée par celle au sommet de la pioche
      *
-     * @param slot
-     * @return
+     * @param slot index
+     * @return un nouvel état de gameState ou la carte face visible à l'index donné est placée chez le joueur ,
+     * tout en étant remplacée par celle au sommet de la pioche
+     *
      */
     public GameState withDrawnFaceUpCard(int slot) {
         Preconditions.checkArgument(canDrawCards());
@@ -231,7 +233,7 @@ public class GameState extends PublicGameState {
      * Retourne un état identique au récepteur si ce n'est que la carte du sommet
      * de la pioche a été placée dans la main du joueur courant
      *
-     * @return
+     * @return un nouvel état de gamestate ou la carte du sommet de la pioche a été placée dans la main du joueur courant
      */
     public GameState withBlindlyDrawnCard() {
         Preconditions.checkArgument(canDrawCards());
@@ -289,7 +291,8 @@ public class GameState extends PublicGameState {
      * courant actuel; de plus, si lastTurnBegins retourne vrai, le joueur
      * courant actuel devient le dernier joueur
      *
-     * @return
+     * @return un nouvel état de gameState dans lequel le joueur courant est celui qui suit le joueur
+     *     courant actuel.
      */
     public GameState forNextTurn() {
         PlayerId lastPlayer = lastPlayer();
