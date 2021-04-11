@@ -13,7 +13,7 @@ public final class Ticket implements Comparable<Ticket> {
     private final String text;
 
     /**
-     * constructeur pricipale
+     * constructeur pricipal
      *
      * @throws IllegalArgumentException
      * @param trips

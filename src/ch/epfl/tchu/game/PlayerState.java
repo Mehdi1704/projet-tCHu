@@ -28,7 +28,7 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne l'état initial d'un joueur auquel les cartes initiales données ont été distribuées
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException si on a pas le bon nombre de cartes initiales
      * @param initialCards les cartes initiales .
      * @return nouvel état de PlayerState auquel les cartes initiales données ont été distribuées au joueur .
      */
@@ -103,7 +103,7 @@ public class PlayerState extends PublicPlayerState {
      * Retourne la liste de tous les ensembles de cartes que le joueur
      * pourrait utiliser pour prendre possession de la route donnée
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException si la longueur de la route depasse le nombre de wagons du joueur
      * @param route route qu'on souhaite capturer
      * @return la liste de tous les ensembles de cartes que le joueur
      *   pourrait utiliser pour prendre possession de la route
@@ -124,7 +124,9 @@ public class PlayerState extends PublicPlayerState {
      * pourrait utiliser pour s'emparer d'un tunnel,
      * trié par ordre croissant du nombre de cartes locomotives
      *
-     *  @throws IllegalArgumentException
+     * @throws IllegalArgumentException si le nombre de cartes additionnelles n'est pas compris entre 1 et 3 (inclus),
+     *  si l'ensemble des cartes initiales est vide ou contient plus de 2 types de cartes différents,
+     *  ou si l'ensemble des cartes tirées ne contient pas exactement 3 cartes,
      * @param additionalCardsCount nombre de carte Additionnelles
      * @param initialCards SortedBag des cartes initiales
      * @param drawnCards SortedBag des cartes piochées
@@ -163,7 +165,6 @@ public class PlayerState extends PublicPlayerState {
      * @param claimCards cartes utilisées pour la carpure de la route.
      * @return un nouvel état de PlayerState , ou le joueur a pris possession de route au moyen de claimCards .
      */
-    //TODO Vérifier que les cartes sont en possession du joueur, ne pas le faire pour l'instant
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
         List<Route> newRoutes = new ArrayList<>(routes);
         newRoutes.add(route);

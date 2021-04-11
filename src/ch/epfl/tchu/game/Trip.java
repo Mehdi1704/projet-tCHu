@@ -15,8 +15,8 @@ public final class Trip {
 
     /**
      *
-     * @param from
-     * @param to
+     * @param from station de depart
+     * @param to station d'arrivée
      * @param points
      */
     public Trip(Station from, Station to, int points) {
@@ -33,6 +33,7 @@ public final class Trip {
      * @param from
      * @param to
      * @param points
+     * @throws IllegalArgumentException
      * @return
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points) {
@@ -47,16 +48,18 @@ public final class Trip {
     }
 
     /**
+     * Getter de la station de depart
      *
-     * @return
+     * @return station de depart
      */
     public Station from() {
         return this.from;
     }
 
     /**
+     * Getter de la station d'arrivée
      *
-     * @return
+     * @return station d'arrivée
      */
     public Station to() {
         return to;

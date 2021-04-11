@@ -16,6 +16,7 @@ public class GameState extends PublicGameState {
     private final CardState cardState;
     private final Map<PlayerId, PlayerState> playerState;
     private static final int NUMBER_OF_PLAYER = 2;
+    private static final int MINIMAL_CAR_COUNT = 2;
 
     /**
      * @param ticket les billets du jeu  .
@@ -281,8 +282,7 @@ public class GameState extends PublicGameState {
      * @return booleen
      */
     public boolean lastTurnBegins() {
-        //TODO carcount constante
-        return ((lastPlayer() == null) && (playerState.get(currentPlayerId()).carCount() <= 2));
+        return ((lastPlayer() == null) && (playerState.get(currentPlayerId()).carCount() <= MINIMAL_CAR_COUNT));
     }
 
     /**

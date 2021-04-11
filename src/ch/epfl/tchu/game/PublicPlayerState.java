@@ -15,12 +15,12 @@ public class PublicPlayerState {
     private final int claimPoints;
 
     /**
+     * Constructeur puvlic d'un état de joueur
      *
-     *
-     * @throws IllegalArgumentException
-     * @param ticketCount
-     * @param cardCount
-     * @param routes
+     * @throws IllegalArgumentException si le nombre de billets ou de cartes est négatif
+     * @param ticketCount nombre de tickets du joueur
+     * @param cardCount nombre de wagons du joueur
+     * @param routes liste des routes du joueur
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
@@ -39,7 +39,8 @@ public class PublicPlayerState {
 
     /**
      * Retourne le nombre de billets que possède le joueur
-     * @return
+     *
+     * @return billets du joueur
      */
     public int ticketCount() {
         return ticketCount;
@@ -47,7 +48,8 @@ public class PublicPlayerState {
 
     /**
      * Retourne le nombre de cartes que possède le joueur
-     * @return
+     *
+     * @return cartes du joueur
      */
     public int cardCount() {
         return cardCount;
@@ -55,7 +57,8 @@ public class PublicPlayerState {
 
     /**
      * Retourne les routes dont le joueur s'est emparé
-     * @return
+     *
+     * @return liste des routes du joueur
      */
     public List<Route> routes() {
         return routes;
@@ -63,7 +66,8 @@ public class PublicPlayerState {
 
     /**
      * Retourne le nombre de wagons que possède le joueur
-     * @return
+     *
+     * @return nombre de wagons
      */
     public int carCount() {
         return carCount;
@@ -71,7 +75,8 @@ public class PublicPlayerState {
 
     /**
      * Retourne le nombre de points de construction obtenus par le joueur
-     * @return
+     *
+     * @return points de construction
      */
     public int claimPoints() {
         return claimPoints;

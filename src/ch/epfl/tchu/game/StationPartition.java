@@ -17,6 +17,7 @@ public final class StationPartition implements StationConnectivity {
     }
 
     /**
+     * Redefinition
      *
      * @param s1 station 1
      * @param s2 station 2
@@ -42,8 +43,9 @@ public final class StationPartition implements StationConnectivity {
 
         /**
          * initialisation du tableau , chaque sation est son propre représentant .
-         * @throws IllegalArgumentException léve IllegalArgumentException si le nombre de station et négatif .
+         *
          * @param stationCount nombres de stations
+         * @throws IllegalArgumentException léve IllegalArgumentException si le nombre de station et négatif .
          */
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
@@ -68,8 +70,7 @@ public final class StationPartition implements StationConnectivity {
         }
 
         /**
-         *
-         * construit un tableau "applatie" des représantant le lien entre chaque station ,via leur représentant .
+         * construit un tableau "aplati" des représantant le lien entre chaque station ,via leur représentant .
          *
          * @return retourne un tableau "applatie" des représantant de chaque gare/station .
          */
@@ -82,6 +83,7 @@ public final class StationPartition implements StationConnectivity {
 
         /**
          * methode auxiliaire permettant d'associer a chaque station , la satation qui la représente
+         *
          * @param stationId identificateur de la station
          * @return retourne l'identificateur de la station passée en paramètre
          */

@@ -113,7 +113,6 @@ public final class Trail {
      */
     @Override
     public String toString() {
-        //TODO ajouter les points intermédiaires
         ArrayList<String> stationNames = new ArrayList<>();
         Station currStation = station1;
         stationNames.add(currStation.name());

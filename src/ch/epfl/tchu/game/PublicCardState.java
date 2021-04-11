@@ -36,27 +36,27 @@ public class PublicCardState {
      * methode retournant le nombre total de carte face visible , des cartes se trouvant dans la pioche
      * ainsi que la defausse .
      *
-     * @return
+     * @return nombre total de cartes en jeu
      */
     public int totalSize() {
         return (Constants.FACE_UP_CARDS_COUNT + deckSize + discardsSize);
     }
 
     /**
-     * retourne une liste des cartes face visible .
+     * getter de la liste des cartes face visible .
      *
-     * @return
+     * @return liste des cartes face visible
      */
     public List<Card> faceUpCards() {
         return (faceUpCards);
     }
 
     /**
-     * methode retourne la carte face visible se trouvant à l'index slot.*
+     * methode retourne la carte face visible se trouvant à l'index slot.
      *
-     * @throws IndexOutOfBoundsException
-     * @param slot
-     * @return
+     * @throws IndexOutOfBoundsException si l'index n'est pas compris entre 0 et le nombre de cartes visibles
+     * @param slot index
+     * @return la carte correspondant a la carte
      */
     public Card faceUpCard(int slot) {
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
@@ -66,7 +66,7 @@ public class PublicCardState {
     /**
      * getter retournant le nombre de cartes de la pioche .
      *
-     * @return
+     * @return taille de la pioche
      */
     public int deckSize() {
         return deckSize;
@@ -75,7 +75,7 @@ public class PublicCardState {
     /**
      * getter retournant le nombre de cartes de la defausse .
      *
-     * @return
+     * @return taille de la defausse
      */
     public int discardsSize() {
         return discardsSize;
@@ -84,7 +84,7 @@ public class PublicCardState {
     /**
      * methode retournant vrai si le deck est vide .
      *
-     * @return
+     * @return booleen
      */
     public boolean isDeckEmpty() {
         return (deckSize == 0);

@@ -26,18 +26,19 @@ public final class Route {
     /**
      * Constructeur public de route
      *
-     * @throws IllegalArgumentException  lève IllegalArgumentException si on a une valeur qui n'est pas attendue
-     * @throws NullPointerException leve NullPointerException si on essaye d'utiliser null alors qu'un objet est necessaire
-     * @param id identificateur de la route
+     * @param id       identificateur de la route
      * @param station1 station 1
      * @param station2 station2
-     * @param length taille de la route
-     * @param level niveau de la route ( soit normal soit tunnel )
-     * @param color couleur de la route
+     * @param length   taille de la route
+     * @param level    niveau de la route ( soit normal soit tunnel )
+     * @param color    couleur de la route
+     * @throws IllegalArgumentException lève IllegalArgumentException si on a une valeur qui n'est pas attendue
+     * @throws NullPointerException     leve NullPointerException si on essaye d'utiliser null alors qu'un objet est necessaire
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
 
-        Preconditions.checkArgument((!(station1.equals(station2))) && (length >= Constants.MIN_ROUTE_LENGTH) &&
+        Preconditions.checkArgument((!(station1.equals(station2))) &&
+                (length >= Constants.MIN_ROUTE_LENGTH) &&
                 (length <= Constants.MAX_ROUTE_LENGTH));
 
         this.id       = Objects.requireNonNull(id);
@@ -102,9 +103,9 @@ public final class Route {
     /**
      * methode retournant la station opposée à celle qui est passé en argument.
      *
-     * @throws IllegalArgumentException lève IllegalArgumentException si station n'est ni egale a station1 ou station2
      * @param station station
      * @return la station opposée à celle qui est passé en argument ( station )
+     * @throws IllegalArgumentException lève IllegalArgumentException si station n'est ni egale a station1 ou station2
      */
     public Station stationOpposite(Station station) {
         Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
@@ -122,52 +123,43 @@ public final class Route {
      * @return retourne la liste de tous les ensembles de cartes qui pourraient être joués
      * pour pouvoir s'emparer de la route (tunnel)
      */
-    //TODO optimiser aved des lambdas
+    //TODO optimiser avec des lambdas
     public List<SortedBag<Card>> possibleClaimCards() {
 
-        ArrayList<SortedBag<Card>> tempListOfPossibleClaimCards = new ArrayList<>();
+        ArrayList<SortedBag<Card>> possibleClaimCards = new ArrayList<>();
 
         if (level.equals(Level.OVERGROUND)) {
             if (color != null) {
-                tempListOfPossibleClaimCards.add(SortedBag.of(length, Card.of(color)));
+                possibleClaimCards.add(SortedBag.of(length, Card.of(color)));
             } else {
-                for (Card c : Card.CARS) {
-                    tempListOfPossibleClaimCards.add(SortedBag.of(length, c));
-                }
+                Card.CARS.forEach((card) -> possibleClaimCards.add(SortedBag.of(length, card)));
             }
-
         } else {
             if (color != null) {
-                for (int i = 0; i <= length; ++i) {
-                    tempListOfPossibleClaimCards.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
-                }
+                for (int i = 0; i <= length; ++i) possibleClaimCards.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
             } else {
-
                 for (int i = 0; i <= length; ++i) {
                     if (i < length) {
-                        for (Card c : Card.CARS) {
-                            tempListOfPossibleClaimCards.add(SortedBag.of(length - i, c, i, Card.LOCOMOTIVE));
-                        }
+                        for (Card c : Card.CARS) possibleClaimCards.add(SortedBag.of(length - i, c, i, Card.LOCOMOTIVE));
                     } else {
-                        tempListOfPossibleClaimCards.add(SortedBag.of(length, Card.LOCOMOTIVE));
+                        possibleClaimCards.add(SortedBag.of(length, Card.LOCOMOTIVE));
                     }
                 }
             }
         }
 
-        return (List.copyOf(tempListOfPossibleClaimCards));
+        return (List.copyOf(possibleClaimCards));
 
     }
 
     /**
      * retourne le nombre de carte additionnel à jouer pour pouvoir s'emparer de la route(tunnel)
      *
-     * @throws IllegalArgumentException lève IllegalArgumentException si le nombre de cartes tirées
-     * de la pioches est différent de 3, et si la route n'est pas un tunnel
-     *
      * @param claimCards cartes qu'on va utiliser pour s'emparer de la route .
      * @param drawnCards cartes tirées de la pioche .(permettant de les comparer a claimCards )
      * @return le nombre de carte additionnel à jouer pour pouvoir s'emparer de la route(tunnel)
+     * @throws IllegalArgumentException lève IllegalArgumentException si le nombre de cartes tirées
+     *                                  de la pioches est différent de 3, et si la route n'est pas un tunnel
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((drawnCards.size() == ADDITIONAL_TUNNEL_CARDS) && level.equals(Level.UNDERGROUND));

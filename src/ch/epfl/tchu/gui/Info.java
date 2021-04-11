@@ -19,9 +19,9 @@ public final class Info {
     /**
      * Retourne le nom francais d'une ou plusieurs cartes de même couleur
      *
-     * @param card
-     * @param count
-     * @return
+     * @param card carte a nommer
+     * @param count nombre de cartes
+     * @return nom francais de la carte
      */
     public static String cardName(Card card, int count) {
 
@@ -52,9 +52,9 @@ public final class Info {
     /**
      * Annonce une egalité
      *
-     * @param playerNames
-     * @param points
-     * @return
+     * @param playerNames noms des joueurs
+     * @param points points des joueurs
+     * @return String "x et x sont ex æqo avec x points"
      */
     public static String draw(List<String> playerNames, int points) {
 
@@ -64,7 +64,7 @@ public final class Info {
     /**
      * Annonce le joueur qui jouera en premier
      *
-     * @return
+     * @return String "x jouera en premier"
      */
     public String willPlayFirst() {
 
@@ -74,8 +74,8 @@ public final class Info {
     /**
      * Annonce que le joueur a gardé un nombre de billets
      *
-     * @param count
-     * @return
+     * @param count nombre de tickets
+     * @return String " x a gardé x billets"
      */
     public String keptTickets(int count) {
 
@@ -85,7 +85,7 @@ public final class Info {
     /**
      * Annonce le tour d'un joueur
      *
-     * @return
+     * @return String "C'est à x de jouer"
      */
     public String canPlay() {
 
@@ -95,8 +95,8 @@ public final class Info {
     /**
      * Annonce que le joueur a tiré un nombre de billets
      *
-     * @param count
-     * @return
+     * @param count nombre de billets tirés
+     * @return String "x a tiré x billets"
      */
     public String drewTickets(int count) {
 
@@ -106,7 +106,7 @@ public final class Info {
     /**
      * Annonce qu'un joueur a tiré une carte de la pioche
      *
-     * @return
+     * @return String "x a tiré une carte de la pioche"
      */
     public String drewBlindCard() {
 
@@ -116,8 +116,8 @@ public final class Info {
     /**
      * Annonce qu'un joueur a tiré une carte visible
      *
-     * @param card
-     * @return
+     * @param card carte tirée
+     * @return String "x a tiré une carte x visible"
      */
     public String drewVisibleCard(Card card) {
 
@@ -127,9 +127,9 @@ public final class Info {
     /**
      * Annonce qu'une route a été prise au moyen de certaines cartes
      *
-     * @param route
-     * @param cards
-     * @return
+     * @param route route prise
+     * @param cards cartes utilisées
+     * @return String "x a pris possession de la route..."
      */
     public String claimedRoute(Route route, SortedBag<Card> cards) {
 
@@ -139,9 +139,9 @@ public final class Info {
     /**
      * Annonce une tentative de s'emparer d'un tunnel
      *
-     * @param route
-     * @param initialCards
-     * @return
+     * @param route route a prendre
+     * @param initialCards cartes utilisées
+     * @return String "x tente de s'emparer du tunnel..."
      */
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
 
@@ -151,9 +151,9 @@ public final class Info {
     /**
      * Annonce les cartes supplémentaires ainsi que l'existence, ou non d'un cout supplementaire
      *
-     * @param drawnCards
-     * @param additionalCost
-     * @return
+     * @param drawnCards les cartes additionnelles
+     * @param additionalCost cout de cartes a ajouter
+     * @return String "Les cartes supplémentaires sont x..."
      */
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
 
@@ -167,8 +167,8 @@ public final class Info {
     /**
      * Annonce qu'un joueur ne s'est pas emparé de la route
      *
-     * @param route
-     * @return
+     * @param route route qui n'a pas été prise
+     * @return String "x n'a pas pu (ou voulu) s'emparer de la route x"
      */
     public String didNotClaimRoute(Route route) {
 
@@ -178,8 +178,8 @@ public final class Info {
     /**
      * Annonce le dernier tour du jeu
      *
-     * @param carCount
-     * @return
+     * @param carCount nombre de wagons
+     * @return String "x n'a plus que x wagons, le dernier tour commence"
      */
     public String lastTurnBegins(int carCount) {
 
@@ -189,8 +189,8 @@ public final class Info {
     /**
      * Annonce le bonus donné au joueur ayant le plus long chemin
      *
-     * @param longestTrail
-     * @return
+     * @param longestTrail plus long chemin
+     * @return String "x reçoit un bonus de 10 points pour le plus long trajet..."
      */
     public String getsLongestTrailBonus(Trail longestTrail) {
 
@@ -201,9 +201,9 @@ public final class Info {
     /**
      * Annonce le vainqueur et donne les points des joueurs
      *
-     * @param points
-     * @param loserPoints
-     * @return
+     * @param points points du gagnant
+     * @param loserPoints points du perdant
+     * @return String "x remporte la victoire avec x points..."
      */
     public String won(int points, int loserPoints) {
 
@@ -214,8 +214,8 @@ public final class Info {
     /**
      * Retourne le nom des stations de la route séparés par le caractère demandé
      *
-     * @param route
-     * @return
+     * @param route route dont on veut le nom des stations
+     * @return station de départ et d'arrivée séparés par un tiret special
      */
     private static String routeName(Route route) {
 
@@ -227,8 +227,8 @@ public final class Info {
      * (separées de virgules et du séparateur AND pour le dernier terme)
      * representant les cartes donnéess en argument avec leur multiplicité
      *
-     * @param cards
-     * @return
+     * @param cards SortedBag de cartes à représenter en string
+     * @return String représentant les cartes ainsi que leur nombres
      */
     private static String cardsNames(SortedBag<Card> cards) {
 

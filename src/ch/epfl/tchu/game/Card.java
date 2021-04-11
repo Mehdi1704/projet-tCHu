@@ -23,7 +23,7 @@ public enum Card {
 
     /**
      *
-     * @param color
+     * @param color couleur à attribuer à la carte
      */
     Card(Color color) {
         this.color = color;

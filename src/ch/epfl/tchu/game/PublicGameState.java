@@ -20,17 +20,18 @@ public class PublicGameState {
     /**
      * Constructeur public d'un Public Game State
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException si le nombre de tickets est négatif ou
+     *  si on a un nombre de joueurs different de 2
      * @throws NullPointerException si cardState ou currentPlayerId est null
      * @param ticketsCount nombre de tickets
      * @param cardState etat de cartes
-     * @param currentPlayerId
-     * @param playerState
-     * @param lastPlayer
+     * @param currentPlayerId identité joueur qui joue actuellement
+     * @param playerState map representant les etats des joueurs
+     * @param lastPlayer identité du dernier joueur
      */
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                            Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
-        Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == 2);
+        Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == PlayerId.COUNT);
 
         this.ticketsCount    = ticketsCount;
         this.cardState       = requireNonNull(cardState);
@@ -42,7 +43,7 @@ public class PublicGameState {
     /**
      * Retourne la taille de la pioche de billets
      *
-     * @return
+     * @return taille de la pioche de billets
      */
     public int ticketsCount() {
         return ticketsCount;
@@ -51,7 +52,7 @@ public class PublicGameState {
     /**
      * Retourne vrai si la pioche n'est pas vide
      *
-     * @return
+     * @return vrai si la pioche n'est pas vide
      */
     public boolean canDrawTickets() {
         return ticketsCount != 0;
@@ -60,7 +61,7 @@ public class PublicGameState {
     /**
      * Retourne la partie publique de l'état des cartes wagon/locomotive
      *
-     * @return
+     * @return la partie publique de l'état des cartes wagon/locomotive
      */
     public PublicCardState cardState() {
         return cardState;
@@ -70,17 +71,16 @@ public class PublicGameState {
      * Retourne vrai ssi il est possible de tirer des cartes,
      * c-à-d si la pioche et la défausse contiennent entre elles au moins 5 cartes
      *
-     * @return
+     * @return booleen
      */
     public boolean canDrawCards() {
-        int totalCards = cardState.deckSize() + cardState.discardsSize();
-        return (totalCards >= INITIAL_TICKETS_COUNT);
+        return ((cardState.deckSize() + cardState.discardsSize()) >= INITIAL_TICKETS_COUNT);
     }
 
     /**
      * Retourne l'identité du joueur actuel
      *
-     * @return
+     * @return identité du joueur actuel
      */
     public PlayerId currentPlayerId() {
         return currentPlayerId;
@@ -89,8 +89,8 @@ public class PublicGameState {
     /**
      * Retourne la partie publique de l'état du joueur d'identité donnée
      *
-     * @param playerId
-     * @return
+     * @param playerId identité du joueur
+     * @return etat public du joueur donné en argument
      */
     public PublicPlayerState playerState(PlayerId playerId) {
         return playerState.get(playerId);
@@ -99,7 +99,7 @@ public class PublicGameState {
     /**
      * Retourne la partie publique de l'état du joueur courant
      *
-     * @return
+     * @return etat public du joueur courant
      */
     public PublicPlayerState currentPlayerState() {
         return playerState.get(currentPlayerId());
@@ -108,7 +108,7 @@ public class PublicGameState {
     /**
      * Retourne la totalité des routes dont l'un ou l'autre des joueurs s'est emparé
      *
-     * @return
+     * @return liste des routes des joueurs
      */
     public List<Route> claimedRoutes() {
         List<Route> newClaimedRoutes = new ArrayList<>(playerState.get(currentPlayerId).routes());
@@ -121,7 +121,7 @@ public class PublicGameState {
      * ou null si elle n'est pas encore connue
      * car le dernier tour n'a pas commencé
      *
-     * @return
+     * @return identité du joueur qui jouera en dernier si elle est connue
      */
     public PlayerId lastPlayer() {
         return lastPlayer;
