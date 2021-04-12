@@ -133,6 +133,9 @@ public final class Game {
                                 // Cartes que le joueur peut jouer
                                 List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
                                         .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
+
+                                //_____________________________________________________________
+
                                 if (playableCards.isEmpty()){
                                     receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
                                 }else{
@@ -142,16 +145,21 @@ public final class Game {
                                     gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
                                     receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
                                 }
-                                /*
+
+
+                                //____________________________________________________________
+/*
                                 // Cartes que le joueur va jouer
-                                SortedBag<Card> playedAddCards = null; //= currentPlayer.chooseAdditionalCards(playableCards);
+                                SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
                                 if (playedAddCards==null) {    // Tentative échouée
                                     receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
                                 } else {                            // Tentative réussie
                                     // Ajout de la route et retrait des cartes
                                     gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
                                     receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
-                                }*/
+                                }
+*/
+                                //____________________________________________________________
                             }
                             break;
                     }
