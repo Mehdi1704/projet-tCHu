@@ -134,7 +134,7 @@ public final class Game {
                                 List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
                                         .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
                                 // Cartes que le joueur va jouer
-                                SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
+                                SortedBag<Card> playedAddCards = null; //= currentPlayer.chooseAdditionalCards(playableCards);
                                 if (playedAddCards==null) {    // Tentative échouée
                                     receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
                                 } else {                            // Tentative réussie
