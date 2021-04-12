@@ -133,6 +133,16 @@ public final class Game {
                                 // Cartes que le joueur peut jouer
                                 List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
                                         .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
+                                if (playableCards.isEmpty()){
+                                    receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
+                                }else{
+                                    // Cartes que le joueur va jouer
+                                    SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
+                                    // Ajout de la route et retrait des cartes
+                                    gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
+                                    receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
+                                }
+                                /*
                                 // Cartes que le joueur va jouer
                                 SortedBag<Card> playedAddCards = null; //= currentPlayer.chooseAdditionalCards(playableCards);
                                 if (playedAddCards==null) {    // Tentative échouée
@@ -141,7 +151,7 @@ public final class Game {
                                     // Ajout de la route et retrait des cartes
                                     gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
                                     receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
-                                }
+                                }*/
                             }
                             break;
                     }
