@@ -6,10 +6,10 @@ public final class Preconditions {
 
     /**
      *
-     * @param shouldBeTrue
+     * @param shouldBeTrue paramètre devant être vrai
      */
         public static void checkArgument ( boolean shouldBeTrue ){
-            if (shouldBeTrue==false) {
+            if (!shouldBeTrue) {
                 throw new IllegalArgumentException();
 
         }

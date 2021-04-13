@@ -15,8 +15,8 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * constructeur pricipal
      *
-     * @throws IllegalArgumentException
-     * @param trips
+     * @throws IllegalArgumentException lève IllegalArgumentException si la liste de trajet est vide.
+     * @param trips liste de trajet
      */
     public Ticket(List<Trip> trips) {
         Preconditions.checkArgument(!(trips.isEmpty()));
@@ -30,9 +30,9 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * @param from
-     * @param to
-     * @param points
+     * @param from station de départ
+     * @param to station d'arrivée
+     * @param points point correspondant
      */
     public Ticket(Station from, Station to, int points) {
         this(List.of(new Trip(from, to, points)));
@@ -40,8 +40,8 @@ public final class Ticket implements Comparable<Ticket> {
 
 
     /**
-     * @param trips
-     * @return
+     * @param trips liste des trajets
+     * @return une représentation textuelle du billet
      */
     //TODO optimiser
     private static String computeText(List<Trip> trips) {
@@ -58,15 +58,15 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * @return
+     * @return retourne la représentation textuelle du billet
      */
     public String text() {
         return (this.text);
     }
 
     /**
-     * @param connectivity
-     * @return
+     * @param connectivity paramettre permettant de savoir si deux stations sont connectées
+     * @return le nombre de points correspondant à la connectivité donnée
      */
     public int points(StationConnectivity connectivity) {
         if (trips.size() == 1) {
@@ -92,7 +92,7 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * @return
+     * @return le texte
      */
     @Override
     public String toString() {
@@ -100,8 +100,13 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * @param that
-     * @return
+     *
+     * qui compare le billet auquel on l'applique (this) à celui passé en argument (that)
+     * par ordre alphabétique de leur représentation textuelle,
+     *
+     * @param that billet qu'on veut comparer à this .
+     * @return un entier strictement négatif si this est strictement plus petit que that, un entier strictement
+     *       positif si this est strictement plus grand que that, et zéro si les deux sont égaux.
      */
     @Override
     public int compareTo(Ticket that) {

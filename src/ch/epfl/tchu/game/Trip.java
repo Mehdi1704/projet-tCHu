@@ -17,7 +17,7 @@ public final class Trip {
      *
      * @param from station de depart
      * @param to station d'arrivée
-     * @param points
+     * @param points point correspondant au trajet .
      */
     public Trip(Station from, Station to, int points) {
 
@@ -30,11 +30,13 @@ public final class Trip {
 
     /**
      *
-     * @param from
-     * @param to
-     * @param points
-     * @throws IllegalArgumentException
-     * @return
+     * @param from  liste des stations de depart
+     * @param to liste des stations d'arrivée
+     * @param points point correspondant au trajet.
+     * @throws IllegalArgumentException lève IllegalArgumentException si la liste des stations de départ ou d'arrivée sont vide ou
+     * si le nombre de points n'est pas strictement positif. .
+     * @return retourne la liste de tous les trajets possibles allant d'une des gares de la première liste (from)
+     * à l'une des gares de la seconde liste
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points) {
         ArrayList<Trip> trips = new ArrayList<>();
@@ -67,7 +69,7 @@ public final class Trip {
 
     /**
      *
-     * @return
+     * @return le nombre de points du trajet
      */
     public int points() {
         return points;
@@ -75,8 +77,8 @@ public final class Trip {
 
     /**
      *
-     * @param connectivity
-     * @return
+     * @param connectivity paramettre permettant de savoir si deux stations sont connectées
+     * @return le nombre de points du trajet pour la connectivité donnée.
      */
     public int points(StationConnectivity connectivity) {
 

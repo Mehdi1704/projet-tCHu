@@ -32,7 +32,7 @@ public enum Card {
 
     /**
      *
-     * @return
+     * @return la couleur du type de carte auquel on l'applique
      */
     public Color color() {
         return this.color;
@@ -40,8 +40,8 @@ public enum Card {
 
     /**
      *
-     * @param color
-     * @return
+     * @param color couleur de la carte
+     * @return retourne le type de carte wagon correspondant à la couleur donnée color.
      */
     public static Card of(Color color) {
         return Card.valueOf(color.name());
