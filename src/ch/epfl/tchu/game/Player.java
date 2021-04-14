@@ -54,13 +54,12 @@ public interface Player {
      * @param tickets les billets qui vont être distribués en debut de partie.
      */
     void setInitialTicketChoice(SortedBag<Ticket> tickets);
-    //TODO pourquoi des return ? (bouchon de patron)
 
     /**
      * qui est appelée au début de la partie pour demander au joueur lesquels des billets
      * qu'on lui a distribué initialement (via la méthode précédente) il garde
      *
-     * @return
+     * @return les billets que le joueur veut garder
      */
     SortedBag<Ticket> chooseInitialTickets();
 
@@ -68,7 +67,7 @@ public interface Player {
      * qui est appelée au début du tour d'un joueur,
      * pour savoir quel type d'action il désire effectuer durant ce tour,
      *
-     * @return
+     * @return type d'action que le joueur désire effectuer durant ce tour
      */
     TurnKind nextTurn();
 
@@ -88,7 +87,7 @@ public interface Player {
      * la valeur retourne est comprise entre 0 et 4 inclus —,
      * ou de la pioche—auquel cas la valeur retournée vaut Constants.DECK_SLOT (c-à-d -1),
      *
-     * @return
+     * @return index de la carte voulant être tirée
      */
     int drawSlot();
 
@@ -96,7 +95,7 @@ public interface Player {
      * qui est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route,
      * afin de savoir de quelle route il s'agit,
      *
-     * @return
+     * @return la route que le joueur désire s'emparer .
      */
     Route claimedRoute();
 
@@ -104,7 +103,7 @@ public interface Player {
      * qui est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route,
      * afin de savoir quelle(s) carte(s) il désire initialement utiliser pour cela,
      *
-     * @return
+     * @return les cartes que le joueur désire initialement utiliser pour tenter de s'emparer d'une route
      */
     SortedBag<Card> initialClaimCards();
 
@@ -114,7 +113,7 @@ public interface Player {
      * si le multiensemble retourné est vide,
      * cela signifie que le joueur ne désire pas (ou ne peut pas) choisir l'une de ces possibilités.
      *
-     * @return
+     * @return cartes additionelles que le joueur veut jouer .
      */
     SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
 

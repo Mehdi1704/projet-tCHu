@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * trajets du jeu
+ *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
