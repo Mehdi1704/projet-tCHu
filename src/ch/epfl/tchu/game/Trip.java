@@ -5,7 +5,12 @@ import ch.epfl.tchu.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Trip {
 
     private final Station from;

@@ -9,7 +9,12 @@ import java.util.*;
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;//4
 import static ch.epfl.tchu.game.PlayerId.*;
 
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class GameState extends PublicGameState {
 
     private final Deck<Ticket> ticket;

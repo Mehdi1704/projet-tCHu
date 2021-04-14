@@ -2,7 +2,12 @@ package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Trail {
     private final Station station1;
     private final Station station2;

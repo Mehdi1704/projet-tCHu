@@ -9,7 +9,12 @@ import java.util.List;
 
 import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class PlayerState extends PublicPlayerState {
 
     private final SortedBag<Ticket> tickets;

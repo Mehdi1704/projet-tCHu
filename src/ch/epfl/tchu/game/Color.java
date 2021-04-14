@@ -1,7 +1,12 @@
 package ch.epfl.tchu.game;
 
 import java.util.List;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public enum Color {
     BLACK,
     VIOLET,

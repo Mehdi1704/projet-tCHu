@@ -9,7 +9,12 @@ import java.util.Objects;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class CardState extends PublicCardState {
 
     private final Deck<Card> deck;

@@ -6,6 +6,12 @@ import java.util.List;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class PublicPlayerState {
 
     private final int ticketCount;

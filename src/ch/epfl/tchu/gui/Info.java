@@ -5,7 +5,12 @@ import ch.epfl.tchu.game.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Info {
 
     private final String playerName;

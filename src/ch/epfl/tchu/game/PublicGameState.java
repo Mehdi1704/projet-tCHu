@@ -9,6 +9,12 @@ import java.util.Map;
 import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
 import static java.util.Objects.requireNonNull;
 
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class PublicGameState {
 
     private final int ticketsCount;

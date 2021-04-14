@@ -8,6 +8,12 @@ import java.util.Random;
 
 import static java.util.Collections.shuffle;
 
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Deck<C extends Comparable<C>> {
 
     private final List<C> listOfCards;

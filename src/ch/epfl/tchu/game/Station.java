@@ -1,7 +1,12 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Station {
     private final int id;
     private final String name;

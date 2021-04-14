@@ -1,5 +1,10 @@
 package ch.epfl.tchu;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Preconditions {
 
     private Preconditions(){ }

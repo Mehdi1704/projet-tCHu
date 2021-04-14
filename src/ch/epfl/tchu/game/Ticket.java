@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.TreeSet;
 
 import static java.lang.Math.abs;
-
+/**
+ *
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public final class Ticket implements Comparable<Ticket> {
 //TODO constantes
     private final List<Trip> trips;
