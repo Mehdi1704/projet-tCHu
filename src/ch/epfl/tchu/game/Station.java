@@ -1,8 +1,9 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+
 /**
- *
+ * Station du plateau de jeu
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -14,17 +15,18 @@ public final class Station {
     /**
      * Constructeur public d'une station
      *
-     * @throws IllegalArgumentException si l'identificateur de la station est négatif .
-     * @param id identificateur de la station
+     * @param id   identificateur de la station
      * @param name le nom de la station
+     * @throws IllegalArgumentException si l'identificateur de la station est négatif .
      */
     public Station(int id, String name) {
         Preconditions.checkArgument(id >= 0);
-        this.id   = id;
+        this.id = id;
         this.name = name;
     }
 
     /**
+     * Getter de l'id
      *
      * @return l'id (identification)
      */
@@ -33,6 +35,7 @@ public final class Station {
     }
 
     /**
+     * Getter du nom
      *
      * @return le nom
      */
@@ -41,8 +44,9 @@ public final class Station {
     }
 
     /**
+     * Donne le nom de la station en String
      *
-     * @return  le nom
+     * @return le nom
      */
     @Override
     public String toString() {

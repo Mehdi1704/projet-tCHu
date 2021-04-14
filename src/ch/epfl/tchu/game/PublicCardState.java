@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * Etat public de cartes
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -20,12 +20,11 @@ public class PublicCardState {
     /**
      * Constructeur public permettant d'initialiser les cartes à l'etat connu
      *
+     * @param faceUpCards  les 5 cartes face visible
+     * @param deckSize     nombre de cartes de la pioche
+     * @param discardsSize nombre de cartes de la défausse
      * @throws IllegalArgumentException si il n'y a pas le nombre voulu de cartes visibles,
      *                                  si la pioche ou la défausse ont une taille négative
-     * @param faceUpCards les 5 cartes face visible
-     * @param deckSize nombre de cartes de la pioche
-     * @param discardsSize nombre de cartes de la défausse
-     *
      */
 
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize) {
@@ -33,8 +32,8 @@ public class PublicCardState {
         Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT &&
                 deckSize >= 0 &&
                 discardsSize >= 0);
-        this.faceUpCards  = List.copyOf(faceUpCards);
-        this.deckSize     = deckSize;
+        this.faceUpCards = List.copyOf(faceUpCards);
+        this.deckSize = deckSize;
         this.discardsSize = discardsSize;
     }
 
@@ -60,9 +59,9 @@ public class PublicCardState {
     /**
      * methode retourne la carte face visible se trouvant à l'index slot.
      *
-     * @throws IndexOutOfBoundsException si l'index n'est pas compris entre 0 et le nombre de cartes visibles
      * @param slot index
      * @return la carte correspondant a la carte
+     * @throws IndexOutOfBoundsException si l'index n'est pas compris entre 0 et le nombre de cartes visibles
      */
     public Card faceUpCard(int slot) {
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);

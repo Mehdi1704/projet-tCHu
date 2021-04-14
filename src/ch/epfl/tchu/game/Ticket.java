@@ -6,22 +6,23 @@ import java.util.List;
 import java.util.TreeSet;
 
 import static java.lang.Math.abs;
+
 /**
- *
+ * Ticket de jeu
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
 public final class Ticket implements Comparable<Ticket> {
-//TODO constantes
+
     private final List<Trip> trips;
     private final String text;
 
     /**
      * constructeur pricipal
      *
-     * @throws IllegalArgumentException lève IllegalArgumentException si la liste de trajet est vide.
      * @param trips liste de trajet
+     * @throws IllegalArgumentException lève IllegalArgumentException si la liste de trajet est vide.
      */
     public Ticket(List<Trip> trips) {
         Preconditions.checkArgument(!(trips.isEmpty()));
@@ -35,8 +36,8 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * @param from station de départ
-     * @param to station d'arrivée
+     * @param from   station de départ
+     * @param to     station d'arrivée
      * @param points point correspondant
      */
     public Ticket(Station from, Station to, int points) {
@@ -105,13 +106,12 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     *
      * qui compare le billet auquel on l'applique (this) à celui passé en argument (that)
      * par ordre alphabétique de leur représentation textuelle,
      *
      * @param that billet qu'on veut comparer à this .
      * @return un entier strictement négatif si this est strictement plus petit que that, un entier strictement
-     *       positif si this est strictement plus grand que that, et zéro si les deux sont égaux.
+     * positif si this est strictement plus grand que that, et zéro si les deux sont égaux.
      */
     @Override
     public int compareTo(Ticket that) {

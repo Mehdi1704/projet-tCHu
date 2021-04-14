@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Joueur d'une partie
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -16,7 +16,7 @@ public interface Player {
     /**
      * représente les trois types d'actions qu'un joueur de tCHu peut effectuer durant un tour .
      */
-     enum TurnKind {
+    enum TurnKind {
         DRAW_TICKETS,
         DRAW_CARDS,
         CLAIM_ROUTE;
@@ -25,7 +25,6 @@ public interface Player {
     }
 
     /**
-     *
      * qui est appelée au début de la partie pour communiquer au joueur sa propre identité ownId,
      * ainsi que les noms des différents joueurs, le sien inclus, qui se trouvent dans playerNames,
      */
@@ -34,21 +33,24 @@ public interface Player {
     /**
      * qui est appelée chaque fois qu'une information doit être communiquée au joueur au cours de la partie;
      * cette information est donnée sous la forme d'une chaîne de caractères, généralement produite par la classe Info
+     *
      * @param info information que l'on doit passé au joueur .
      */
     void receiveInfo(String info);
 
     /**
-     *  qui est appelée chaque fois que l'état du jeu a changé,
-     *  pour informer le joueur de la composante publique de ce nouvel état,newState,
-     *  ainsi que de son propre état, ownState,
+     * qui est appelée chaque fois que l'état du jeu a changé,
+     * pour informer le joueur de la composante publique de ce nouvel état,newState,
+     * ainsi que de son propre état, ownState,
+     *
      * @param newState nouvel état du jeu .
      * @param ownState état du joueur .
      */
     void updateState(PublicGameState newState, PlayerState ownState);
 
     /**
-     *     *qui est appelée au début de la partie pour communiquer au joueur les cinq billets qui lui ont été distribués,
+     * *qui est appelée au début de la partie pour communiquer au joueur les cinq billets qui lui ont été distribués,
+     *
      * @param tickets les billets qui vont être distribués en debut de partie.
      */
     void setInitialTicketChoice(SortedBag<Ticket> tickets);
@@ -57,13 +59,15 @@ public interface Player {
     /**
      * qui est appelée au début de la partie pour demander au joueur lesquels des billets
      * qu'on lui a distribué initialement (via la méthode précédente) il garde
+     *
      * @return
      */
     SortedBag<Ticket> chooseInitialTickets();
 
     /**
      * qui est appelée au début du tour d'un joueur,
-     *  pour savoir quel type d'action il désire effectuer durant ce tour,
+     * pour savoir quel type d'action il désire effectuer durant ce tour,
+     *
      * @return
      */
     TurnKind nextTurn();
@@ -79,24 +83,27 @@ public interface Player {
     SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);
 
     /**
-     *qui est appelée lorsque le joueur a décidé de tirer des cartes wagon/locomotive, afin de savoir
-     *      *  d'où il désire les tirer: d'un des emplacements contenant une carte face visible—auquel cas
-     *      *  la valeur retourne est comprise entre 0 et 4 inclus —,
-     *      *  ou de la pioche—auquel cas la valeur retournée vaut Constants.DECK_SLOT (c-à-d -1),
+     * qui est appelée lorsque le joueur a décidé de tirer des cartes wagon/locomotive, afin de savoir
+     * d'où il désire les tirer: d'un des emplacements contenant une carte face visible—auquel cas
+     * la valeur retourne est comprise entre 0 et 4 inclus —,
+     * ou de la pioche—auquel cas la valeur retournée vaut Constants.DECK_SLOT (c-à-d -1),
+     *
      * @return
      */
     int drawSlot();
 
     /**
-     *qui est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route,
-     *      *  afin de savoir de quelle route il s'agit,
+     * qui est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route,
+     * afin de savoir de quelle route il s'agit,
+     *
      * @return
      */
     Route claimedRoute();
 
     /**
-     *qui est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route,
-     *  afin de savoir quelle(s) carte(s) il désire initialement utiliser pour cela,
+     * qui est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route,
+     * afin de savoir quelle(s) carte(s) il désire initialement utiliser pour cela,
+     *
      * @return
      */
     SortedBag<Card> initialClaimCards();
@@ -106,6 +113,7 @@ public interface Player {
      * afin de savoir quelle(s) carte(s) il désire utiliser pour cela, les possibilités lui étant passées en argument;
      * si le multiensemble retourné est vide,
      * cela signifie que le joueur ne désire pas (ou ne peut pas) choisir l'une de ces possibilités.
+     *
      * @return
      */
     SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);

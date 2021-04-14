@@ -7,7 +7,7 @@ import java.util.List;
 import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
 /**
- *
+ * Etat public d'un joueur
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -21,12 +21,12 @@ public class PublicPlayerState {
     private final int claimPoints;
 
     /**
-     * Constructeur puvlic d'un état de joueur
+     * Constructeur public d'un état de joueur
      *
-     * @throws IllegalArgumentException si le nombre de billets ou de cartes est négatif
      * @param ticketCount nombre de tickets du joueur
-     * @param cardCount nombre de wagons du joueur
-     * @param routes liste des routes du joueur
+     * @param cardCount   nombre de wagons du joueur
+     * @param routes      liste des routes du joueur
+     * @throws IllegalArgumentException si le nombre de billets ou de cartes est négatif
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
@@ -39,7 +39,7 @@ public class PublicPlayerState {
             totalCars -= r.length();
             totalPoints += r.claimPoints();
         }
-        this.carCount    = totalCars;
+        this.carCount = totalCars;
         this.claimPoints = totalPoints;
     }
 

@@ -1,8 +1,9 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+
 /**
- *
+ * Connecteur de stations pour calculer les points
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -80,9 +81,8 @@ public final class StationPartition implements StationConnectivity {
          * @return retourne un tableau "applatie" des représantant de chaque gare/station .
          */
         public StationPartition build() {
-            for (int i = 0; i < tabBuilderOfPartition.length; i++) {
+            for (int i = 0; i < tabBuilderOfPartition.length; i++)
                 tabBuilderOfPartition[i] = representative(i);
-            }
             return new StationPartition(tabBuilderOfPartition);
         }
 

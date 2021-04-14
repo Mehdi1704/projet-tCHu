@@ -9,7 +9,7 @@ import java.util.Random;
 import static java.util.Collections.shuffle;
 
 /**
- *
+ * Tas de cartes, tickets
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -17,7 +17,6 @@ import static java.util.Collections.shuffle;
 public final class Deck<C extends Comparable<C>> {
 
     private final List<C> listOfCards;
-    private final int ZERO_COUNT = 0;
 
     /**
      * Constructeur privé initialisant notre liste de carte.
@@ -32,7 +31,7 @@ public final class Deck<C extends Comparable<C>> {
      * Méthode de construction retournant un deck de cartes qui ont été mélangés
      *
      * @param cards Cartes à melanger
-     * @param rng variable aléatoire
+     * @param rng   variable aléatoire
      * @return Un deck melangé
      */
     public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
@@ -66,7 +65,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public C topCard() {
         Preconditions.checkArgument(!listOfCards.isEmpty());
-        return (listOfCards.get(ZERO_COUNT));
+        return (listOfCards.get(0));
     }
 
     /**
@@ -83,12 +82,12 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * methode qui retourne un multiensemble contenant les count cartes se trouvant au sommet du tas
      *
-     * @throws IllegalArgumentException si le count n'est pas entre zero et la taille du tas
      * @param count nombre de cartes à prélever
      * @return Un SortedBag composé des count cartes du sommet du tas
+     * @throws IllegalArgumentException si le count n'est pas entre zero et la taille du tas
      */
     public SortedBag<C> topCards(int count) {
-        Preconditions.checkArgument(ZERO_COUNT <= count && count <= listOfCards.size());
+        Preconditions.checkArgument(0 <= count && count <= listOfCards.size());
         SortedBag.Builder<C> topCards = new SortedBag.Builder<>();
         for (int i = 0; i < count; i++) topCards.add(listOfCards.get(i));
         return topCards.build();
@@ -98,12 +97,12 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * methode qui retourne un tas identique au récepteur mais sans les count cartes du sommet.
      *
-     * @throws IllegalArgumentException si le count n'est pas entre zero et la taille du tas
      * @param count nombre de cartes à prélever
      * @return Deck sans les count cartes du sommet
+     * @throws IllegalArgumentException si le count n'est pas entre zero et la taille du tas
      */
     public Deck<C> withoutTopCards(int count) {
-        Preconditions.checkArgument(ZERO_COUNT <= count && count <= listOfCards.size());
+        Preconditions.checkArgument(0 <= count && count <= listOfCards.size());
         return new Deck<>(listOfCards.subList(count, listOfCards.size()));
 
     }

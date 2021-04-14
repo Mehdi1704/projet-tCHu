@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import java.util.List;
 
 /**
- *
+ * Carte du jeu
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -25,7 +25,6 @@ public enum Card {
     public static final List<Card> CARS = List.of(BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE);
 
     /**
-     *
      * @param color couleur à attribuer à la carte
      */
     Card(Color color) {
@@ -34,7 +33,6 @@ public enum Card {
 
 
     /**
-     *
      * @return la couleur du type de carte auquel on l'applique
      */
     public Color color() {
@@ -42,7 +40,6 @@ public enum Card {
     }
 
     /**
-     *
      * @param color couleur de la carte
      * @return retourne le type de carte wagon correspondant à la couleur donnée color.
      */

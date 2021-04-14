@@ -10,7 +10,7 @@ import static ch.epfl.tchu.game.Constants.INITIAL_TICKETS_COUNT;
 import static java.util.Objects.requireNonNull;
 
 /**
- *
+ * Etat public du jeu
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -26,24 +26,24 @@ public class PublicGameState {
     /**
      * Constructeur public d'un Public Game State
      *
-     * @throws IllegalArgumentException si le nombre de tickets est négatif ou
-     *  si on a un nombre de joueurs different de 2
-     * @throws NullPointerException si cardState ou currentPlayerId est null
-     * @param ticketsCount nombre de tickets
-     * @param cardState etat de cartes
+     * @param ticketsCount    nombre de tickets
+     * @param cardState       etat de cartes
      * @param currentPlayerId identité joueur qui joue actuellement
-     * @param playerState map representant les etats des joueurs
-     * @param lastPlayer identité du dernier joueur
+     * @param playerState     map representant les etats des joueurs
+     * @param lastPlayer      identité du dernier joueur
+     * @throws IllegalArgumentException si le nombre de tickets est négatif ou
+     *                                  si on a un nombre de joueurs different de 2
+     * @throws NullPointerException     si cardState ou currentPlayerId est null
      */
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId,
                            Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
         Preconditions.checkArgument(ticketsCount >= 0 && playerState.size() == PlayerId.COUNT);
 
-        this.ticketsCount    = ticketsCount;
-        this.cardState       = requireNonNull(cardState);
+        this.ticketsCount = ticketsCount;
+        this.cardState = requireNonNull(cardState);
         this.currentPlayerId = requireNonNull(currentPlayerId);
-        this.playerState     = playerState;
-        this.lastPlayer      = lastPlayer;
+        this.playerState = playerState;
+        this.lastPlayer = lastPlayer;
     }
 
     /**

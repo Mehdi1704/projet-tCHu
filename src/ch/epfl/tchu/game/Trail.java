@@ -2,8 +2,9 @@ package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- *
+ * Chemin du jeu ; ensemble de routes connectant deux stations
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -19,8 +20,8 @@ public final class Trail {
      *
      * @param station1 station de depart
      * @param station2 station d'arrivée
-     * @param routes liste de routes
-     * @param length longueur du chemin
+     * @param routes   liste de routes
+     * @param length   longueur du chemin
      */
     private Trail(Station station1, Station station2, List<Route> routes, int length) {
 
@@ -69,9 +70,9 @@ public final class Trail {
     /**
      * Methode permettant d'ajouter un chemin supplementaire à la liste de chemins
      *
-     * @param t chemin a ajouter
-     * @param r route a ajouter
-     * @param prolongedTrails liste de chemins a prolonger
+     * @param t                     chemin a ajouter
+     * @param r                     route a ajouter
+     * @param prolongedTrails       liste de chemins a prolonger
      * @param correspondingStation1 pour verifier la compatibilité
      * @param correspondingStation2 marque la fin du chemin
      */

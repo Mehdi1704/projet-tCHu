@@ -10,7 +10,7 @@ import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;//4
 import static ch.epfl.tchu.game.PlayerId.*;
 
 /**
- *
+ * Etat de jeu lors d'une partie
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -24,11 +24,11 @@ public class GameState extends PublicGameState {
     private static final int MINIMAL_CAR_COUNT = 2;
 
     /**
-     * @param ticket les billets du jeu  .
-     * @param cardState l'état des cartes du jeu .
+     * @param ticket          les billets du jeu  .
+     * @param cardState       l'état des cartes du jeu .
      * @param currentPlayerId le joueur actuel .
-     * @param playerState l'état du joueur .
-     * @param lastPlayer le dernier joueur .
+     * @param playerState     l'état du joueur .
+     * @param lastPlayer      le dernier joueur .
      */
     private GameState(Deck<Ticket> ticket, CardState cardState, PlayerId currentPlayerId,
                       Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
@@ -48,7 +48,7 @@ public class GameState extends PublicGameState {
      * on choisi au hasard l'identité du premier joueur.
      *
      * @param tickets les billets du jeu .
-     * @param rng variable permettant le caractère aléatoire de la selection du joueur et de la manière de mélanger .
+     * @param rng     variable permettant le caractère aléatoire de la selection du joueur et de la manière de mélanger .
      * @return un nouvel état de gameState (l'initialisation de la partie)
      */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
@@ -152,31 +152,10 @@ public class GameState extends PublicGameState {
     }
 
     /**
-     * Retourne l'état complet du joueur d'identité donnée, et pas seulement sa partie publique
-     *
-     * @param playerId identité du joueur
-     * @return l'état du joueur (playerID)
-     */
-    @Override
-    public PlayerState playerState(PlayerId playerId) {
-        return playerState.get(playerId);
-    }
-
-    /**
-     * Retourne l'état complet du joueur courant, et pas seulement sa partie publique
-     *
-     * @return état complet du joueur courant
-     */
-    @Override
-    public PlayerState currentPlayerState() {
-        return playerState.get(currentPlayerId());
-    }
-
-    /**
      * Retourne un état identique au récepteur mais dans lequel
      * les billets donnés ont été ajoutés à la main du joueur donné
      *
-     * @param playerId  identité du joueur
+     * @param playerId      identité du joueur
      * @param chosenTickets les billets choisis
      * @return un nouvel état gameState dans lequel les chosenTickets ont été ajoutés à la main de playerId.
      */
@@ -196,7 +175,7 @@ public class GameState extends PublicGameState {
      * Retourne un état identique au récepteur, mais dans lequel le joueur courant a tiré les billets drawnTickets
      * du sommet de la pioche, et choisi de garder ceux contenus dans chosenTicket
      *
-     * @param drawnTickets les billets tirés
+     * @param drawnTickets  les billets tirés
      * @param chosenTickets les billets choisis
      * @return un nouvel état de gameState dans lequel le joueur a choisi de garder chosenTicket parmi drawnTickets
      */
@@ -220,7 +199,6 @@ public class GameState extends PublicGameState {
      * @param slot index
      * @return un nouvel état de gameState ou la carte face visible à l'index donné est placée chez le joueur ,
      * tout en étant remplacée par celle au sommet de la pioche
-     *
      */
     public GameState withDrawnFaceUpCard(int slot) {
         Preconditions.checkArgument(canDrawCards());
@@ -297,18 +275,38 @@ public class GameState extends PublicGameState {
      * courant actuel devient le dernier joueur
      *
      * @return un nouvel état de gameState dans lequel le joueur courant est celui qui suit le joueur
-     *     courant actuel.
+     * courant actuel.
      */
     public GameState forNextTurn() {
         PlayerId lastPlayer = lastPlayer();
-        if (lastTurnBegins()) {
-            lastPlayer = currentPlayerId();
-        }
+        if (lastTurnBegins()) lastPlayer = currentPlayerId();
         return new GameState(ticket,
                 cardState,
                 currentPlayerId().next(),
                 playerState,
                 lastPlayer);
     }
+
+    /**
+     * Retourne l'état complet du joueur d'identité donnée, et pas seulement sa partie publique
+     *
+     * @param playerId identité du joueur
+     * @return l'état du joueur (playerID)
+     */
+    @Override
+    public PlayerState playerState(PlayerId playerId) {
+        return playerState.get(playerId);
+    }
+
+    /**
+     * Retourne l'état complet du joueur courant, et pas seulement sa partie publique
+     *
+     * @return état complet du joueur courant
+     */
+    @Override
+    public PlayerState currentPlayerState() {
+        return playerState.get(currentPlayerId());
+    }
+
 
 }

@@ -10,13 +10,15 @@ import java.util.Objects;
 import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 
 /**
- *
+ * Route du plateau de jeu
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
 public final class Route {
-
+    /**
+     * Niveau de la route
+     */
     public enum Level {
         OVERGROUND,
         UNDERGROUND
@@ -36,7 +38,7 @@ public final class Route {
      * @param station1 station 1
      * @param station2 station2
      * @param length   taille de la route
-     * @param level    niveau de la route ( soit normal soit tunnel )
+     * @param level    niveau de la route (normal ou tunnel)
      * @param color    couleur de la route
      * @throws IllegalArgumentException lève IllegalArgumentException si on a une valeur qui n'est pas attendue
      * @throws NullPointerException     leve NullPointerException si on essaye d'utiliser null alors qu'un objet est necessaire
@@ -47,12 +49,12 @@ public final class Route {
                 (length >= Constants.MIN_ROUTE_LENGTH) &&
                 (length <= Constants.MAX_ROUTE_LENGTH));
 
-        this.id       = Objects.requireNonNull(id);
+        this.id = Objects.requireNonNull(id);
         this.station1 = Objects.requireNonNull(station1);
         this.station2 = Objects.requireNonNull(station2);
-        this.length   = length;
-        this.level    = Objects.requireNonNull(level);
-        this.color    = color;
+        this.length = length;
+        this.level = Objects.requireNonNull(level);
+        this.color = color;
     }
 
     /**
@@ -115,11 +117,8 @@ public final class Route {
      */
     public Station stationOpposite(Station station) {
         Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
-        if (station.equals(station1)) {
-            return station2;
-        } else {
-            return station1;
-        }
+        if (station.equals(station1)) return station2;
+        else return station1;
     }
 
     /**
@@ -129,33 +128,29 @@ public final class Route {
      * @return retourne la liste de tous les ensembles de cartes qui pourraient être joués
      * pour pouvoir s'emparer de la route (tunnel)
      */
-    //TODO optimiser avec des lambdas
     public List<SortedBag<Card>> possibleClaimCards() {
 
         ArrayList<SortedBag<Card>> possibleClaimCards = new ArrayList<>();
 
         if (level.equals(Level.OVERGROUND)) {
-            if (color != null) {
-                possibleClaimCards.add(SortedBag.of(length, Card.of(color)));
-            } else {
-                Card.CARS.forEach((card) -> possibleClaimCards.add(SortedBag.of(length, card)));
-            }
+            if (color != null) possibleClaimCards.add(SortedBag.of(length, Card.of(color)));
+            else Card.CARS.forEach((card) -> possibleClaimCards.add(SortedBag.of(length, card)));
         } else {
             if (color != null) {
-                for (int i = 0; i <= length; ++i) possibleClaimCards.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
+                for (int i = 0; i <= length; ++i)
+                    possibleClaimCards.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
             } else {
                 for (int i = 0; i <= length; ++i) {
                     if (i < length) {
-                        for (Card c : Card.CARS) possibleClaimCards.add(SortedBag.of(length - i, c, i, Card.LOCOMOTIVE));
+                        for (Card c : Card.CARS)
+                            possibleClaimCards.add(SortedBag.of(length - i, c, i, Card.LOCOMOTIVE));
                     } else {
                         possibleClaimCards.add(SortedBag.of(length, Card.LOCOMOTIVE));
                     }
                 }
             }
         }
-
         return (List.copyOf(possibleClaimCards));
-
     }
 
     /**

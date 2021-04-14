@@ -5,8 +5,9 @@ import ch.epfl.tchu.game.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- *
+ * Affichage des messages d'information du déroulement de la partie
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -24,7 +25,7 @@ public final class Info {
     /**
      * Retourne le nom francais d'une ou plusieurs cartes de même couleur
      *
-     * @param card carte a nommer
+     * @param card  carte a nommer
      * @param count nombre de cartes
      * @return nom francais de la carte
      */
@@ -58,7 +59,7 @@ public final class Info {
      * Annonce une egalité
      *
      * @param playerNames noms des joueurs
-     * @param points points des joueurs
+     * @param points      points des joueurs
      * @return String "x et x sont ex æqo avec x points"
      */
     public static String draw(List<String> playerNames, int points) {
@@ -144,7 +145,7 @@ public final class Info {
     /**
      * Annonce une tentative de s'emparer d'un tunnel
      *
-     * @param route route a prendre
+     * @param route        route a prendre
      * @param initialCards cartes utilisées
      * @return String "x tente de s'emparer du tunnel..."
      */
@@ -156,7 +157,7 @@ public final class Info {
     /**
      * Annonce les cartes supplémentaires ainsi que l'existence, ou non d'un cout supplementaire
      *
-     * @param drawnCards les cartes additionnelles
+     * @param drawnCards     les cartes additionnelles
      * @param additionalCost cout de cartes a ajouter
      * @return String "Les cartes supplémentaires sont x..."
      */
@@ -206,7 +207,7 @@ public final class Info {
     /**
      * Annonce le vainqueur et donne les points des joueurs
      *
-     * @param points points du gagnant
+     * @param points      points du gagnant
      * @param loserPoints points du perdant
      * @return String "x remporte la victoire avec x points..."
      */

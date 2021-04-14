@@ -1,8 +1,9 @@
 package ch.epfl.tchu.game;
 
 import java.util.List;
+
 /**
- *
+ * Couleur d'une route ou d'une carte
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)

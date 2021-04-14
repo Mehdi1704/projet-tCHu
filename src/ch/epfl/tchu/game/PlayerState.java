@@ -9,9 +9,8 @@ import java.util.List;
 
 import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;
+
 /**
- *
- *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
@@ -33,9 +32,9 @@ public class PlayerState extends PublicPlayerState {
     /**
      * Retourne l'état initial d'un joueur auquel les cartes initiales données ont été distribuées
      *
-     * @throws IllegalArgumentException si on a pas le bon nombre de cartes initiales
      * @param initialCards les cartes initiales .
      * @return nouvel état de PlayerState auquel les cartes initiales données ont été distribuées au joueur .
+     * @throws IllegalArgumentException si on a pas le bon nombre de cartes initiales
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
         Preconditions.checkArgument(initialCards.size() == INITIAL_CARDS_COUNT);
@@ -108,18 +107,16 @@ public class PlayerState extends PublicPlayerState {
      * Retourne la liste de tous les ensembles de cartes que le joueur
      * pourrait utiliser pour prendre possession de la route donnée
      *
-     * @throws IllegalArgumentException si la longueur de la route depasse le nombre de wagons du joueur
      * @param route route qu'on souhaite capturer
      * @return la liste de tous les ensembles de cartes que le joueur
-     *   pourrait utiliser pour prendre possession de la route
+     * pourrait utiliser pour prendre possession de la route
+     * @throws IllegalArgumentException si la longueur de la route depasse le nombre de wagons du joueur
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         Preconditions.checkArgument(route.length() <= carCount());
         List<SortedBag<Card>> listOfCards = new ArrayList<>();
         for (SortedBag<Card> bagOfCards : route.possibleClaimCards()) {
-            if (cards.contains(bagOfCards)) {
-                listOfCards.add(bagOfCards);
-            }
+            if (cards.contains(bagOfCards)) listOfCards.add(bagOfCards);
         }
         return listOfCards;
     }
@@ -129,18 +126,17 @@ public class PlayerState extends PublicPlayerState {
      * pourrait utiliser pour s'emparer d'un tunnel,
      * trié par ordre croissant du nombre de cartes locomotives
      *
-     * @throws IllegalArgumentException si le nombre de cartes additionnelles n'est pas compris entre 1 et 3 (inclus),
-     *  si l'ensemble des cartes initiales est vide ou contient plus de 2 types de cartes différents,
-     *  ou si l'ensemble des cartes tirées ne contient pas exactement 3 cartes,
      * @param additionalCardsCount nombre de carte Additionnelles
-     * @param initialCards SortedBag des cartes initiales
-     * @param drawnCards SortedBag des cartes piochées
+     * @param initialCards         SortedBag des cartes initiales
+     * @param drawnCards           SortedBag des cartes piochées
      * @return liste de tous les ensembles de cartes que le joueur pourrait utiliser pour s'emparer d'un tunnel.
+     * @throws IllegalArgumentException si le nombre de cartes additionnelles n'est pas compris entre 1 et 3 (inclus),
+     *                                  si l'ensemble des cartes initiales est vide ou contient plus de 2 types de cartes différents,
+     *                                  ou si l'ensemble des cartes tirées ne contient pas exactement 3 cartes,
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount,
                                                          SortedBag<Card> initialCards,
                                                          SortedBag<Card> drawnCards) {
-        //TODO constantes
         Preconditions.checkArgument(1 <= additionalCardsCount && additionalCardsCount <= ADDITIONAL_TUNNEL_CARDS);
         Preconditions.checkArgument(!initialCards.isEmpty() && initialCards.toSet().size() <= 2);
         Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS);
@@ -155,9 +151,8 @@ public class PlayerState extends PublicPlayerState {
         }
         SortedBag<Card> buildedCards = possibleAdditionalCards.build();
         List<SortedBag<Card>> finalList = new ArrayList<>();
-        if (buildedCards.size() >= additionalCardsCount) {
+        if (buildedCards.size() >= additionalCardsCount)
             finalList = new ArrayList<>(buildedCards.subsetsOfSize(additionalCardsCount));
-        }
         finalList.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE)));
         return finalList;
     }
@@ -166,7 +161,7 @@ public class PlayerState extends PublicPlayerState {
      * Retourne un état identique au récepteur,
      * si ce n'est que le joueur s'est de plus emparé de la route donnée au moyen des cartes données
      *
-     * @param route qui a été emparer
+     * @param route      qui a été emparer
      * @param claimCards cartes utilisées pour la carpure de la route.
      * @return un nouvel état de PlayerState , ou le joueur a pris possession de route au moyen de claimCards .
      */
@@ -181,7 +176,6 @@ public class PlayerState extends PublicPlayerState {
      *
      * @return nombre de points obtenus par le joueur grâce à ses billets
      */
-    //TODO optimiser?
     public int ticketPoints() {
         int indexMax = 0;
         for (Route r : routes) {
@@ -190,14 +184,10 @@ public class PlayerState extends PublicPlayerState {
             }
         }
         StationPartition.Builder stationPartitonProfonde = new StationPartition.Builder(indexMax + 1);
-        for (Route r : routes) {
-            stationPartitonProfonde.connect(r.station1(), r.station2());
-        }
+        routes.forEach(r -> stationPartitonProfonde.connect(r.station1(), r.station2()));
         StationPartition stationPartitionAplatie = stationPartitonProfonde.build();
         int ticketPt = 0;
-        for (Ticket t : tickets) {
-            ticketPt = ticketPt + t.points(stationPartitionAplatie);
-        }
+        for (Ticket t : tickets) ticketPt = ticketPt + t.points(stationPartitionAplatie);
         return ticketPt;
     }
 
