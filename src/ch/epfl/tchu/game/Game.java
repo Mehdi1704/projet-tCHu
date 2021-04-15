@@ -74,7 +74,9 @@ public final class Game {
             receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).canPlay());
             updateStateForBothPlayers(players, gameState);
 
-            switch (players.get(gameState.currentPlayerId()).nextTurn()) {
+            Player.TurnKind typeOfAction = players.get(gameState.currentPlayerId()).nextTurn(); // action que le joueur
+                                                                                             //veut effectuer durant ce tour
+            switch (typeOfAction) {
 
                 case DRAW_TICKETS:
                     receiveInfoForBothPlayers(players, information.drewTickets(IN_GAME_TICKETS_COUNT));
@@ -124,6 +126,7 @@ public final class Game {
                                 drawnCardsBuilder.add(gameState.withCardsDeckRecreatedIfNeeded(rng).topCard());
                                 gameState = gameState.withCardsDeckRecreatedIfNeeded(rng).withoutTopCard();
                             }
+
                             SortedBag<Card> drawnCards = drawnCardsBuilder.build();
                             gameState = gameState.withMoreDiscardedCards(drawnCards);
                             int addClaimCardsCount = chosenRoute.additionalClaimCardsCount(playerClaimCards, drawnCards);
@@ -138,8 +141,6 @@ public final class Game {
                                 // Cartes que le joueur peut jouer
                                 List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
                                         .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
-
-                                //_____________________________________________________________
 
                                 if (playableCards.isEmpty()) {
                                     receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
@@ -156,8 +157,8 @@ public final class Game {
                     }
                     break;
             }
-
-            if (gameState.currentPlayerId().equals(gameState.lastPlayer())) {
+                
+            if (gameState.currentPlayerId().equals(gameState.lastPlayer())) {    // condition de sortie
                 break;
             }
             if (gameState.lastTurnBegins()) {
