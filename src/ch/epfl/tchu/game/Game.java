@@ -157,7 +157,6 @@ public final class Game {
                     }
                     break;
             }
-                
             if (gameState.currentPlayerId().equals(gameState.lastPlayer())) {    // condition de sortie
                 break;
             }
