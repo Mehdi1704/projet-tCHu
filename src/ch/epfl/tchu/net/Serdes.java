@@ -1,17 +1,29 @@
 package ch.epfl.tchu.net;
 
+import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
+ * Serdes
  *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
  */
 public final class Serdes {
 
+    private Serdes(){}
+
+    private static final char colon = ':';
+    private static final char semicolon = ';';
+    
     /**
      * Serde d'un entier
      */
@@ -84,20 +96,103 @@ public final class Serdes {
     /**
      * Serde d'un Public Card State
      */
-    public static final Serde<PublicCardState> PUBLIC_CARD_STATE_SERDE = Serde.of();
+    public static final Serde<PublicCardState> PUBLIC_CARD_STATE_SERDE = new Serde<>() {
+
+        @Override
+        public String serialize(PublicCardState toSerialize) {
+            Objects.requireNonNull(toSerialize);
+            return LIST_CARDS_SERDE.serialize(toSerialize.faceUpCards()) + semicolon +
+                    INTEGER_SERDE.serialize(toSerialize.deckSize()) + semicolon +
+                    INTEGER_SERDE.serialize(toSerialize.discardsSize());
+        }
+
+        @Override
+        public PublicCardState deserialize(String toDeserialize) {
+            Preconditions.checkIfEmptyString(toDeserialize);
+            //TODO comprendre cette ligne
+            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
+            return new PublicCardState(
+                    LIST_CARDS_SERDE.deserialize(attributes[0]),
+                    INTEGER_SERDE.deserialize(attributes[1]),
+                    INTEGER_SERDE.deserialize(attributes[2]));
+        }
+    };
 
     /**
      * Serde d'un Public Player State
      */
-    public static final Serde<PublicPlayerState> PUBLIC_PLAYER_STATE_SERDE = Serde.of();
+    public static final Serde<PublicPlayerState> PUBLIC_PLAYER_STATE_SERDE = new Serde<>() {
+
+        @Override
+        public String serialize(PublicPlayerState toSerialize) {
+            Objects.requireNonNull(toSerialize);
+            return INTEGER_SERDE.serialize(toSerialize.ticketCount()) + semicolon +
+                    INTEGER_SERDE.serialize(toSerialize.carCount()) + semicolon +
+                    LIST_ROUTES_SERDE.serialize(toSerialize.routes());
+        }
+
+        @Override
+        public PublicPlayerState deserialize(String toDeserialize) {
+            Preconditions.checkIfEmptyString(toDeserialize);
+            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
+            return new PublicPlayerState(
+                    INTEGER_SERDE.deserialize(attributes[0]),
+                    INTEGER_SERDE.deserialize(attributes[1]),
+                    LIST_ROUTES_SERDE.deserialize(attributes[2]));
+        }
+    };
 
     /**
      * Serde d'un Player State
      */
-    public static final Serde<PlayerState> PLAYER_STATE_SERDE = Serde.of();
+    public static final Serde<PlayerState> PLAYER_STATE_SERDE = new Serde<>() {
+
+        @Override
+        public String serialize(PlayerState toSerialize) {
+            Objects.requireNonNull(toSerialize);
+            return SORTEDBAG_TICKETS_SERDE.serialize(toSerialize.tickets()) + semicolon +
+                    SORTEDBAG_CARDS_SERDE.serialize(toSerialize.cards()) + semicolon +
+                    LIST_ROUTES_SERDE.serialize(toSerialize.routes());
+        }
+
+        @Override
+        public PlayerState deserialize(String toDeserialize) {
+            Preconditions.checkIfEmptyString(toDeserialize);
+            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
+            return new PlayerState(
+                    SORTEDBAG_TICKETS_SERDE.deserialize(attributes[0]),
+                    SORTEDBAG_CARDS_SERDE.deserialize(attributes[1]),
+                    LIST_ROUTES_SERDE.deserialize(attributes[2]));
+
+        }
+    };
 
     /**
      * Serde d'un Public Game State
      */
-    public static final Serde<PublicGameState> PUBLIC_GAME_STATE_SERDE = Serde.of();
+    public static final Serde<PublicGameState> PUBLIC_GAME_STATE_SERDE = new Serde<>() {
+        @Override
+        public String serialize(PublicGameState toSerialize) {
+            Objects.requireNonNull(toSerialize);
+            return INTEGER_SERDE.serialize(toSerialize.ticketsCount()) + colon +
+                    PUBLIC_CARD_STATE_SERDE.serialize(toSerialize.cardState()) + colon +
+                    PLAYER_ID_SERDE.serialize(toSerialize.currentPlayerId()) + colon +
+                    PUBLIC_PLAYER_STATE_SERDE.serialize(toSerialize.playerState(PlayerId.PLAYER_1)) + colon +
+                    PUBLIC_PLAYER_STATE_SERDE.serialize(toSerialize.playerState(PlayerId.PLAYER_2)) + colon +
+                    PLAYER_ID_SERDE.serialize(toSerialize.lastPlayer());
+        }
+
+        @Override
+        public PublicGameState deserialize(String toDeserialize) {
+            Preconditions.checkIfEmptyString(toDeserialize);
+            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(colon)), -1);
+            return new PublicGameState(
+                    INTEGER_SERDE.deserialize(attributes[0]),
+                    PUBLIC_CARD_STATE_SERDE.deserialize(attributes[1]),
+                    PLAYER_ID_SERDE.deserialize(attributes[2]),
+                    Map.of(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE_SERDE.deserialize(attributes[3]),
+                            PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE_SERDE.deserialize(attributes[4])),
+                    PLAYER_ID_SERDE.deserialize(attributes[5]));
+        }
+    };
 }

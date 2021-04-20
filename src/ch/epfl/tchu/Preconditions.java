@@ -17,8 +17,14 @@ public final class Preconditions {
     public static void checkArgument(boolean shouldBeTrue) {
         if (!shouldBeTrue) {
             throw new IllegalArgumentException();
-
         }
-
+    }
+    /**
+     * @param string ne devant pas etre vide
+     */
+    public static void checkIfEmptyString(String string) {
+        if (string.equals("")) {
+            throw new NullPointerException();
+        }
     }
 }
