@@ -34,7 +34,7 @@ public interface Serde<E>  {
      * @return le serde correspondant .
      */
     static <E> Serde<E> of(Function<E, String> serialize, Function<String, E> deserialize){
-            return new Serde<E>() {
+            return new Serde<>() {
                 @Override
                 public String serialize(E toSerialize) {
                     return  serialize.apply(toSerialize);
