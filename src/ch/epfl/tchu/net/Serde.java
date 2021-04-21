@@ -72,9 +72,8 @@ public interface Serde<E>  {
             public List<E> deserialize(String toDeserialize) {
                 List<E> tabDeserializer = new ArrayList<>();
                 String[] tab = toDeserialize.split(Pattern.quote(separation), -1);
-                //TODO for each?
-                for (int i = 0; i < tab.length ; i++) {
-                   tabDeserializer.add(ourSerde.deserialize(tab[i]));
+                for (String s : tab) {
+                    tabDeserializer.add(ourSerde.deserialize(s));
                 }
                 return tabDeserializer;
             }

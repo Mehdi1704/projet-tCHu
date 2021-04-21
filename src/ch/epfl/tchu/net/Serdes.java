@@ -109,7 +109,7 @@ public final class Serdes {
         @Override
         public PublicCardState deserialize(String toDeserialize) {
             Preconditions.checkIfEmptyString(toDeserialize);
-            //TODO comprendre cette ligne
+            //TODO comprendre cette ligne easy
             String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
             return new PublicCardState(
                     LIST_CARDS_SERDE.deserialize(attributes[0]),
