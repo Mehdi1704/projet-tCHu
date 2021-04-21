@@ -45,10 +45,10 @@ public class SerdeTest {
     void listOf(){
         Serde<Color> color = Serde.oneOf(Color.ALL);
         Serde<List<Color>> listOfColor = Serde.listOf(color, "+");
-
+        //TODO la ca passe
         assertEquals(List.of(Color.BLACK, Color.VIOLET), listOfColor.deserialize("0+1"));
         assertEquals("2+3", listOfColor.serialize(List.of(Color.BLUE, Color.GREEN)));
-
+        //TODO c'est ici que ca deconne
         for(Color clr : Color.ALL){
             List<Color> list = Color.ALL.subList(0, clr.ordinal());
             List<String> listOrdinal = list.stream().map(c -> String.valueOf(c.ordinal())).collect(Collectors.toList());
@@ -56,7 +56,7 @@ public class SerdeTest {
             assertEquals(list, listOfColor.deserialize(String.join("+", listOrdinal)));
             assertEquals(String.join("+", listOrdinal), listOfColor.serialize(list));
         }
-
+        //TODO ici aussi hhhh
         assertEquals(List.of(), listOfColor.deserialize(""));
         assertEquals("", listOfColor.serialize(List.of()));
     }

@@ -48,17 +48,17 @@ public interface Serde<E>  {
             };
     }
 
-    static <E> Serde<E> oneOf(List<E> liste ){
+    static <E> Serde<E> oneOf(List<E> liste){
        //lequel faut il utiliser Preconditions.checkArgument(!liste.isEmpty());
         Objects.requireNonNull(liste);
 
-        return of(e -> String.valueOf(liste.indexOf(e)), v-> liste.get(Integer.parseInt(v)));
+        return of(e -> String.valueOf(liste.indexOf(e)), v -> liste.get(Integer.parseInt(v)));
     }
 
 
-    static <E> Serde<List<E>> listOf( Serde<E> ourSerde, String separation ){
+    static <E> Serde<List<E>> listOf(Serde<E> ourSerde, String separation){
        //il faut que la separation soit différente de "".
-        Preconditions.checkArgument(!separation.equals(""));
+        Preconditions.checkIfEmptyString(separation);
         Objects.requireNonNull(ourSerde);
         return new Serde<>() {
             @Override
@@ -80,8 +80,8 @@ public interface Serde<E>  {
         };
     }
 
-    static <E extends Comparable<E>> Serde<SortedBag<E>> bagOf(Serde<E> ourSerde, String separation ){
-        Preconditions.checkArgument(!separation.equals(""));
+    static <E extends Comparable<E>> Serde<SortedBag<E>> bagOf(Serde<E> ourSerde, String separation){
+        Preconditions.checkIfEmptyString(separation);
         Objects.requireNonNull(ourSerde);
         Serde<List<E>> sorted = listOf(ourSerde,separation);
         return new Serde<SortedBag<E>>() {

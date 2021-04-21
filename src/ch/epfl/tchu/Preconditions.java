@@ -24,7 +24,7 @@ public final class Preconditions {
      */
     public static void checkIfEmptyString(String string) {
         if (string.equals("")) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
     }
 }

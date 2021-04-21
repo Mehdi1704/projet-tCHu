@@ -126,8 +126,8 @@ public final class Serdes {
         @Override
         public String serialize(PublicPlayerState toSerialize) {
             Objects.requireNonNull(toSerialize);
-            return INTEGER_SERDE.serialize(toSerialize.ticketCount()) + semicolon +
-                    INTEGER_SERDE.serialize(toSerialize.carCount()) + semicolon +
+            return  INTEGER_SERDE.serialize(toSerialize.ticketCount()) + semicolon +
+                    INTEGER_SERDE.serialize(toSerialize.cardCount()) + semicolon +
                     LIST_ROUTES_SERDE.serialize(toSerialize.routes());
         }
 
