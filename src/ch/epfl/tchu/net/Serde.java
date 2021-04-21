@@ -49,17 +49,17 @@ public interface Serde<E>  {
     }
 
     static <E> Serde<E> oneOf(List<E> liste ){
-       //lequel faut il utiliser .
+       //lequel faut il utiliser Preconditions.checkArgument(!liste.isEmpty());
         Objects.requireNonNull(liste);
-        Preconditions.checkArgument(!liste.isEmpty());
 
         return of(e -> String.valueOf(liste.indexOf(e)), v-> liste.get(Integer.parseInt(v)));
     }
 
 
     static <E> Serde<List<E>> listOf( Serde<E> ourSerde, String separation ){
-       // des conditions ?
-
+       //il faut que la separation soit différente de "".
+        Preconditions.checkArgument(!separation.equals(""));
+        Objects.requireNonNull(ourSerde);
         return new Serde<>() {
             @Override
             public String serialize(List<E> toSerialize) {
@@ -81,6 +81,8 @@ public interface Serde<E>  {
     }
 
     static <E extends Comparable<E>> Serde<SortedBag<E>> bagOf(Serde<E> ourSerde, String separation ){
+        Preconditions.checkArgument(!separation.equals(""));
+        Objects.requireNonNull(ourSerde);
         Serde<List<E>> sorted = listOf(ourSerde,separation);
         return new Serde<SortedBag<E>>() {
             @Override
