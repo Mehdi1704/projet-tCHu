@@ -110,11 +110,11 @@ public final class Serdes {
         public PublicCardState deserialize(String toDeserialize) {
             Preconditions.checkIfEmptyString(toDeserialize);
             //TODO comprendre cette ligne easy
-            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
+            String[] position = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
             return new PublicCardState(
-                    LIST_CARDS_SERDE.deserialize(attributes[0]),
-                    INTEGER_SERDE.deserialize(attributes[1]),
-                    INTEGER_SERDE.deserialize(attributes[2]));
+                    LIST_CARDS_SERDE.deserialize(position[0]),
+                    INTEGER_SERDE.deserialize(position[1]),
+                    INTEGER_SERDE.deserialize(position[2]));
         }
     };
 
@@ -134,11 +134,11 @@ public final class Serdes {
         @Override
         public PublicPlayerState deserialize(String toDeserialize) {
             Preconditions.checkIfEmptyString(toDeserialize);
-            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
+            String[] position = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
             return new PublicPlayerState(
-                    INTEGER_SERDE.deserialize(attributes[0]),
-                    INTEGER_SERDE.deserialize(attributes[1]),
-                    LIST_ROUTES_SERDE.deserialize(attributes[2]));
+                    INTEGER_SERDE.deserialize(position[0]),
+                    INTEGER_SERDE.deserialize(position[1]),
+                    LIST_ROUTES_SERDE.deserialize(position[2]));
         }
     };
 
@@ -158,11 +158,11 @@ public final class Serdes {
         @Override
         public PlayerState deserialize(String toDeserialize) {
             Preconditions.checkIfEmptyString(toDeserialize);
-            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
+            String[] position = toDeserialize.split(Pattern.quote(String.valueOf(semicolon)), -1);
             return new PlayerState(
-                    SORTEDBAG_TICKETS_SERDE.deserialize(attributes[0]),
-                    SORTEDBAG_CARDS_SERDE.deserialize(attributes[1]),
-                    LIST_ROUTES_SERDE.deserialize(attributes[2]));
+                    SORTEDBAG_TICKETS_SERDE.deserialize(position[0]),
+                    SORTEDBAG_CARDS_SERDE.deserialize(position[1]),
+                    LIST_ROUTES_SERDE.deserialize(position[2]));
 
         }
     };
@@ -185,14 +185,14 @@ public final class Serdes {
         @Override
         public PublicGameState deserialize(String toDeserialize) {
             Preconditions.checkIfEmptyString(toDeserialize);
-            String[] attributes = toDeserialize.split(Pattern.quote(String.valueOf(colon)), -1);
+            String[] position = toDeserialize.split(Pattern.quote(String.valueOf(colon)), -1);
             return new PublicGameState(
-                    INTEGER_SERDE.deserialize(attributes[0]),
-                    PUBLIC_CARD_STATE_SERDE.deserialize(attributes[1]),
-                    PLAYER_ID_SERDE.deserialize(attributes[2]),
-                    Map.of(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE_SERDE.deserialize(attributes[3]),
-                            PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE_SERDE.deserialize(attributes[4])),
-                    PLAYER_ID_SERDE.deserialize(attributes[5]));
+                    INTEGER_SERDE.deserialize(position[0]),
+                    PUBLIC_CARD_STATE_SERDE.deserialize(position[1]),
+                    PLAYER_ID_SERDE.deserialize(position[2]),
+                    Map.of(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE_SERDE.deserialize(position[3]),
+                            PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE_SERDE.deserialize(position[4])),
+                    PLAYER_ID_SERDE.deserialize(position[5]));
         }
     };
 }

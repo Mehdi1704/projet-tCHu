@@ -51,7 +51,8 @@ public interface Serde<E>  {
     static <E> Serde<E> oneOf(List<E> liste){
        //lequel faut il utiliser Preconditions.checkArgument(!liste.isEmpty());
         Objects.requireNonNull(liste);
-        return of(e -> String.valueOf(liste.indexOf(e)), v -> liste.get(Integer.parseInt(v)));
+        return of(e -> String.valueOf(liste.indexOf(e)),
+                  v -> liste.get(Integer.parseInt(v)));
     }
 
 
@@ -63,18 +64,23 @@ public interface Serde<E>  {
             @Override
             public String serialize(List<E> toSerialize) {
                 List<String> tabSerialiser = new ArrayList<>();
-                Objects.requireNonNull(toSerialize).forEach(i->tabSerialiser.add(ourSerde.serialize(i)));
+                Objects.requireNonNull(toSerialize).forEach(i -> tabSerialiser.add(ourSerde.serialize(i)));
                 return String.join(separation,tabSerialiser);
             }
 
             @Override
             public List<E> deserialize(String toDeserialize) {
+                if (toDeserialize.equals("")){
+                    return List.of();
+                }else{
                 List<E> tabDeserializer = new ArrayList<>();
                 String[] tab = toDeserialize.split(Pattern.quote(separation), -1);
                 for (String s : tab) {
                     tabDeserializer.add(ourSerde.deserialize(s));
                 }
-                return tabDeserializer;
+                   return tabDeserializer;
+               }
+
             }
         };
     }
@@ -83,7 +89,7 @@ public interface Serde<E>  {
         Preconditions.checkIfEmptyString(separation);
         Objects.requireNonNull(ourSerde);
         Serde<List<E>> sorted = listOf(ourSerde,separation);
-        return new Serde<SortedBag<E>>() {
+        return new Serde<>() {
             @Override
             public String serialize(SortedBag<E> toSerialize) {
                 return sorted.serialize(toSerialize.toList());
