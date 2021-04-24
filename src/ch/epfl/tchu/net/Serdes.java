@@ -116,7 +116,7 @@ public final class Serdes {
 
         @Override
         public String serialize(PublicCardState toSerialize) {
-            Objects.requireNonNull(toSerialize);
+            Objects.requireNonNull(toSerialize); 
             return  LIST_CARDS_SERDE.serialize(toSerialize.faceUpCards()) + semicolon +
                     INTEGER_SERDE.serialize(toSerialize.deckSize()) + semicolon +
                     INTEGER_SERDE.serialize(toSerialize.discardsSize());
