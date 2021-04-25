@@ -18,6 +18,7 @@ public class RemotePlayerClient{
 
 
     /**
+     * Constructeur
      *
      * @param player
      * @param portName
