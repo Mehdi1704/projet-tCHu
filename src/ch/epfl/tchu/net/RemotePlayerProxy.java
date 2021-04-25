@@ -36,7 +36,36 @@ public class RemotePlayerProxy implements Player {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
 
+    //TODO cette methode peut servir quelque part
+    // Je suis pas sur si elle devrait etre ici
+    private void checkMessage(MessageId messageId, Serde serde, BufferedReader r){
+        switch(messageId){
+            case INIT_PLAYERS:
+                initPlayers();
+            case RECEIVE_INFO:
+                receiveInfo();
+            case UPDATE_STATE:
+                updateState();
+            case SET_INITIAL_TICKETS:
+                setInitialTicketChoice();
+            case CHOOSE_INITIAL_TICKETS:
+                chooseInitialTickets();
+            case NEXT_TURN:
+                nextTurn();
+            case CHOOSE_TICKETS:
+                chooseTickets();
+            case DRAW_SLOT:
+                drawSlot();
+            case ROUTE:
+                claimedRoute();
+            case CARDS:
+                initialClaimCards();
+            case CHOOSE_ADDITIONAL_CARDS:
+                chooseAdditionalCards();
+                break;
+        }
     }
 
     @Override
