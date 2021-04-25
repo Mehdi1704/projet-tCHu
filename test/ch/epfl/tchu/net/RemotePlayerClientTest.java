@@ -2,16 +2,14 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 public class RemotePlayerClientTest {
 
-
     public static final class TestClient {
-        @Test
+
         public static void main(String[] args) {
             System.out.println("Starting client!");
             RemotePlayerClient playerClient =
@@ -32,12 +30,14 @@ public class RemotePlayerClientTest {
 
             @Override
             public void receiveInfo(String info) {
+                System.out.printf("info: %s\n", info);
 
             }
 
             @Override
             public void updateState(PublicGameState newState, PlayerState ownState) {
-
+                System.out.printf("newState: %s\n", newState);
+                System.out.printf("ownState: %s\n", ownState);
             }
 
             @Override

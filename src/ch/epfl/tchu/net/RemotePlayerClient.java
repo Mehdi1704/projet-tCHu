@@ -5,6 +5,8 @@ import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -39,14 +41,15 @@ public class RemotePlayerClient{
      */
     public void run(){
         try (Socket s = new Socket(portName, port);
-             //Socket s = s0.accept();
              BufferedReader r = new BufferedReader(
                                         new InputStreamReader(s.getInputStream(), US_ASCII));
              BufferedWriter w = new BufferedWriter(
                                         new OutputStreamWriter(s.getOutputStream(), US_ASCII))) {
+            String[] message;
 
-            do {//TODO check if inside or outside the do
-                String[] message = r.readLine().split(Pattern.quote(" "), -1);
+            do { //TODO pas encore stable
+                String readLine = r.readLine();
+                message = readLine.split(Pattern.quote(" "), -1);
                 checkMessage(message, w);
             } while (r.readLine()!=null);
 
@@ -55,7 +58,6 @@ public class RemotePlayerClient{
             }
 
     }
-
 
     /**
      *
@@ -66,8 +68,10 @@ public class RemotePlayerClient{
     private void checkMessage(String[] message, BufferedWriter w) throws IOException {
         switch(MessageId.valueOf(message[0])){
             case INIT_PLAYERS:
-                //TODO
-                // player.initPlayers();
+                Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
+                playerNames.put(PlayerId.PLAYER_1, Serdes.LIST_STRING_SERDE.deserialize(message[2]).get(0));
+                playerNames.put(PlayerId.PLAYER_2, Serdes.LIST_STRING_SERDE.deserialize(message[2]).get(1));
+                player.initPlayers(Serdes.PLAYER_ID_SERDE.deserialize(message[1]),playerNames);
                 break;
             case RECEIVE_INFO:
                 player.receiveInfo(Serdes.STRING_SERDE.deserialize(message[1]));
