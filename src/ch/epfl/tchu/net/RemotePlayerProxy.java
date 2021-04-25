@@ -13,20 +13,19 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 public class RemotePlayerProxy implements Player {
 
-    public final Socket socket;
+    private final Socket socket;
 
     public RemotePlayerProxy(Socket socket) {
         this.socket = socket;
 
-        try (ServerSocket s0 = new ServerSocket(5108);
-             Socket s = s0.accept();
+        try (socket;
              BufferedReader r =
                      new BufferedReader(
-                             new InputStreamReader(s.getInputStream(),
+                             new InputStreamReader(socket.getInputStream(),
                                      US_ASCII));
              BufferedWriter w =
                      new BufferedWriter(
-                             new OutputStreamWriter(s.getOutputStream(),
+                             new OutputStreamWriter(socket.getOutputStream(),
                                      US_ASCII))) {
             int i = Integer.parseInt(r.readLine());
             int i1 = i + 1;
@@ -38,39 +37,19 @@ public class RemotePlayerProxy implements Player {
         }
     }
 
-    //TODO cette methode peut servir quelque part
-    // Je suis pas sur si elle devrait etre ici
-    private void checkMessage(MessageId messageId, Serde serde, BufferedReader r){
-        switch(messageId){
-            case INIT_PLAYERS:
-                initPlayers();
-            case RECEIVE_INFO:
-                receiveInfo();
-            case UPDATE_STATE:
-                updateState();
-            case SET_INITIAL_TICKETS:
-                setInitialTicketChoice();
-            case CHOOSE_INITIAL_TICKETS:
-                chooseInitialTickets();
-            case NEXT_TURN:
-                nextTurn();
-            case CHOOSE_TICKETS:
-                chooseTickets();
-            case DRAW_SLOT:
-                drawSlot();
-            case ROUTE:
-                claimedRoute();
-            case CARDS:
-                initialClaimCards();
-            case CHOOSE_ADDITIONAL_CARDS:
-                chooseAdditionalCards();
-                break;
-        }
-    }
+
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
 
+        String arg1 = Serdes.PLAYER_ID_SERDE.serialize(ownId);
+        List<String> listOfSerdes = List.of(
+                Serdes.STRING_SERDE.serialize(playerNames.get(PlayerId.PLAYER_1)),
+                Serdes.STRING_SERDE.serialize(playerNames.get(PlayerId.PLAYER_2)));
+        String arg2 = Serdes.LIST_STRING_SERDE.serialize(listOfSerdes);
+        List<String> listOfArgs = List.of(arg1,arg2);
+
+        sendMessage(MessageId.INIT_PLAYERS,listOfArgs);
 
     }
 
@@ -122,5 +101,12 @@ public class RemotePlayerProxy implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         return null;
+    }
+
+
+    private void sendMessage(MessageId messageId, List<String> args) {
+        String message = messageId.name() + " " + String.join(" ", args);
+        // TODO: there is a superfluous space when the args array is empty
+        // …suite de la méthode
     }
 }
