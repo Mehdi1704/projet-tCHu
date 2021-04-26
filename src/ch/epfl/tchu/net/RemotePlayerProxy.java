@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Proxy de joueur
  *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
  */
 public class RemotePlayerProxy implements Player {
 
@@ -19,10 +22,10 @@ public class RemotePlayerProxy implements Player {
     private final BufferedWriter w;
 
     /**
-     *
-     * @param socket
-     * @param r
-     * @param w
+     * Constructeur d'un RemotePlayerProxy
+     * @param socket Prise dans laquelle les messages vont s'échanger
+     * @param r Objet qui lit les messages
+     * @param w Objet qui écrit les messages
      */
     public RemotePlayerProxy(Socket socket, BufferedReader r, BufferedWriter w) {
         this.socket = socket;
@@ -31,9 +34,9 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @param ownId
-     * @param playerNames
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @param ownId Identité du joueur appelant la methode
+     * @param playerNames Noms des différents joueurs se trouvant dans la Map
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
@@ -47,7 +50,7 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
      * @param info information que l'on doit passé au joueur .
      */
     @Override
@@ -57,9 +60,9 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @param newState nouvel état du jeu .
-     * @param ownState état du joueur .
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @param newState nouvel état du jeu
+     * @param ownState état du joueur
      */
     @Override
     public void updateState(PublicGameState newState, PlayerState ownState) {
@@ -69,8 +72,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @param tickets les billets qui vont être distribués en debut de partie.
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @param tickets les billets qui vont être distribués en debut de partie
      */
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
@@ -79,8 +82,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @return
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
@@ -89,8 +92,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @return
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public TurnKind nextTurn() {
@@ -99,9 +102,9 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
      * @param options les billets qu'on propose
-     * @return
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
@@ -110,8 +113,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @return
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public int drawSlot() {
@@ -120,8 +123,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @return
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public Route claimedRoute() {
@@ -130,8 +133,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @return
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public SortedBag<Card> initialClaimCards() {
@@ -140,9 +143,9 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @param options
-     * @return
+     * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     * @param options Cartes que le joueur peut jouer
+     * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
@@ -151,16 +154,17 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @param messageId
-     * @param args
+     * Methode auxiliaire servant à envoyer un message sur la prise
+     * @param messageId Message correspondant à la méthode appelée
+     * @param args Liste d'arguments de la méthode, sérialisés et listés dans l'ordre
      */
     private void sendMessage(MessageId messageId, List<String> args) {
         try {
             if (args.isEmpty()){
                 w.write(messageId.name());
             }else{
-                w.write(messageId.name() + " " + String.join(" ", args));
+                String spaceSeparator = " ";
+                w.write(messageId.name() + spaceSeparator + String.join(spaceSeparator, args));
             }
             w.write('\n');
             w.flush();
@@ -170,8 +174,8 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
-     *
-     * @return
+     * Methode auxiliaire servant à réceptionner un message de la prise
+     * @return Le message recu sous forme de String
      */
     private String receiveMessage() {
         try {

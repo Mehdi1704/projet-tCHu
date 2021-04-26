@@ -9,6 +9,12 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+/**
+ * Interface de Serdes
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public interface Serde<E> {
 
     /**

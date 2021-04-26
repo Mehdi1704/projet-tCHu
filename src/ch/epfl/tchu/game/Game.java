@@ -10,7 +10,7 @@ import java.util.List;
 import static ch.epfl.tchu.game.Constants.*;
 
 /**
- *
+ * Classe qui fait tourner le jeu
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)

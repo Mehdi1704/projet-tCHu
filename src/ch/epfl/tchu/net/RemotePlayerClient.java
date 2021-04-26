@@ -12,6 +12,12 @@ import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+/**
+ * Client de joueur
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class RemotePlayerClient{
 
     private final Player player;
@@ -20,21 +26,17 @@ public class RemotePlayerClient{
 
 
     /**
-     * Constructeur
+     * Constructeur d'un RemotePlayerProxy
      *
-     * @param player
-     * @param portName
-     * @param port
+     * @param player Joueur
+     * @param portName Nom du port de communication
+     * @param port Numero du port de communication
      */
     public RemotePlayerClient(Player player, String portName, int port){
         this.player = player;
         this.portName = portName;
         this.port = port;
     }
-
-    //cette exception est levée en cas d’erreur d’entrée/sortie.
-    // Dans le projet, cette erreur pourra p.ex. être levée si la connexion entre
-    // le client et le serveur est interrompue, p.ex. suite à la perte de la connexion Internet (problème de wifi, p.ex.)
 
     /**
      *
@@ -60,10 +62,10 @@ public class RemotePlayerClient{
     }
 
     /**
-     *
-     * @param message
-     * @param w
-     * @throws IOException
+     * Methode qui détermine la méthode à utiliser, déserialise ses arguments et renvoie un résultat si nécessaire
+     * @param message Message recu par la prise, composé du type de la méthode et ses arguments
+     * @param w Objet qui écrit les messages
+     * @throws IOException Si la connexion entre le client et le serveur est interrompue
      */
     private void checkMessage(String[] message, BufferedWriter w) throws IOException {
         switch(MessageId.valueOf(message[0])){
@@ -115,9 +117,9 @@ public class RemotePlayerClient{
 
     /**
      *
-     * @param w
-     * @param output
-     * @throws IOException
+     * @param w Objet qui écrit les messages
+     * @param output le résultat (sérialisé) de la méthode à renvoyer sur la prise
+     * @throws IOException Si la connexion entre le client et le serveur est interrompue
      */
     private void sendOutput(BufferedWriter w, String output) throws IOException {
         Preconditions.checkIfEmptyString(output);
