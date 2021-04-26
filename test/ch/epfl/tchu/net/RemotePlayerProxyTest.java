@@ -38,7 +38,7 @@ public class RemotePlayerProxyTest {
 
             Map<PlayerId, Info> playerInformation = new EnumMap<>(PlayerId.class);
             playerNames.forEach((player, info) -> playerInformation.put(player, new Info(info)));
-            //playerProxy.receiveInfo(playerInformation.get(PLAYER_1).willPlayFirst());
+            playerProxy.receiveInfo(playerInformation.get(PLAYER_1).willPlayFirst());
         }
         System.out.println("Server done!");
     }
