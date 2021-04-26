@@ -24,25 +24,29 @@ public class RemotePlayerClientTest {
             @Override
             public void initPlayers(PlayerId ownId,
                                     Map<PlayerId, String> names) {
+                System.out.println(MessageId.INIT_PLAYERS.name()+".........\n");
                 System.out.printf("ownId: %s\n", ownId);
                 System.out.printf("playerNames: %s\n", names);
             }
 
             @Override
             public void receiveInfo(String info) {
+                System.out.println(MessageId.RECEIVE_INFO.name()+".........\n");
                 System.out.printf("info: %s\n", info);
-
             }
 
             @Override
             public void updateState(PublicGameState newState, PlayerState ownState) {
-                System.out.printf("newState: %s\n", newState);
-                System.out.printf("ownState: %s\n", ownState);
+                System.out.println(MessageId.UPDATE_STATE.name()+".........\n");
+                System.out.printf("newPublicGameState: %s\n", newState);
+                System.out.printf("ownPlayerState: %s\n", ownState);
             }
 
             @Override
             public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
+                System.out.println(MessageId.SET_INITIAL_TICKETS.name()+".........\n");
 
+                System.out.printf("tickets: %s\n", tickets);
             }
 
             @Override
@@ -57,6 +61,7 @@ public class RemotePlayerClientTest {
 
             @Override
             public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
+                System.out.printf("options: %s\n", options);
                 return null;
             }
 
@@ -77,6 +82,7 @@ public class RemotePlayerClientTest {
 
             @Override
             public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
+                System.out.printf("options: %s\n", options);
                 return null;
             }
 
