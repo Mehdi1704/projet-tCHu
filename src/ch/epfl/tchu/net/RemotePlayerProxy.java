@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ */
 public class RemotePlayerProxy implements Player {
 
     private final Socket socket;
@@ -25,7 +28,6 @@ public class RemotePlayerProxy implements Player {
         this.socket = socket;
         this.r = r;
         this.w = w;
-
     }
 
     /**
