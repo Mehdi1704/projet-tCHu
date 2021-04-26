@@ -23,7 +23,7 @@ public final class Preconditions {
      * @param string ne devant pas etre vide
      */
     public static void checkIfEmptyString(String string) {
-        if (string.equals("")) {
+        if (string.isEmpty()) {
             throw new IllegalArgumentException();
         }
     }
