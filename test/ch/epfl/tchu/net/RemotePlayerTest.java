@@ -2,7 +2,6 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -111,58 +110,77 @@ final class TestClient {
 
         @Override
         public void initPlayers(PlayerId ownId, Map<PlayerId, String> names) {
+            System.out.println(MessageId.INIT_PLAYERS.name()+".........\n");
+            System.out.printf("ownId: %s\n", ownId);
+            System.out.printf("playerNames: %s\n", names);
             assertEquals(ownId, storage.id);
             assertEquals(names, storage.playerNames);
         }
 
         @Override
         public void receiveInfo(String info) {
+            System.out.println(MessageId.RECEIVE_INFO.name()+".........\n");
+            System.out.printf("info: %s\n", info);
             assertEquals(info, storage.receiveInfo);
         }
 
         @Override
         public void updateState(PublicGameState newState, PlayerState ownState) {
+            System.out.println(MessageId.UPDATE_STATE.name()+".........\n");
+            System.out.printf("newPublicGameState: %s\n", newState);
+            System.out.printf("ownPlayerState: %s\n", ownState);
             storage.assertEqualsPublicGameState(newState, storage.gs);
             storage.assertEqualsPlayerState(ownState, storage.ps);
         }
 
         @Override
         public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
+            System.out.println(MessageId.SET_INITIAL_TICKETS.name()+".........\n");
+            System.out.printf("tickets: %s\n", tickets);
             assertEquals(tickets.toList(), storage.tickets.toList());
         }
 
         @Override
         public SortedBag<Ticket> chooseInitialTickets() {
+            System.out.println(MessageId.CHOOSE_INITIAL_TICKETS.name()+".........\n");
             return storage.tickets;
         }
 
         @Override
         public TurnKind nextTurn() {
+            System.out.println(MessageId.NEXT_TURN.name()+".........\n");
             return storage.nextTurn;
         }
 
         @Override
         public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
+            System.out.println(MessageId.CHOOSE_TICKETS.name()+".........\n");
+            System.out.printf("options: %s\n", options);
             return options;
         }
 
         @Override
         public int drawSlot() {
+            System.out.println(MessageId.DRAW_SLOT.name()+".........\n");
             return storage.drawSlot;
         }
 
         @Override
         public Route claimedRoute() {
+            System.out.println(MessageId.ROUTE.name()+".........\n");
             return storage.route;
         }
 
         @Override
         public SortedBag<Card> initialClaimCards() {
+            System.out.println(MessageId.CARDS.name()+".........\n");
             return storage.cards;
         }
 
         @Override
         public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
+            System.out.println(MessageId.CHOOSE_ADDITIONAL_CARDS.name()+".........\n");
+            System.out.printf("options: %s\n", options);
             return options.get(0);
         }
     }
