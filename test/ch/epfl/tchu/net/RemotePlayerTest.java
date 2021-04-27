@@ -3,6 +3,7 @@ package ch.epfl.tchu.net;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Not really a comment
  */
 final class storage {
+
     public final static Map<PlayerId, String> playerNames = Map.of(PlayerId.PLAYER_1, "Ada", PlayerId.PLAYER_2, "Charles");
     public final static String receiveInfo = "info to proxy";
     public final static SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets().subList(0, 5));
@@ -63,7 +65,10 @@ final class storage {
     }
 }
 
+
+
 final class TestServer {
+
     public static void main(String[] args) throws IOException {
         System.out.println("Starting server!");
         try (ServerSocket serverSocket = new ServerSocket(5108);
