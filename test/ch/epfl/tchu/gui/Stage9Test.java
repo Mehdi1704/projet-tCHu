@@ -29,22 +29,22 @@ public class Stage9Test extends Application {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
 
         ObjectProperty<ActionHandler.ClaimRouteHandler> claimRoute =
-                new SimpleObjectProperty<>(Stage9Test::claimRoute);/*
+                new SimpleObjectProperty<>(Stage9Test::claimRoute);
         ObjectProperty<ActionHandler.DrawTicketsHandler> drawTickets =
                 new SimpleObjectProperty<>(Stage9Test::drawTickets);
         ObjectProperty<ActionHandler.DrawCardHandler> drawCard =
                 new SimpleObjectProperty<>(Stage9Test::drawCard);
-*/
+
         Node mapView = MapViewCreator
                 .createMapView(gameState, claimRoute, Stage9Test::chooseCards);
-        /*
+
         Node cardsView = DecksViewCreator
                 .createCardsView(gameState, drawTickets, drawCard);
         Node handView = DecksViewCreator
                 .createHandView(gameState);
-*/
+
         BorderPane mainPane =
-                new BorderPane(mapView, null, null, null, null);
+                new BorderPane(mapView, null, cardsView, handView, null);
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
 
