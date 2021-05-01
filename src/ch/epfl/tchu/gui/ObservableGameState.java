@@ -2,6 +2,8 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.*;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.*;
 
@@ -9,63 +11,152 @@ import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
 public class ObservableGameState {
 
-    private PlayerState playerState ;
-    private PublicGameState publicGameState;
+    private final PlayerState playerState;
+    private final PublicGameState publicGameState;
 
-    //groupe des propriétés concernant l'état public de la partie
+    // Groupe des propriétés concernant l'état public de la partie
     private final IntegerProperty poucentageTicket;
     private final IntegerProperty pourcentageCard;
     private final List<ObjectProperty<Card>> faceUpCards = new ArrayList<>();
-    private final Map<Route,ObjectProperty<PlayerId>>  routeObjectPropertyMap = new HashMap<>();
+    private final Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMap = new HashMap<>();
 
-    //groupe des propriétés concernant l'état public de chacun des joueurs
-    private final Map<PlayerId,IntegerProperty> numberOfTicketMap  = new EnumMap<>(PlayerId.class);
-    private final Map<PlayerId,IntegerProperty> numberOfCardMap = new EnumMap<>(PlayerId.class);
-    private final Map<PlayerId,IntegerProperty> numberOfWagonMap = new EnumMap<>(PlayerId.class);
-    private final Map<PlayerId,IntegerProperty> numberOfPointOfConstructionMap = new EnumMap<>(PlayerId.class);
+    // Groupe des propriétés concernant l'état public de chacun des joueurs
+    private final Map<PlayerId, IntegerProperty> numberOfTicketsMap = new EnumMap<>(PlayerId.class);
+    private final Map<PlayerId, IntegerProperty> numberOfCardsMap = new EnumMap<>(PlayerId.class);
+    private final Map<PlayerId, IntegerProperty> numberOfWagonsMap = new EnumMap<>(PlayerId.class);
+    private final Map<PlayerId, IntegerProperty> numberOfPointsOfConstructionMap = new EnumMap<>(PlayerId.class);
 
-    //groupe des propriétés concernant l'état privé du joueur
-    private final List<ObjectProperty<Ticket>> listOfTicket = new ArrayList<>(); //ticket
-    private final Map<Card,IntegerProperty> numberOfEachTypeOfCardMap = new EnumMap<>(Card.class);
+    // Groupe des propriétés concernant l'état privé du joueur
+    private final List<Ticket> listOfTicket = new ArrayList<>(); //ticket
+    private final Map<Card, IntegerProperty> numberOfEachTypeOfCardMap = new EnumMap<>(Card.class);
     private final Map<Route, BooleanProperty> canTakeRouteMap = new HashMap<>();
 
 
-    public ObservableGameState(PlayerId PlayerId){
+    public ObservableGameState(PlayerId PlayerId) {
 
-        playerState = null ;
-        publicGameState = null ;
+        playerState = null;
+        publicGameState = null;
 
-        poucentageTicket= new SimpleIntegerProperty(0);
+        poucentageTicket = new SimpleIntegerProperty(0);
         pourcentageCard = new SimpleIntegerProperty(0);
 
-        for (int slot: FACE_UP_CARD_SLOTS) {
-            faceUpCards.add(new SimpleObjectProperty<>(null));
+        for (int slot : FACE_UP_CARD_SLOTS) {
+            faceUpCards.add(new SimpleObjectProperty<Card>(null));
         }
         // FACE_UP_CARD_SLOTS.forEach(index -> faceUpCards.add(new SimpleObjectProperty<>(null)));
 
-        Card.ALL.forEach(carte->numberOfEachTypeOfCardMap.put(carte,new SimpleIntegerProperty(0)));
+        Card.ALL.forEach(carte -> numberOfEachTypeOfCardMap.put(carte, new SimpleIntegerProperty(0)));
 
 
-        ChMap.routes().forEach(e->{
+        ChMap.routes().forEach(e -> {
             routeObjectPropertyMap.put(e, new SimpleObjectProperty<>(null));
-            canTakeRouteMap.put(e,new SimpleBooleanProperty(false));
+            canTakeRouteMap.put(e, new SimpleBooleanProperty(false));
         });
 
 
         PlayerId.ALL.forEach(playerId -> {
-            numberOfTicketMap.put(playerId,new SimpleIntegerProperty(0));
-            numberOfCardMap.put(playerId,new SimpleIntegerProperty(0));
-            numberOfWagonMap.put(playerId,new SimpleIntegerProperty(0));
-            numberOfPointOfConstructionMap.put(playerId,new SimpleIntegerProperty(0));
+            numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(0));
+            numberOfCardsMap.put(playerId, new SimpleIntegerProperty(0));
+            numberOfWagonsMap.put(playerId, new SimpleIntegerProperty(0));
+            numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(0));
 
         });
 
 
     }
 
-    public ObservableGameState setState(PublicGameState publicGameState, PlayerState playerState){
-        return this;
+    public ObservableGameState setState(PublicGameState publicGameState, PlayerState playerState) {
+
+        //TODO pourcentages
+
+        // Face Up Cards
+        for (int slot : FACE_UP_CARD_SLOTS) {
+            Card newCard = publicGameState.cardState().faceUpCard(slot);
+            faceUpCards.get(slot).set(newCard);
+        }
+
+        PlayerId.ALL.forEach(playerId -> {
+            PublicPlayerState tempPlayerState = publicGameState.playerState(playerId);
+            // route Object Property Map
+            List<Route> listOfRoutes = tempPlayerState.routes();
+            for (Route r : routeObjectPropertyMap.keySet()) {//TODO verifier
+                if (listOfRoutes.contains(r)) routeObjectPropertyMap.put(r, new SimpleObjectProperty<>(playerId));
+            }
+            // number Of Tickets Map
+            numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(
+                    tempPlayerState.ticketCount()));
+            // number Of Cards Map
+            numberOfCardsMap.put(playerId, new SimpleIntegerProperty(
+                    tempPlayerState.cardCount()));
+            // number Of Wagons Map
+            numberOfWagonsMap.put(playerId, new SimpleIntegerProperty(
+                    tempPlayerState.carCount()));
+            //numberOfWagonsMap.forEach((p,i)-> i.set(tempPlayerState.carCount()));
+            // number Of Points Of Construction Map
+            numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(
+                    tempPlayerState.claimPoints()));
+        });
+        // list Of Ticket
+        listOfTicket.addAll(playerState.tickets().toList());
+
+        //TODO sortedbag manip
+        playerState.cards();
+        //numberOfEachTypeOfCardMap.forEach();
+
+        // can Take Route Map
+        canTakeRouteMap.forEach((r,v) -> v.set(playerState.canClaimRoute(r)));
+
+        return null;
     }
-//TODO getter , list setState.
+
+    //_____________________GETTERS DE PUBLIC GAME STATE_____________________
+    public ReadOnlyIntegerProperty poucentageTicket() {
+        return poucentageTicket;
+    }
+
+    public ReadOnlyIntegerProperty pourcentageCard() {
+        return pourcentageCard;
+    }
+
+    public ReadOnlyObjectProperty<Card> faceUpCard(int slot) {
+        return faceUpCards.get(slot);
+    }
+
+    public ReadOnlyObjectProperty<PlayerId> routeObjectPropertyMap(Route route) {
+        return routeObjectPropertyMap.get(route);
+    }
+
+    //_____________________GETTERS PUBLIC PLAYER STATE_____________________
+    public ReadOnlyIntegerProperty numberofTickets(PlayerId playerId) {
+        return numberOfTicketsMap.get(playerId);
+    }
+
+    public ReadOnlyIntegerProperty numberOfCards(PlayerId playerId) {
+        return numberOfCardsMap.get(playerId);
+    }
+
+    public ReadOnlyIntegerProperty numberOfWagons(PlayerId playerId) {
+        return numberOfWagonsMap.get(playerId);
+    }
+
+    public ReadOnlyIntegerProperty numberOfPointsOfConstruction(PlayerId playerId) {
+        return numberOfPointsOfConstructionMap.get(playerId);
+    }
+
+    //_____________________GETTERS PLAYER STATE___________________________
+
+    //TODO listOfTicket getter verifier
+    public ObservableList<Ticket> tickets() {
+        return FXCollections.unmodifiableObservableList(
+                FXCollections.observableList(listOfTicket));
+    }
+
+    public ReadOnlyIntegerProperty numberOfEachTypeOfCards(Card card) {
+        return numberOfEachTypeOfCardMap.get(card);
+    }
+
+    public ReadOnlyBooleanProperty canTakeRoute(Route route) {
+        return canTakeRouteMap.get(route);
+    }
 
 }

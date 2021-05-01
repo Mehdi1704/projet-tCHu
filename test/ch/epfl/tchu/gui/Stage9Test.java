@@ -37,7 +37,6 @@ public class Stage9Test extends Application {
 
         Node mapView = MapViewCreator
                 .createMapView(gameState, claimRoute, Stage9Test::chooseCards);
-
         Node cardsView = DecksViewCreator
                 .createCardsView(gameState, drawTickets, drawCard);
         Node handView = DecksViewCreator
