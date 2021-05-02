@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
+import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
 
 public class ObservableGameState {
 
@@ -43,10 +44,8 @@ public class ObservableGameState {
         for (int slot : FACE_UP_CARD_SLOTS) {
             faceUpCards.add(new SimpleObjectProperty<Card>(null));
         }
-        // FACE_UP_CARD_SLOTS.forEach(index -> faceUpCards.add(new SimpleObjectProperty<>(null)));
 
         Card.ALL.forEach(carte -> numberOfEachTypeOfCardMap.put(carte, new SimpleIntegerProperty(0)));
-
 
         ChMap.routes().forEach(e -> {
             routeObjectPropertyMap.put(e, new SimpleObjectProperty<>(null));
@@ -61,13 +60,14 @@ public class ObservableGameState {
             numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(0));
 
         });
-
-
     }
 
-    public ObservableGameState setState(PublicGameState publicGameState, PlayerState playerState) {
+    public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
         //TODO pourcentages
+            //TODO castage
+        poucentageTicket.set( (publicGameState.ticketsCount()*100) /ChMap.tickets().size());
+        pourcentageCard.set( (publicGameState.cardState().deckSize()*100)/TOTAL_CARDS_COUNT);
 
         // Face Up Cards
         for (int slot : FACE_UP_CARD_SLOTS) {
@@ -106,7 +106,6 @@ public class ObservableGameState {
         // can Take Route Map
         canTakeRouteMap.forEach((r,v) -> v.set(playerState.canClaimRoute(r)));
 
-        return null;
     }
 
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
