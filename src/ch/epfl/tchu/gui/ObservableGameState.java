@@ -9,7 +9,7 @@ import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
-
+//ASBA ALOULOU
 public class ObservableGameState {
 
     private final PlayerState playerState;
