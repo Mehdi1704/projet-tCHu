@@ -14,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import java.util.List;
+import java.util.Objects;
 
 
 class MapViewCreator {
@@ -53,14 +54,7 @@ class MapViewCreator {
     private static Group GroupRoute(Route route) {
         Group theRoute = new Group();
         String type = route.level().name();
-        String color;
-
-        if (route.color() == null) {
-            color = "NEUTRAL";
-        } else {
-            color = route.color().name();
-        }
-        // Objects.isNull(route.color()) ? color = "NEUTRAL" : color = route.color().name();
+        String color = Objects.isNull(route.color()) ? "NEUTRAL" : route.color().name();
         theRoute.setId(route.id());
         theRoute.getStyleClass().addAll("route", type, color);
 

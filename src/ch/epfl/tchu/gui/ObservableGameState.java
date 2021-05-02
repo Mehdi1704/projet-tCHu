@@ -100,9 +100,8 @@ public class ObservableGameState {
         // list Of Ticket
         listOfTicket.addAll(playerState.tickets().toList());
 
-        //TODO sortedbag manip
-        playerState.cards();
-        //numberOfEachTypeOfCardMap.forEach();
+        // number Of Each Type Of Card Map
+        numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
 
         // can Take Route Map
         canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)));
@@ -152,8 +151,6 @@ public class ObservableGameState {
     }
 
     //_____________________GETTERS PLAYER STATE___________________________
-
-    //TODO listOfTicket getter verifier
     public ObservableList<Ticket> tickets() {
         return FXCollections.unmodifiableObservableList(
                 FXCollections.observableList(listOfTicket));

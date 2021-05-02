@@ -4,6 +4,7 @@ import ch.epfl.tchu.game.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,22 +23,28 @@ class DecksViewCreator {
         HBox box = new HBox();
         box.getStylesheets().addAll("decks.css", "colors.css");
 
-        ListView<Ticket> listView = new ListView<>();
+        ListView<Ticket> listView = new ListView<>(observableGameState.tickets());
         listView.setId("tickets");
 
         HBox box2 = new HBox();
         box2.setId("hand-pane");
 
-
-        Card.ALL.forEach(card -> box2.getChildren().add(cardView(card.name())));
-
-        //observableGameState.getPlayerState().cards().toList().
+        Card.ALL.forEach(card -> {
+            ReadOnlyIntegerProperty count = observableGameState.numberOfEachTypeOfCards(card);
+            Text counter = new Text();
+            counter.getStyleClass().add("count");
+            counter.textProperty().bind(Bindings.convert(count));
+            counter.visibleProperty().bind(Bindings.greaterThan(count,1));
+            StackPane stackPane = cardView(card);
+            stackPane.visibleProperty().bind(Bindings.greaterThan(count, 0));
+            stackPane.getChildren().add(counter);
+            box2.getChildren().add(stackPane);
+        });
 
         box.getChildren().addAll(listView, box2);
         return box;
     }
 
-    //TODO mettre observableGameState
     public static Node createCardsView(ObservableGameState gameState,
                                        ObjectProperty<ActionHandler.DrawTicketsHandler> ticketHandler,
                                        ObjectProperty<ActionHandler.DrawCardHandler> cardHandler) {
@@ -48,19 +55,15 @@ class DecksViewCreator {
         box.getChildren().add(gaugeButton(gameState.poucentageTicket(), "Billets"));
         box.setId("card-pane");
         for (int i = 0; i < 5; i++) {
-            box.getChildren().add(cardView(gameState.faceUpCard(i).getName()));
+            box.getChildren().add(cardView(gameState.faceUpCard(i).get()));
         }
         box.getChildren().add(gaugeButton(gameState.pourcentageCard(), "Cartes"));
         return box;
     }
 
-    private static StackPane cardView(String cardName, ObservableGameState observableGameState) {
-        if (cardName.equals("LOCOMOTIVE")) {
-            cardName = "NEUTRAL";
-        }
-        //TODO count
-        Text counter = new Text();
-        counter.getStyleClass().add("count");
+    private static StackPane cardView(Card card) {
+
+        String cardName = card.name().equals("LOCOMOTIVE") ? "NEUTRAL" : card.name();
 
         Rectangle rect1 = new Rectangle(60, 90);
         rect1.getStyleClass().add("outside");
@@ -74,9 +77,6 @@ class DecksViewCreator {
         StackPane stackPane = new StackPane();
         stackPane.getStyleClass().addAll(cardName, "card");
         stackPane.getChildren().addAll(rect1, rect2, rect3);
-
-        observableGameState.numberOfEachTypeOfCards()
-        stackPane.visibleProperty().bind(Bindings.greaterThan(count, 0));
 
         return stackPane;
     }
