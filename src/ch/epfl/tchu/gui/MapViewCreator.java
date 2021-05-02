@@ -23,7 +23,6 @@ class MapViewCreator {
                                      ObjectProperty<ActionHandler.ClaimRouteHandler> arg2,
                                      CardChooser cardChooser) {
 
-
         Pane paneFond = new Pane();
         paneFond.getStylesheets().addAll("map.css", "colors.css");
         paneFond.getChildren().add(new ImageView());
@@ -32,23 +31,9 @@ class MapViewCreator {
             Group r1 = GroupRoute(route);
             paneFond.getChildren().add(r1);
         });
-
-
-        /*
-        CardChooser firstChoice = (options, handler) -> {
-            handler.onChooseCards(options.get(0));
-        };// test pour cet etape , ca va changer à l'étape suivante .
-
-        Image map = new Image("map.css");
-        ImageView mapImageView = new ImageView();
-        mapImageView.setImage(map);
-        GridPane gridPane = new GridPane();
-        gridPane.add(mapImageView,0,0);
-        */
         return paneFond;
-        // return gridPane;
     }
-    // private GridPane
+
 
 
     private static Group GroupRoute(Route route) {
