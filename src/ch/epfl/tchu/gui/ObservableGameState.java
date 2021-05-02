@@ -1,5 +1,6 @@
 package ch.epfl.tchu.gui;
 
+import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -9,7 +10,7 @@ import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
-
+//ASBA ALOULOU
 public class ObservableGameState {
 
     private final PlayerId playerId;
@@ -157,8 +158,6 @@ public class ObservableGameState {
     }
 
     //_____________________GETTERS PLAYER STATE___________________________
-
-    //TODO listOfTicket getter verifier
     public ObservableList<Ticket> tickets() {
         return FXCollections.unmodifiableObservableList(
                 FXCollections.observableList(listOfTicket));
@@ -170,6 +169,18 @@ public class ObservableGameState {
 
     public ReadOnlyBooleanProperty canTakeRoute(Route route) {
         return canTakeRouteMap.get(route);
+    }
+
+    public boolean canDrawTickets() {
+        return publicGameState.canDrawTickets();
+    }
+
+    public boolean canDrawCards() {
+        return publicGameState.canDrawCards();
+    }
+
+    public List<SortedBag<Card>> possibleClaimCards(Route route) {
+        return playerState.possibleClaimCards(route);
     }
 
 }
