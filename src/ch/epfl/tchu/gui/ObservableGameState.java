@@ -65,9 +65,9 @@ public class ObservableGameState {
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
         //TODO pourcentages
-            //TODO castage
-        poucentageTicket.set( (publicGameState.ticketsCount()*100) /ChMap.tickets().size());
-        pourcentageCard.set( (publicGameState.cardState().deckSize()*100)/TOTAL_CARDS_COUNT);
+        //TODO castage
+        poucentageTicket.set((publicGameState.ticketsCount() * 100) / ChMap.tickets().size());
+        pourcentageCard.set((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT);
 
         // Face Up Cards
         for (int slot : FACE_UP_CARD_SLOTS) {
@@ -104,8 +104,16 @@ public class ObservableGameState {
         //numberOfEachTypeOfCardMap.forEach();
 
         // can Take Route Map
-        canTakeRouteMap.forEach((r,v) -> v.set(playerState.canClaimRoute(r)));
+        canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)));
 
+    }
+
+    public PublicGameState getPublicGameState() {
+        return publicGameState;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
     }
 
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
