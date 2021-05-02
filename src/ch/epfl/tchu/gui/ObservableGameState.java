@@ -12,6 +12,7 @@ import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
 
 public class ObservableGameState {
 
+    private final PlayerId playerId;
     private final PlayerState playerState;
     private final PublicGameState publicGameState;
 
@@ -34,7 +35,7 @@ public class ObservableGameState {
 
 
     public ObservableGameState(PlayerId PlayerId) {
-
+        this.playerId= PlayerId;
         playerState = null;
         publicGameState = null;
 
@@ -99,15 +100,19 @@ public class ObservableGameState {
         // list Of Ticket
         listOfTicket.addAll(playerState.tickets().toList());
 
-        //TODO sortedbag manip.
-
         //Sortedbag map.
         numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
 
+        // TODO verifier que l'autre joueur ne possède pas la route ?
+
         // can Take Route Map
-        canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)));
+        canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)
+                            && publicGameState.currentPlayerId().equals(playerId)
+                ));
 
     }
+
+    
 
     public PublicGameState getPublicGameState() {
         return publicGameState;
