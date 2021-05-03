@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
+import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Route;
 import static ch.epfl.tchu.gui.ActionHandler.*;
 
@@ -21,45 +22,61 @@ import java.util.Objects;
 class MapViewCreator {
 
     public static Node createMapView(ObservableGameState observableGameState,
-                                     ObjectProperty<ClaimRouteHandler> arg2,
+                                     ObjectProperty<ClaimRouteHandler> claimRouteHandler,
                                      CardChooser cardChooser) {
+
+        CardChooser firstChoice = (options, handler) -> {
+            handler.onChooseCards(options.get(0));
+        };
 
         Pane paneFond = new Pane();
         paneFond.getStylesheets().addAll("map.css", "colors.css");
         paneFond.getChildren().add(new ImageView());
 
         ChMap.routes().forEach(route -> {
-            Group r1 = GroupRoute(route);
+            Group r1 = GroupRoute(route,observableGameState);
             paneFond.getChildren().add(r1);
+
         });
+
+
         return paneFond;
     }
 
 
 
-    private static Group GroupRoute(Route route) {
+    private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
+        String playerId = observableGameState.getPlayerId().name();
         String type = route.level().name();
         String color = Objects.isNull(route.color()) ? "NEUTRAL" : route.color().name();
         theRoute.setId(route.id());
         theRoute.getStyleClass().addAll("route", type, color);
 
+        observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
+                theRoute.getStyleClass().set(2,n.name()));
+
         for (int i = 0; i < route.length(); i++) {
-            theRoute.getChildren().add(GroupCase(i + 1, route));
+            theRoute.getChildren().add(GroupCase(i + 1, route,observableGameState));
         }
         return theRoute;
     }
 
 
-    private static Group GroupCase(int index, Route route) {
+    private static Group GroupCase(int index, Route route,ObservableGameState observableGameState) {
         Group theCase = new Group();
+        Group wagon = GroupWagon();
         theCase.setId(route.id() + "_" + index);
         //voie
         Rectangle rect = new Rectangle(36, 12);
         rect.getStyleClass().addAll("track", "filled");
         theCase.getChildren().add(rect);
 
-        theCase.getChildren().add(GroupWagon());
+        observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
+                wagon.visibleProperty().set(!Objects.isNull(n)));
+
+
+    theCase.getChildren().add(GroupWagon());
         return theCase;
     }
 

@@ -19,8 +19,8 @@ public class ObservableGameState {
     private final PublicGameState publicGameState;
 
     // Groupe des propriétés concernant l'état public de la partie
-    private final IntegerProperty poucentageTicket;
-    private final IntegerProperty pourcentageCard;
+    private final IntegerProperty percentageTicket;
+    private final IntegerProperty percentageCard;
     private final List<ObjectProperty<Card>> faceUpCards = new ArrayList<>();
     private final Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMap = new HashMap<>();
 
@@ -41,8 +41,8 @@ public class ObservableGameState {
         playerState = null;
         publicGameState = null;
 
-        poucentageTicket = new SimpleIntegerProperty(0);
-        pourcentageCard = new SimpleIntegerProperty(0);
+        percentageTicket = new SimpleIntegerProperty(0);
+        percentageCard = new SimpleIntegerProperty(0);
 
         for (int slot : FACE_UP_CARD_SLOTS) {
             faceUpCards.add(new SimpleObjectProperty<Card>(null));
@@ -55,7 +55,6 @@ public class ObservableGameState {
             canTakeRouteMap.put(e, new SimpleBooleanProperty(false));
         });
 
-//TODO pk jaune ?
 
         PlayerId.ALL.forEach(playerId -> {
             numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(0));
@@ -69,8 +68,8 @@ public class ObservableGameState {
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
 
-        poucentageTicket.set(((publicGameState.ticketsCount() * 100) / ChMap.tickets().size()));
-        pourcentageCard.set(((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT));
+        percentageTicket.set(((publicGameState.ticketsCount() * 100) / ChMap.tickets().size()));
+        percentageCard.set(((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT));
 
         // Face Up Cards
         for (int slot : FACE_UP_CARD_SLOTS) {
@@ -130,11 +129,11 @@ public class ObservableGameState {
 
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
     public ReadOnlyIntegerProperty poucentageTicket() {
-        return poucentageTicket;
+        return percentageTicket;
     }
 
     public ReadOnlyIntegerProperty pourcentageCard() {
-        return pourcentageCard;
+        return percentageCard;
     }
 
     public ReadOnlyObjectProperty<Card> faceUpCard(int slot) {
@@ -188,4 +187,7 @@ public class ObservableGameState {
         return playerState.possibleClaimCards(route);
     }
 
+    public PlayerId getPlayerId() {
+        return playerId;
+    }
 }
