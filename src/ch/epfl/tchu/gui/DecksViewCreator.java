@@ -1,10 +1,13 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.*;
+
 import static ch.epfl.tchu.gui.ActionHandler.*;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -15,26 +18,37 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-
+/**
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 class DecksViewCreator {
 
+    /**
+     * Création de la vue des cartes et tickets du joueur
+     *
+     * @param observableGameState Etat de jeu observable
+     * @return Noeud représentant les élements de jeu du joueur
+     */
     public static Node createHandView(ObservableGameState observableGameState) {
 
         HBox box = new HBox();
         box.getStylesheets().addAll("decks.css", "colors.css");
-
+        // Création de la liste de tickets
         ListView<Ticket> listView = new ListView<>(observableGameState.tickets());
         listView.setId("tickets");
 
         HBox box2 = new HBox();
         box2.setId("hand-pane");
-
+        // Création des cartes en main du joueur
         Card.ALL.forEach(card -> {
             ReadOnlyIntegerProperty count = observableGameState.numberOfEachTypeOfCards(card);
+            //TODO verifier
+            count.addListener((observable, oldValue, newValue) -> System.out.println("Types of cards: " + newValue));
             Text counter = new Text();
             counter.getStyleClass().add("count");
             counter.textProperty().bind(Bindings.convert(count));
-            counter.visibleProperty().bind(Bindings.greaterThan(count,1));
+            counter.visibleProperty().bind(Bindings.greaterThan(count, 1));
             StackPane stackPane = cardView(card);
             stackPane.visibleProperty().bind(Bindings.greaterThan(count, 0));
             stackPane.getChildren().add(counter);
@@ -45,26 +59,49 @@ class DecksViewCreator {
         return box;
     }
 
-    public static Node createCardsView(ObservableGameState gameState,
+    /**
+     * Création de la vue des pioches de cartes (visibles ou pas) et de tickets
+     *
+     * @param observableGameState Etat de jeu observable
+     * @param ticketHandler       Gestionnaire des tickets
+     * @param cardHandler         Gestionnaire des cartes
+     * @return Noeud représentant les élements piochables visibles aux deux joueurs
+     */
+    public static Node createCardsView(ObservableGameState observableGameState,
                                        ObjectProperty<DrawTicketsHandler> ticketHandler,
                                        ObjectProperty<DrawCardHandler> cardHandler) {
 
-        VBox box = new VBox();
-        box.getStylesheets().addAll("decks.css", "colors.css");
-
-        box.getChildren().add(gaugeButton(gameState.poucentageTicket(), "Billets"));
-        box.setId("card-pane");
-        //for (Card slot : gameState.getPublicGameState().cardState().faceUpCards()){
-
-        //}
-        for (int i = 0; i < 5; i++) {
+        VBox cardsView = new VBox();
+        cardsView.getStylesheets().addAll("decks.css", "colors.css");
+        cardsView.setId("card-pane");
+        // Creation du bouton pour les tickets
+        ReadOnlyIntegerProperty percentageTickets = observableGameState.poucentageTicket();
+        percentageTickets.addListener((observable, oldValue, newValue) -> System.out.println("Ticket percentage: " + newValue));
+        Button ticketButton = gaugeButton(percentageTickets, "Billets");
+        ticketButton.disabledProperty().isEqualTo(ticketHandler.isNull());
+        ticketButton.setOnAction(e -> ticketHandler.get().onDrawTickets());
+        cardsView.getChildren().add(ticketButton);
+        // Creation des cartes face visible
+        for (int i = 0; i < 5; i++) {//TODO optimiser boucle
             int slot = i;
-            StackPane card = cardView(gameState.faceUpCard(i).get());
+            ReadOnlyObjectProperty<Card> faceUpCard = observableGameState.faceUpCard(i);
+            StackPane card = cardView(faceUpCard.get());
+            faceUpCard.addListener((observable, oldValue, newValue) -> {
+                System.out.println("Face up card: " + newValue);
+                card.getStyleClass().set(1, newValue.name());
+            });
             card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
-            box.getChildren().add(card);
+            cardsView.getChildren().add(card);
         }
-        box.getChildren().add(gaugeButton(gameState.pourcentageCard(), "Cartes"));
-        return box;
+        // Creation du bouton pour la pioche de cartes
+        ReadOnlyIntegerProperty percentageCards = observableGameState.pourcentageCard();
+        percentageCards.addListener((observable, oldValue, newValue) -> System.out.println("Cards percentage: " + newValue));
+        Button cardsButton = gaugeButton(percentageCards, "Cartes");
+        cardsButton.disabledProperty().isEqualTo(cardHandler.isNull());
+        cardsButton.setOnAction(e -> cardHandler.get().onDrawCard(-1));
+        cardsView.getChildren().add(cardsButton);
+
+        return cardsView;
     }
 
     private static StackPane cardView(Card card) {
@@ -103,13 +140,10 @@ class DecksViewCreator {
         Button gaugedButton = new Button(title);
         gaugedButton.getStyleClass().add("gauged");
 
-
         Group group = new Group();
         group.getChildren().addAll(background, foreground);
-
         gaugedButton.setGraphic(group);
+
         return gaugedButton;
     }
-
-
 }
