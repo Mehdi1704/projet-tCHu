@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
+import static ch.epfl.tchu.gui.ActionHandler.*;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
@@ -20,7 +21,7 @@ import java.util.Objects;
 class MapViewCreator {
 
     public static Node createMapView(ObservableGameState observableGameState,
-                                     ObjectProperty<ActionHandler.ClaimRouteHandler> arg2,
+                                     ObjectProperty<ClaimRouteHandler> arg2,
                                      CardChooser cardChooser) {
 
         Pane paneFond = new Pane();
@@ -79,6 +80,6 @@ class MapViewCreator {
     @FunctionalInterface
     interface CardChooser {
         void chooseCards(List<SortedBag<Card>> options,
-                         ActionHandler.ChooseCardsHandler handler);
+                         ChooseCardsHandler handler);
     }
 }

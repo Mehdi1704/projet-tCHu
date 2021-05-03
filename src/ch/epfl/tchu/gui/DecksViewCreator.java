@@ -1,10 +1,10 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.*;
+import static ch.epfl.tchu.gui.ActionHandler.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -46,16 +46,22 @@ class DecksViewCreator {
     }
 
     public static Node createCardsView(ObservableGameState gameState,
-                                       ObjectProperty<ActionHandler.DrawTicketsHandler> ticketHandler,
-                                       ObjectProperty<ActionHandler.DrawCardHandler> cardHandler) {
+                                       ObjectProperty<DrawTicketsHandler> ticketHandler,
+                                       ObjectProperty<DrawCardHandler> cardHandler) {
 
         VBox box = new VBox();
         box.getStylesheets().addAll("decks.css", "colors.css");
 
         box.getChildren().add(gaugeButton(gameState.poucentageTicket(), "Billets"));
         box.setId("card-pane");
+        //for (Card slot : gameState.getPublicGameState().cardState().faceUpCards()){
+
+        //}
         for (int i = 0; i < 5; i++) {
-            box.getChildren().add(cardView(gameState.faceUpCard(i).get()));
+            int slot = i;
+            StackPane card = cardView(gameState.faceUpCard(i).get());
+            card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
+            box.getChildren().add(card);
         }
         box.getChildren().add(gaugeButton(gameState.pourcentageCard(), "Cartes"));
         return box;
@@ -96,6 +102,7 @@ class DecksViewCreator {
 
         Button gaugedButton = new Button(title);
         gaugedButton.getStyleClass().add("gauged");
+
 
         Group group = new Group();
         group.getChildren().addAll(background, foreground);
