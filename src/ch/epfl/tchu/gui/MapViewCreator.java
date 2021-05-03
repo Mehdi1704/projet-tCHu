@@ -18,7 +18,7 @@ import java.util.Objects;
 
 
 class MapViewCreator {
-    // pourquoi une map pour arg2 .
+
     public static Node createMapView(ObservableGameState observableGameState,
                                      ObjectProperty<ActionHandler.ClaimRouteHandler> arg2,
                                      CardChooser cardChooser) {

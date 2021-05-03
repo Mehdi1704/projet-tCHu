@@ -10,7 +10,7 @@ import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
-//ASBA ALOULOU
+
 public class ObservableGameState {
 
     private final PlayerId playerId;
@@ -66,7 +66,6 @@ public class ObservableGameState {
 
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
-        //TODO pourcentages
         //TODO castage
         poucentageTicket.set((int)((publicGameState.ticketsCount() * 100) / ChMap.tickets().size()));
         pourcentageCard.set((int)((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT));
@@ -110,7 +109,7 @@ public class ObservableGameState {
         canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)
                             && publicGameState.currentPlayerId().equals(playerId)
                 ));
-
+//TODO ajouter la condition route double ,et n'appartient à personne .
     }
 
     
@@ -170,7 +169,7 @@ public class ObservableGameState {
     public ReadOnlyBooleanProperty canTakeRoute(Route route) {
         return canTakeRouteMap.get(route);
     }
-
+// TODO à vérifier
     public boolean canDrawTickets() {
         return publicGameState.canDrawTickets();
     }
