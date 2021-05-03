@@ -35,8 +35,25 @@ class MapViewCreator {
 
         ChMap.routes().forEach(route -> {
             Group r1 = GroupRoute(route,observableGameState);
-            paneFond.getChildren().add(r1);
+            r1.disableProperty().bind(claimRouteHandler.isNull().or(observableGameState.canTakeRoute(route).not()));
 
+         //   observableGameState.numberOfCards(observableGameState.getPlayerId()).addListener(event->{
+         // });
+
+                r1.setOnMouseClicked(mouseEvent -> {
+
+                    if( observableGameState.check(observableGameState.getPlayerState(),route).size()==1 ){
+                        claimRouteHandler.get().onClaimRoute(route,observableGameState.possibleClaimCards(route).get(0));
+                    }else if ( observableGameState.check(observableGameState.getPlayerState(),route).size()>=1 ){
+                        ActionHandler.ChooseCardsHandler chooseCardsH =
+                                chosenCards -> claimRouteHandler.get().onClaimRoute(route, chosenCards);
+                        cardChooser.chooseCards(observableGameState.possibleClaimCards(route), chooseCardsH);
+
+                    }});
+
+
+
+            paneFond.getChildren().add(r1);
         });
 
 
@@ -53,6 +70,8 @@ class MapViewCreator {
         }else if (PlayerId.PLAYER_2.equals(observableGameState.routeObjectPropertyMap(route).get())){
             playerId = PlayerId.PLAYER_2.name();
         }
+
+       // a voir.
         observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
                 theRoute.getStyleClass().set(3,n.name()));
 
