@@ -47,14 +47,20 @@ class MapViewCreator {
 
     private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
-        String playerId = observableGameState.getPlayerId().name();
+        String playerId = "";
+        if (PlayerId.PLAYER_1.equals(observableGameState.routeObjectPropertyMap(route).get())){
+            playerId = PlayerId.PLAYER_1.name();
+        }else if (PlayerId.PLAYER_2.equals(observableGameState.routeObjectPropertyMap(route).get())){
+            playerId = PlayerId.PLAYER_2.name();
+        }
+        observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
+                theRoute.getStyleClass().set(3,n.name()));
+
         String type = route.level().name();
         String color = Objects.isNull(route.color()) ? "NEUTRAL" : route.color().name();
         theRoute.setId(route.id());
-        theRoute.getStyleClass().addAll("route", type, color);
+        theRoute.getStyleClass().addAll("route", type, color, playerId);
 
-        observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
-                theRoute.getStyleClass().set(2,n.name()));
 
         for (int i = 0; i < route.length(); i++) {
             theRoute.getChildren().add(GroupCase(i + 1, route,observableGameState));
