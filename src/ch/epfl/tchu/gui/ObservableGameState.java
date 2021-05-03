@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
@@ -54,6 +55,7 @@ public class ObservableGameState {
             canTakeRouteMap.put(e, new SimpleBooleanProperty(false));
         });
 
+//TODO pk jaune ?
 
         PlayerId.ALL.forEach(playerId -> {
             numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(0));
@@ -66,9 +68,9 @@ public class ObservableGameState {
 
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
-        //TODO castage
-        poucentageTicket.set((int)((publicGameState.ticketsCount() * 100) / ChMap.tickets().size()));
-        pourcentageCard.set((int)((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT));
+
+        poucentageTicket.set(((publicGameState.ticketsCount() * 100) / ChMap.tickets().size()));
+        pourcentageCard.set(((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT));
 
         // Face Up Cards
         for (int slot : FACE_UP_CARD_SLOTS) {
@@ -103,13 +105,17 @@ public class ObservableGameState {
         //Sortedbag map.
         numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
 
-        // TODO verifier que l'autre joueur ne possède pas la route ?
+        List<Route> takenRoutes = publicGameState.claimedRoutes();
+                  Set<List<Station>> setOfListOfStationTaken = takenRoutes
+                    .stream()
+                    .map(Route::stations)
+                    .collect(Collectors.toSet());
 
         // can Take Route Map
         canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)
                             && publicGameState.currentPlayerId().equals(playerId)
-                ));
-//TODO ajouter la condition route double ,et n'appartient à personne .
+                            && !(setOfListOfStationTaken.contains(r.stations()))
+        ));
     }
 
     
@@ -169,7 +175,7 @@ public class ObservableGameState {
     public ReadOnlyBooleanProperty canTakeRoute(Route route) {
         return canTakeRouteMap.get(route);
     }
-// TODO à vérifier
+
     public boolean canDrawTickets() {
         return publicGameState.canDrawTickets();
     }
