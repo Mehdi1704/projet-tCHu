@@ -76,7 +76,6 @@ class DecksViewCreator {
         cardsView.setId("card-pane");
         // Creation du bouton pour les tickets
         ReadOnlyIntegerProperty percentageTickets = observableGameState.poucentageTicket();
-        percentageTickets.addListener((observable, oldValue, newValue) -> System.out.println("Ticket percentage: " + newValue));
         Button ticketButton = gaugeButton(percentageTickets, "Billets");
         ticketButton.disabledProperty().isEqualTo(ticketHandler.isNull());
         ticketButton.setOnAction(e -> ticketHandler.get().onDrawTickets());
@@ -95,7 +94,6 @@ class DecksViewCreator {
         }
         // Creation du bouton pour la pioche de cartes
         ReadOnlyIntegerProperty percentageCards = observableGameState.pourcentageCard();
-        percentageCards.addListener((observable, oldValue, newValue) -> System.out.println("Cards percentage: " + newValue));
         Button cardsButton = gaugeButton(percentageCards, "Cartes");
         cardsButton.disabledProperty().isEqualTo(cardHandler.isNull());
         cardsButton.setOnAction(e -> cardHandler.get().onDrawCard(-1));
