@@ -15,8 +15,8 @@ import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
 public class ObservableGameState {
 
     private final PlayerId playerId;
-    private final PlayerState playerState;
-    private final PublicGameState publicGameState;
+    private PlayerState playerStateAtt;
+    private PublicGameState publicGameStateAtt;
 
     // Groupe des propriétés concernant l'état public de la partie
     private final IntegerProperty percentageTicket;
@@ -31,15 +31,15 @@ public class ObservableGameState {
     private final Map<PlayerId, IntegerProperty> numberOfPointsOfConstructionMap = new EnumMap<>(PlayerId.class);
 
     // Groupe des propriétés concernant l'état privé du joueur
-    private final List<Ticket> listOfTicket = new ArrayList<>(); //ticket
+    private final ListProperty<Ticket> listOfTicket = new SimpleListProperty<>();
     private final Map<Card, IntegerProperty> numberOfEachTypeOfCardMap = new EnumMap<>(Card.class);
     private final Map<Route, BooleanProperty> canTakeRouteMap = new HashMap<>();
 
 
     public ObservableGameState(PlayerId PlayerId) {
         this.playerId= PlayerId;
-        playerState = null;
-        publicGameState = null;
+        playerStateAtt = null;
+        publicGameStateAtt = null;
 
         percentageTicket = new SimpleIntegerProperty(0);
         percentageCard = new SimpleIntegerProperty(0);
@@ -63,10 +63,14 @@ public class ObservableGameState {
             numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(0));
 
         });
+
+        listOfTicket.set(null);
     }
 
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
+        playerStateAtt = playerState;
+        publicGameStateAtt = publicGameState;
 
         percentageTicket.set(((publicGameState.ticketsCount() * 100) / ChMap.tickets().size()));
         percentageCard.set(((publicGameState.cardState().deckSize() * 100) / TOTAL_CARDS_COUNT));
@@ -99,7 +103,7 @@ public class ObservableGameState {
                     tempPlayerState.claimPoints()));
         });
         // list Of Ticket
-        listOfTicket.addAll(playerState.tickets().toList());
+        listOfTicket.setValue(FXCollections.observableList(playerState.tickets().toList()));
 
         //Sortedbag map.
         numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
@@ -119,12 +123,12 @@ public class ObservableGameState {
 
     
 
-    public PublicGameState getPublicGameState() {
-        return publicGameState;
+    public PublicGameState getPublicGameStateAtt() {
+        return publicGameStateAtt;
     }
 
-    public PlayerState getPlayerState() {
-        return playerState;
+    public PlayerState getPlayerStateAtt() {
+        return playerStateAtt;
     }
 
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
@@ -163,8 +167,7 @@ public class ObservableGameState {
 
     //_____________________GETTERS PLAYER STATE___________________________
     public ObservableList<Ticket> tickets() {
-        return FXCollections.unmodifiableObservableList(
-                FXCollections.observableList(listOfTicket));
+        return FXCollections.unmodifiableObservableList(listOfTicket);
     }
 
     public ReadOnlyIntegerProperty numberOfEachTypeOfCards(Card card) {
@@ -176,15 +179,15 @@ public class ObservableGameState {
     }
 
     public boolean canDrawTickets() {
-        return publicGameState.canDrawTickets();
+        return publicGameStateAtt.canDrawTickets();
     }
 
     public boolean canDrawCards() {
-        return publicGameState.canDrawCards();
+        return publicGameStateAtt.canDrawCards();
     }
 
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
-        return playerState.possibleClaimCards(route);
+        return playerStateAtt.possibleClaimCards(route);
     }
 
     public PlayerId getPlayerId() {

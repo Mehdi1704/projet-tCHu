@@ -37,7 +37,8 @@ class MapViewCreator {
 
             r1.setOnMouseClicked(mouseEvent -> {
 
-                List<SortedBag<Card>> pCC = List.of(SortedBag.of(3, Card.RED));//observableGameState.possibleClaimCards(route);
+                List<SortedBag<Card>> pCC = //List.of(SortedBag.of(3, Card.RED));//
+                        observableGameState.possibleClaimCards(route);
                 System.out.println(pCC);
                 System.out.println("testdone2");
                 if (pCC.size() == 1) {

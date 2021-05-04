@@ -18,6 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.Objects;
+
 /**
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -87,11 +89,12 @@ class DecksViewCreator {
             StackPane card = cardView(faceUpCard.get());
             faceUpCard.addListener((observable, oldValue, newValue) -> {
                 System.out.println("Face up card: " + newValue);
-                card.getStyleClass().set(1, newValue.name());
+                card.getStyleClass().set(0, newValue.name());
             });
             card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
             cardsView.getChildren().add(card);
         }
+
         // Creation du bouton pour la pioche de cartes
         ReadOnlyIntegerProperty percentageCards = observableGameState.pourcentageCard();
         Button cardsButton = gaugeButton(percentageCards, "Cartes");
@@ -104,7 +107,10 @@ class DecksViewCreator {
 
     private static StackPane cardView(Card card) {
 
-        String cardName = card.name().equals("LOCOMOTIVE") ? "NEUTRAL" : card.name();
+        String cardName="";
+        if (!Objects.isNull(card)){
+            cardName = card.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
+        }
 
         Rectangle rect1 = new Rectangle(60, 90);
         rect1.getStyleClass().add("outside");

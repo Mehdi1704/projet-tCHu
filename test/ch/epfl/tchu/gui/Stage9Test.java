@@ -27,7 +27,7 @@ public class Stage9Test extends Application {
     @Override
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
-        setState(gameState);
+
 
         ObjectProperty<ActionHandler.ClaimRouteHandler> claimRoute =
                 new SimpleObjectProperty<>(Stage9Test::claimRoute);
@@ -47,6 +47,7 @@ public class Stage9Test extends Application {
                 new BorderPane(mapView, null, cardsView, handView, null);
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
+        setState(gameState);
 
 
     }
