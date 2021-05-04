@@ -190,12 +190,6 @@ public class ObservableGameState {
     public PlayerId getPlayerId() {
         return playerId;
     }
+        // a voir
 
-    public static List<SortedBag<Card>> check (PlayerState playerState, Route route){
-        if (Objects.isNull(playerState)){
-            return List.of();
-        }else {
-            return playerState.possibleClaimCards(route);
-        }
-    }
 }

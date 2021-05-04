@@ -1,10 +1,8 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.ChMap;
-import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.game.Route;
+import ch.epfl.tchu.game.*;
+
 import static ch.epfl.tchu.gui.ActionHandler.*;
 
 import javafx.beans.property.ObjectProperty;
@@ -42,10 +40,10 @@ class MapViewCreator {
 
                 r1.setOnMouseClicked(mouseEvent -> {
 
-                    if( observableGameState.check(observableGameState.getPlayerState(),route).size()==1 ){
+                    if( check(observableGameState.getPlayerState(),route).size()==1 ){
                         claimRouteHandler.get().onClaimRoute(route,observableGameState.possibleClaimCards(route).get(0));
-                    }else if ( observableGameState.check(observableGameState.getPlayerState(),route).size()>=1 ){
-                        ActionHandler.ChooseCardsHandler chooseCardsH =
+                    }else if ( check(observableGameState.getPlayerState(),route).size()>=1 ){
+                        ChooseCardsHandler chooseCardsH =
                                 chosenCards -> claimRouteHandler.get().onClaimRoute(route, chosenCards);
                         cardChooser.chooseCards(observableGameState.possibleClaimCards(route), chooseCardsH);
 
@@ -123,5 +121,13 @@ class MapViewCreator {
     interface CardChooser {
         void chooseCards(List<SortedBag<Card>> options,
                          ChooseCardsHandler handler);
+    }
+
+    public static List<SortedBag<Card>> check (PlayerState playerState, Route route){
+        if (Objects.isNull(playerState)){
+            return List.of();
+        }else {
+            return playerState.possibleClaimCards(route);
+        }
     }
 }
