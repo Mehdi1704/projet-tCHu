@@ -37,16 +37,18 @@ class MapViewCreator {
 
             r1.setOnMouseClicked(mouseEvent -> {
 
-                if (check(observableGameState.getPlayerState(), route).size() == 1) {
-                    claimRouteHandler.get().onClaimRoute(route, observableGameState.possibleClaimCards(route).get(0));
-                } else if (check(observableGameState.getPlayerState(), route).size() >= 1) {
+                List<SortedBag<Card>> pCC = List.of(SortedBag.of(3, Card.RED));//observableGameState.possibleClaimCards(route);
+                System.out.println(pCC);
+                System.out.println("testdone2");
+                if (pCC.size() == 1) {
+                    claimRouteHandler.get().onClaimRoute(route, pCC.get(0));
+                } else if (pCC.size() > 1) {
                     ChooseCardsHandler chooseCardsH =
                             chosenCards -> claimRouteHandler.get().onClaimRoute(route, chosenCards);
-                    cardChooser.chooseCards(observableGameState.possibleClaimCards(route), chooseCardsH);
-
+                    cardChooser.chooseCards(pCC, chooseCardsH);
                 }
             });
-            
+
             paneFond.getChildren().add(r1);
         });
 
