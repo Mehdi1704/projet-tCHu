@@ -32,25 +32,21 @@ class MapViewCreator {
         paneFond.getChildren().add(new ImageView());
 
         ChMap.routes().forEach(route -> {
-            Group r1 = GroupRoute(route,observableGameState);
+            Group r1 = GroupRoute(route, observableGameState);
             r1.disableProperty().bind(claimRouteHandler.isNull().or(observableGameState.canTakeRoute(route).not()));
 
-         //   observableGameState.numberOfCards(observableGameState.getPlayerId()).addListener(event->{
-         // });
+            r1.setOnMouseClicked(mouseEvent -> {
 
-                r1.setOnMouseClicked(mouseEvent -> {
+                if (check(observableGameState.getPlayerState(), route).size() == 1) {
+                    claimRouteHandler.get().onClaimRoute(route, observableGameState.possibleClaimCards(route).get(0));
+                } else if (check(observableGameState.getPlayerState(), route).size() >= 1) {
+                    ChooseCardsHandler chooseCardsH =
+                            chosenCards -> claimRouteHandler.get().onClaimRoute(route, chosenCards);
+                    cardChooser.chooseCards(observableGameState.possibleClaimCards(route), chooseCardsH);
 
-                    if( check(observableGameState.getPlayerState(),route).size()==1 ){
-                        claimRouteHandler.get().onClaimRoute(route,observableGameState.possibleClaimCards(route).get(0));
-                    }else if ( check(observableGameState.getPlayerState(),route).size()>=1 ){
-                        ChooseCardsHandler chooseCardsH =
-                                chosenCards -> claimRouteHandler.get().onClaimRoute(route, chosenCards);
-                        cardChooser.chooseCards(observableGameState.possibleClaimCards(route), chooseCardsH);
-
-                    }});
-
-
-
+                }
+            });
+            
             paneFond.getChildren().add(r1);
         });
 
@@ -59,19 +55,18 @@ class MapViewCreator {
     }
 
 
-
     private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
         String playerId = "";
-        if (PlayerId.PLAYER_1.equals(observableGameState.routeObjectPropertyMap(route).get())){
+        if (PlayerId.PLAYER_1.equals(observableGameState.routeObjectPropertyMap(route).get())) {
             playerId = PlayerId.PLAYER_1.name();
-        }else if (PlayerId.PLAYER_2.equals(observableGameState.routeObjectPropertyMap(route).get())){
+        } else if (PlayerId.PLAYER_2.equals(observableGameState.routeObjectPropertyMap(route).get())) {
             playerId = PlayerId.PLAYER_2.name();
         }
 
-       // a voir.
-        observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
-                theRoute.getStyleClass().set(3,n.name()));
+        // a voir.
+        observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) ->
+                theRoute.getStyleClass().set(3, n.name()));
 
         String type = route.level().name();
         String color = Objects.isNull(route.color()) ? "NEUTRAL" : route.color().name();
@@ -80,13 +75,13 @@ class MapViewCreator {
 
 
         for (int i = 0; i < route.length(); i++) {
-            theRoute.getChildren().add(GroupCase(i + 1, route,observableGameState));
+            theRoute.getChildren().add(GroupCase(i + 1, route, observableGameState));
         }
         return theRoute;
     }
 
 
-    private static Group GroupCase(int index, Route route,ObservableGameState observableGameState) {
+    private static Group GroupCase(int index, Route route, ObservableGameState observableGameState) {
         Group theCase = new Group();
         Group wagon = GroupWagon();
         theCase.setId(route.id() + "_" + index);
@@ -95,11 +90,11 @@ class MapViewCreator {
         rect.getStyleClass().addAll("track", "filled");
         theCase.getChildren().add(rect);
 
-        observableGameState.routeObjectPropertyMap(route).addListener((p,o,n)->
+        observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) ->
                 wagon.visibleProperty().set(!Objects.isNull(n)));
 
 
-    theCase.getChildren().add(GroupWagon());
+        theCase.getChildren().add(GroupWagon());
         return theCase;
     }
 
@@ -123,10 +118,10 @@ class MapViewCreator {
                          ChooseCardsHandler handler);
     }
 
-    public static List<SortedBag<Card>> check (PlayerState playerState, Route route){
-        if (Objects.isNull(playerState)){
+    private static List<SortedBag<Card>> check(PlayerState playerState, Route route) {
+        if (Objects.isNull(playerState)) {
             return List.of();
-        }else {
+        } else {
             return playerState.possibleClaimCards(route);
         }
     }
