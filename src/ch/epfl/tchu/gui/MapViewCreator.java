@@ -36,11 +36,7 @@ class MapViewCreator {
             r1.disableProperty().bind(claimRouteHandler.isNull().or(observableGameState.canTakeRoute(route).not()));
 
             r1.setOnMouseClicked(mouseEvent -> {
-
-                List<SortedBag<Card>> pCC = //List.of(SortedBag.of(3, Card.RED));//
-                        observableGameState.possibleClaimCards(route);
-                System.out.println(pCC);
-                System.out.println("testdone2");
+                List<SortedBag<Card>> pCC = observableGameState.possibleClaimCards(route);
                 if (pCC.size() == 1) {
                     claimRouteHandler.get().onClaimRoute(route, pCC.get(0));
                 } else if (pCC.size() > 1) {
@@ -49,14 +45,11 @@ class MapViewCreator {
                     cardChooser.chooseCards(pCC, chooseCardsH);
                 }
             });
-
             paneFond.getChildren().add(r1);
         });
 
-
         return paneFond;
     }
-
 
     private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
@@ -67,9 +60,13 @@ class MapViewCreator {
             playerId = PlayerId.PLAYER_2.name();
         }
 
-        // a voir.
-        observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) ->
-                theRoute.getStyleClass().set(3, n.name()));
+        // a voir
+        observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) -> {
+            if (o!=null) theRoute.getStyleClass().set(3, o.name());
+            theRoute.getStyleClass().set(3, n.name());
+            System.out.println("wagon de " + n.name() + " route " + route);
+        });
+
 
         String type = route.level().name();
         String color = Objects.isNull(route.color()) ? "NEUTRAL" : route.color().name();
@@ -121,11 +118,4 @@ class MapViewCreator {
                          ChooseCardsHandler handler);
     }
 
-    private static List<SortedBag<Card>> check(PlayerState playerState, Route route) {
-        if (Objects.isNull(playerState)) {
-            return List.of();
-        } else {
-            return playerState.possibleClaimCards(route);
-        }
-    }
 }
