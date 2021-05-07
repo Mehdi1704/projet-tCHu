@@ -53,26 +53,14 @@ class MapViewCreator {
 
     private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
-        String playerId = "";
-        if (PlayerId.PLAYER_1.equals(observableGameState.routeObjectPropertyMap(route).get())) {
-            playerId = PlayerId.PLAYER_1.name();
-        } else if (PlayerId.PLAYER_2.equals(observableGameState.routeObjectPropertyMap(route).get())) {
-            playerId = PlayerId.PLAYER_2.name();
-        }
-
-        // a voir
         observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) -> {
-            if (o!=null) theRoute.getStyleClass().set(3, o.name());
-            theRoute.getStyleClass().set(3, n.name());
-            System.out.println("wagon de " + n.name() + " route " + route);
+            theRoute.getStyleClass().set(3,n.name());
         });
-
 
         String type = route.level().name();
         String color = Objects.isNull(route.color()) ? "NEUTRAL" : route.color().name();
         theRoute.setId(route.id());
-        theRoute.getStyleClass().addAll("route", type, color, playerId);
-
+        theRoute.getStyleClass().addAll("route", type, color, "");
 
         for (int i = 0; i < route.length(); i++) {
             theRoute.getChildren().add(GroupCase(i + 1, route, observableGameState));
@@ -92,7 +80,6 @@ class MapViewCreator {
 
         observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) ->
                 wagon.visibleProperty().set(!Objects.isNull(n)));
-
 
         theCase.getChildren().add(GroupWagon());
         return theCase;

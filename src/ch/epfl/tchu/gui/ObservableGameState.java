@@ -55,13 +55,11 @@ public class ObservableGameState {
             canTakeRouteMap.put(e, new SimpleBooleanProperty(false));
         });
 
-
         PlayerId.ALL.forEach(playerId -> {
             numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(0));
             numberOfCardsMap.put(playerId, new SimpleIntegerProperty(0));
             numberOfWagonsMap.put(playerId, new SimpleIntegerProperty(0));
             numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(0));
-
         });
 
         listOfTicket.set(null);
@@ -85,22 +83,17 @@ public class ObservableGameState {
             PublicPlayerState tempPlayerState = publicGameState.playerState(playerId);
             // route Object Property Map
             List<Route> listOfRoutes = tempPlayerState.routes();
-            for (Route r : routeObjectPropertyMap.keySet()) {//TODO verifier
-                if (listOfRoutes.contains(r)) routeObjectPropertyMap.put(r, new SimpleObjectProperty<>(playerId));
+            for (Route r : routeObjectPropertyMap.keySet()) {
+                if (listOfRoutes.contains(r)) routeObjectPropertyMap.get(r).set(playerId);
             }
             // number Of Tickets Map
-            numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(
-                    tempPlayerState.ticketCount()));
+            numberOfTicketsMap.get(playerId).set(tempPlayerState.ticketCount());
             // number Of Cards Map
-            numberOfCardsMap.put(playerId, new SimpleIntegerProperty(
-                    tempPlayerState.cardCount()));
+            numberOfCardsMap.get(playerId).set(tempPlayerState.cardCount());
             // number Of Wagons Map
-            numberOfWagonsMap.put(playerId, new SimpleIntegerProperty(
-                    tempPlayerState.carCount()));
-            //numberOfWagonsMap.forEach((p,i)-> i.set(tempPlayerState.carCount()));
+            numberOfWagonsMap.get(playerId).set(tempPlayerState.carCount());
             // number Of Points Of Construction Map
-            numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(
-                    tempPlayerState.claimPoints()));
+            numberOfPointsOfConstructionMap.get(playerId).set(tempPlayerState.claimPoints());
         });
         // list Of Ticket
         listOfTicket.setValue(FXCollections.observableList(playerState.tickets().toList()));
