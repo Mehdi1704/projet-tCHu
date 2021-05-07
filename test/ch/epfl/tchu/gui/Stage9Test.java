@@ -3,15 +3,15 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Application;
-
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
+import javafx.scene.text.Text;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +27,13 @@ public class Stage9Test extends Application {
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
 
+        Map<PlayerId, String> playerNames =
+                Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
+        ObservableList<Text> infos = FXCollections.observableArrayList(
+                new Text("Première information.\n"),
+                new Text("\nSeconde information.\n"));
+        Node infoView = InfoViewCreator
+                .createInfoView(PLAYER_1, playerNames, gameState, infos);
 
         ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
                 new SimpleObjectProperty<>(Stage9Test::claimRoute);
@@ -42,8 +49,7 @@ public class Stage9Test extends Application {
         Node handView = DecksViewCreator
                 .createHandView(gameState);
 
-        BorderPane mainPane =
-                new BorderPane(mapView, null, cardsView, handView, null);
+        BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, infoView);
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
         setState(gameState);

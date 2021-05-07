@@ -53,7 +53,7 @@ class InfoViewCreator {
                 observableGameState.numberOfWagons(playerId),
                 observableGameState.numberOfPointsOfConstruction(playerId)));
 
-        textFlow.getChildren().addAll(text,circle);
+        textFlow.getChildren().addAll(circle,text);
         return textFlow;
 
     }
