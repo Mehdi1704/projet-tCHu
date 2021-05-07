@@ -20,7 +20,6 @@ public class GameState extends PublicGameState {
     private final Deck<Ticket> ticket;
     private final CardState cardState;
     private final Map<PlayerId, PlayerState> playerState;
-    private static final int NUMBER_OF_PLAYER = 2;
     private static final int MINIMAL_CAR_COUNT = 2;
 
     /**
@@ -35,7 +34,7 @@ public class GameState extends PublicGameState {
         super(ticket.size(), cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
 
         this.cardState = cardState;
-        this.playerState = playerState;
+        this.playerState = Map.copyOf(playerState);
         this.ticket = ticket;
     }
 
@@ -63,7 +62,7 @@ public class GameState extends PublicGameState {
 
         return new GameState(ticketShuffled,
                 CardState.of(ourDeck),
-                ALL.get(rng.nextInt(NUMBER_OF_PLAYER)),
+                ALL.get(rng.nextInt(COUNT)),
                 playerState,
                 null);
 

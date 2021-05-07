@@ -14,13 +14,14 @@ import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
-public class PlayerState extends PublicPlayerState {
+public final class PlayerState extends PublicPlayerState {
 
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;
     private final List<Route> routes;
 
 
+    //TODO
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
         super(tickets.size(), cards.size(), routes);
         this.tickets = tickets;
@@ -187,7 +188,7 @@ public class PlayerState extends PublicPlayerState {
         routes.forEach(r -> stationPartitonProfonde.connect(r.station1(), r.station2()));
         StationPartition stationPartitionAplatie = stationPartitonProfonde.build();
         int ticketPt = 0;
-        for (Ticket t : tickets) ticketPt = ticketPt + t.points(stationPartitionAplatie);
+        for (Ticket t : tickets) ticketPt += t.points(stationPartitionAplatie);
         return ticketPt;
     }
 

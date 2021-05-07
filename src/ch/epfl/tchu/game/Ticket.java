@@ -49,7 +49,6 @@ public final class Ticket implements Comparable<Ticket> {
      * @param trips liste des trajets
      * @return une représentation textuelle du billet
      */
-    //TODO optimiser
     private static String computeText(List<Trip> trips) {
         if (trips.size() == 1) {
             return (String.format("%s - %s (%d)", trips.get(0).from(), trips.get(0).to(), trips.get(0).points()));

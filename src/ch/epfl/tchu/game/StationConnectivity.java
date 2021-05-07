@@ -7,7 +7,7 @@ package ch.epfl.tchu.game;
  * @author Ali Ridha Mrad (314529)
  */
 public interface StationConnectivity {
-
+    //TODO commentaire
     boolean connected(Station s1, Station s2);
 
 }

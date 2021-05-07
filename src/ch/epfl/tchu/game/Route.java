@@ -117,8 +117,7 @@ public final class Route {
      */
     public Station stationOpposite(Station station) {
         Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
-        if (station.equals(station1)) return station2;
-        else return station1;
+            return (station.equals(station1)) ? station2 : station1;
     }
 
     /**

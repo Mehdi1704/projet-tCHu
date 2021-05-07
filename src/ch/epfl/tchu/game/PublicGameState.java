@@ -42,7 +42,7 @@ public class PublicGameState {
         this.ticketsCount = ticketsCount;
         this.cardState = requireNonNull(cardState);
         this.currentPlayerId = requireNonNull(currentPlayerId);
-        this.playerState = playerState;
+        this.playerState = Map.copyOf(playerState);
         this.lastPlayer = lastPlayer;
     }
 
@@ -61,7 +61,7 @@ public class PublicGameState {
      * @return vrai si la pioche n'est pas vide
      */
     public boolean canDrawTickets() {
-        return ticketsCount != 0;
+        return ticketsCount > 0;
     }
 
     /**
@@ -117,8 +117,8 @@ public class PublicGameState {
      * @return liste des routes des joueurs
      */
     public List<Route> claimedRoutes() {
-        List<Route> newClaimedRoutes = new ArrayList<>(playerState.get(currentPlayerId).routes());
-        newClaimedRoutes.addAll(playerState.get(currentPlayerId.next()).routes());
+        List<Route> newClaimedRoutes = new ArrayList<>();
+        PlayerId.ALL.forEach(playerId -> newClaimedRoutes.addAll(playerState.get(playerId).routes()));
         return newClaimedRoutes;
     }
 

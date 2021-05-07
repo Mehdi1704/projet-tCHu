@@ -18,7 +18,6 @@ import static ch.epfl.tchu.game.Constants.*;
 public final class Game {
 
     public static final int DRAW_CARDS_COUNT = 2;
-    public static final int PLAYERS_COUNT = 2;
 
     /**
      * Methode permettant le déroulement de la partie :
@@ -37,17 +36,22 @@ public final class Game {
      * @param rng         Variable permettant, de mélanger les cartes,et de choisir le joueur qui joue en premier,
      *                    tout cela de manière aléatoire
      */
-    public static void play(Map<PlayerId, Player> players, Map<PlayerId,
-            String> playerNames, SortedBag<Ticket> tickets, Random rng) {
+    public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames,
+                            SortedBag<Ticket> tickets, Random rng) {
 
-        Preconditions.checkArgument(players.size() == PLAYERS_COUNT && playerNames.size() == PLAYERS_COUNT);
+        Preconditions.checkArgument(players.size() == PlayerId.COUNT);
+        Preconditions.checkArgument(playerNames.size() == PlayerId.COUNT);
         // Initialisation
         Map<PlayerId, Info> playerInformation = new EnumMap<>(PlayerId.class);
-        playerNames.forEach((player, info) -> playerInformation.put(player, new Info(info)));    // Informations des joueurs
-        Map<PlayerId, SortedBag<Ticket>> playersTickets = new EnumMap<>(PlayerId.class);         // Tickets initiaux
-        players.forEach((key, value) -> value.initPlayers(key, playerNames));                    // Joueurs
-        GameState gameState = GameState.initial(tickets, rng);                                   // Etat de jeu
-
+        // Informations des joueurs
+        playerNames.forEach((player, info) -> playerInformation.put(player, new Info(info)));
+        // Tickets initiaux
+        Map<PlayerId, SortedBag<Ticket>> playersTickets = new EnumMap<>(PlayerId.class);
+        // Joueurs
+        players.forEach((key, value) -> value.initPlayers(key, playerNames));
+        // Etat de jeu
+        GameState gameState = GameState.initial(tickets, rng);
+        updateStateForBothPlayers(players, gameState);
         receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).willPlayFirst());
 
         // Distribution des premiers tickets aux joueurs
@@ -68,14 +72,14 @@ public final class Game {
         //----------------------------- Commencement de la partie ------------------------------------------------------
 
         while (true) {
-
-            Player currentPlayer = players.get(gameState.currentPlayerId());        // initialisation du joueur actuel
-            Info information = playerInformation.get(gameState.currentPlayerId());  // initialisation information du joueur
+            // Initialisation du joueur actuel
+            Player currentPlayer = players.get(gameState.currentPlayerId());
+            // Initialisation information du joueur
+            Info information = playerInformation.get(gameState.currentPlayerId());
             receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).canPlay());
             updateStateForBothPlayers(players, gameState);
-
-            Player.TurnKind typeOfAction = players.get(gameState.currentPlayerId()).nextTurn(); // action que le joueur
-                                                                                             //veut effectuer durant ce tour
+            // Action que le joueur veut effectuer durant ce tour
+            Player.TurnKind typeOfAction = players.get(gameState.currentPlayerId()).nextTurn();
             switch (typeOfAction) {
 
                 case DRAW_TICKETS:
@@ -88,15 +92,19 @@ public final class Game {
 
                 case DRAW_CARDS:
                     for (int i = 0; i < DRAW_CARDS_COUNT; i++) {
-                        int actualDrawSlot = currentPlayer.drawSlot();          // Slot que le joueur va tirer 2 fois
+                        // Slot que le joueur va tirer 2 fois
+                        int actualDrawSlot = currentPlayer.drawSlot();
                         updateStateForBothPlayers(players, gameState);
-                        if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)) {          // Tire des face up cards
+                        // Tire des face up cards
+                        if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)) {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                     .withDrawnFaceUpCard(actualDrawSlot);
 
                             Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
                             receiveInfoForBothPlayers(players, information.drewVisibleCard(pickedCard));
-                        } else if (actualDrawSlot == Constants.DECK_SLOT) {          // Tire du Deck
+
+                            // Tire du Deck
+                        } else if (actualDrawSlot == Constants.DECK_SLOT) {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                     .withBlindlyDrawnCard();
                             receiveInfoForBothPlayers(players, information.drewBlindCard());
@@ -157,7 +165,8 @@ public final class Game {
                     }
                     break;
             }
-            if (gameState.currentPlayerId().equals(gameState.lastPlayer())) {    // condition de sortie
+            // Condition de sortie de la boucle while
+            if (gameState.currentPlayerId().equals(gameState.lastPlayer())) {
                 break;
             }
             if (gameState.lastTurnBegins()) {
@@ -223,23 +232,23 @@ public final class Game {
         int conditionTrail = Integer.compare(playerLongestTrails.get(PlayerId.PLAYER_1).length(), playerLongestTrails.get(PlayerId.PLAYER_2).length());
         switch (conditionTrail) {
             case (0):        // Meme longueur
-                annexeLongestDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
-                annexeLongestDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
+                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
+                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
                 break;
             case (1):        // Joueur 1 a le bonus
-                annexeLongestDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
+                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
                 break;
             case (-1):        // Joueur 2 a le bonus
-                annexeLongestDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
+                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
                 break;
         }
     }
 
-    private static void annexeLongestDeclaration(Map<PlayerId, Player> players,
-                                                 Map<PlayerId, Integer> playerPoints,
-                                                 Map<PlayerId, Info> playerInformation,
-                                                 Map<PlayerId, Trail> playerLongestTrails,
-                                                 PlayerId playerID) {
+    private static void longestFinalDeclaration(Map<PlayerId, Player> players,
+                                                Map<PlayerId, Integer> playerPoints,
+                                                Map<PlayerId, Info> playerInformation,
+                                                Map<PlayerId, Trail> playerLongestTrails,
+                                                PlayerId playerID) {
         receiveInfoForBothPlayers(players, playerInformation.get(playerID).getsLongestTrailBonus(playerLongestTrails.get(playerID)));
         playerPoints.replace(playerID, playerPoints.get(playerID) + LONGEST_TRAIL_BONUS_POINTS);
 

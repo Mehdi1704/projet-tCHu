@@ -14,6 +14,7 @@ public final class Trail {
     private final Station station2;
     private final List<Route> routes;
     private final int length;
+    private static final Trail emptyTrail = new Trail(null, null, List.of(), 0);
 
     /**
      * Contructeur privé de notre classe
@@ -38,7 +39,7 @@ public final class Trail {
      * @return Le chemin le plus long
      */
     public static Trail longest(List<Route> routes) {
-        Trail longest = new Trail(null, null, List.of(), 0);
+        Trail longest = emptyTrail;
 
         if (routes.isEmpty()) return longest;
 
@@ -54,8 +55,8 @@ public final class Trail {
 
                 for (Route r : routes) {
                     if (!t.routes.contains(r)) {
-                        Trail.addTrail(t, r, prolongedTrails, r.station1(), r.station2());
-                        Trail.addTrail(t, r, prolongedTrails, r.station2(), r.station1());
+                        Trail.addToListOfTrails(t, r, prolongedTrails, r.station1(), r.station2());
+                        Trail.addToListOfTrails(t, r, prolongedTrails, r.station2(), r.station1());
                     }
                 }
 
@@ -76,7 +77,7 @@ public final class Trail {
      * @param correspondingStation1 pour verifier la compatibilité
      * @param correspondingStation2 marque la fin du chemin
      */
-    private static void addTrail(Trail t, Route r, List<Trail> prolongedTrails, Station correspondingStation1, Station correspondingStation2) {
+    private static void addToListOfTrails(Trail t, Route r, List<Trail> prolongedTrails, Station correspondingStation1, Station correspondingStation2) {
         if (t.station2.equals(correspondingStation1)) {
             ArrayList<Route> rToAdd = new ArrayList<>(t.routes);
             rToAdd.add(r);

@@ -46,7 +46,7 @@ public final class Deck<C extends Comparable<C>> {
      * @return le nombre de cartes que le tas contient
      */
     public int size() {
-        return (listOfCards.size());
+        return listOfCards.size();
     }
 
     /**
@@ -55,7 +55,7 @@ public final class Deck<C extends Comparable<C>> {
      * @return un booleen indiquant si le tas est vide
      */
     public boolean isEmpty() {
-        return (listOfCards.isEmpty());
+        return listOfCards.isEmpty();
     }
 
     /**
@@ -65,7 +65,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public C topCard() {
         Preconditions.checkArgument(!listOfCards.isEmpty());
-        return (listOfCards.get(0));
+        return listOfCards.get(0);
     }
 
     /**
