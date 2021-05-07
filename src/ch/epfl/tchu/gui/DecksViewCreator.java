@@ -2,7 +2,7 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.*;
 
-import static ch.epfl.tchu.gui.ActionHandler.*;
+import static ch.epfl.tchu.gui.ActionHandlers.*;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;

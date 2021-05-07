@@ -5,7 +5,7 @@ import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Ticket;
 //TODO renommer
-public interface ActionHandler {
+public interface ActionHandlers {
     @FunctionalInterface
     interface DrawTicketsHandler{
         void onDrawTickets();

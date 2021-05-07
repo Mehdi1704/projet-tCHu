@@ -2,7 +2,6 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import ch.epfl.tchu.gui.*;
 import javafx.application.Application;
 
 
@@ -29,11 +28,11 @@ public class Stage9Test extends Application {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
 
 
-        ObjectProperty<ActionHandler.ClaimRouteHandler> claimRoute =
+        ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
                 new SimpleObjectProperty<>(Stage9Test::claimRoute);
-        ObjectProperty<ActionHandler.DrawTicketsHandler> drawTickets =
+        ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTickets =
                 new SimpleObjectProperty<>(Stage9Test::drawTickets);
-        ObjectProperty<ActionHandler.DrawCardHandler> drawCard =
+        ObjectProperty<ActionHandlers.DrawCardHandler> drawCard =
                 new SimpleObjectProperty<>(Stage9Test::drawCard);
 
         Node mapView = MapViewCreator
@@ -76,7 +75,7 @@ public class Stage9Test extends Application {
     }
 
     private static void chooseCards(List<SortedBag<Card>> options,
-                                    ActionHandler.ChooseCardsHandler chooser) {
+                                    ActionHandlers.ChooseCardsHandler chooser) {
         chooser.onChooseCards(options.get(0));
     }
 
