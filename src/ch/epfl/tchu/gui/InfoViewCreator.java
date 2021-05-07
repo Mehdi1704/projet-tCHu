@@ -5,7 +5,6 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
