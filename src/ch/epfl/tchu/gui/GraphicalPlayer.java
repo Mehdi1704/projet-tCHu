@@ -21,7 +21,7 @@ public class GraphicalPlayer {
     }
 
     public void setState(PublicGameState publicGameState, PlayerState playerState){
-        
+
         observableGameState.setState(publicGameState,playerState);
     }
 
