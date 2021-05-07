@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
+/**
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
+
 
 public class ObservableGameState {
 
@@ -35,6 +40,10 @@ public class ObservableGameState {
     private final Map<Card, IntegerProperty> numberOfEachTypeOfCardMap = new EnumMap<>(Card.class);
     private final Map<Route, BooleanProperty> canTakeRouteMap = new HashMap<>();
 
+    /**
+     * Constructeur initialisant nos valeurs
+     * @param PlayerId identité du joueur.
+     */
 
     public ObservableGameState(PlayerId PlayerId) {
         this.playerId= PlayerId;
@@ -64,6 +73,14 @@ public class ObservableGameState {
 
         listOfTicket.set(null);
     }
+
+    /**
+     * methode permettant de met à jour la totalité des propriétés des éléments du jeu .
+     *
+     *
+     * @param publicGameState l'état publique de la partie.
+     * @param playerState état complet du joueur .
+     */
 
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
@@ -114,7 +131,9 @@ public class ObservableGameState {
         ));
     }
 
-    
+    /**
+     * les différents getter .
+     */
 
     public PublicGameState getPublicGameStateAtt() {
         return publicGameStateAtt;
@@ -186,6 +205,5 @@ public class ObservableGameState {
     public PlayerId getPlayerId() {
         return playerId;
     }
-        // a voir
 
 }

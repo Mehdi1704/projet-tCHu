@@ -16,8 +16,19 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 class MapViewCreator {
+    /**
+     *création de la vue de la carte avec les différents éléments qui la compose .
+     *
+     * @param observableGameState état du jeu observable
+     * @param claimRouteHandler le gestionnaire d'action à utiliser lorsque le joueur désire s'emparer d'une route.
+     * @param cardChooser notre sélectionneur de cartes .
+     * @return un nœud représantant une vue de la carte contenant les différents éléments(route , case, wagon) .
+     */
 
     public static Node createMapView(ObservableGameState observableGameState,
                                      ObjectProperty<ClaimRouteHandler> claimRouteHandler,
@@ -51,6 +62,13 @@ class MapViewCreator {
         return paneFond;
     }
 
+    /**
+     * création de groupe route .
+     *
+     * @param route route que l'on desire créer
+     * @param observableGameState le gamestate observable.
+     * @return un Group de route .
+     */
     private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
         observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) -> {
@@ -68,7 +86,14 @@ class MapViewCreator {
         return theRoute;
     }
 
-
+    /**
+     * création de case.
+     *
+     * @param index index de la route
+     * @param route route pour laquelle on désire créer les cases
+     * @param observableGameState le gamestate observable
+     * @return un Group de la case .
+     */
     private static Group GroupCase(int index, Route route, ObservableGameState observableGameState) {
         Group theCase = new Group();
         Group wagon = GroupWagon();
@@ -85,6 +110,10 @@ class MapViewCreator {
         return theCase;
     }
 
+    /**
+     * creation de wagon .
+     * @return un groupe de wagon
+     */
     // création d'un wagon ;
     private static Group GroupWagon() {
         Group wagon = new Group();
