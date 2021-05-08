@@ -44,12 +44,8 @@ public final class Trip {
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points) {
         ArrayList<Trip> trips = new ArrayList<>();
-        Preconditions.checkArgument((from != null) && (to != null) && (points > 0));
-        for (Station s : from) {
-            for (Station v : to) {
-                trips.add(new Trip(s, v, points));
-            }
-        }
+        Preconditions.checkArgument((!from.isEmpty()) && (!to.isEmpty()) && (points > 0));
+        from.forEach(s -> to.forEach(v -> trips.add(new Trip(s, v, points))));
         return trips;
     }
 
@@ -83,10 +79,7 @@ public final class Trip {
      * @return le nombre de points du trajet pour la connectivité donnée.
      */
     public int points(StationConnectivity connectivity) {
-
-        if (connectivity.connected(from(), to())) {
-            return (points);
-        } else return (-points);
+        return (connectivity.connected(from(), to())) ? points : -points;
 
     }
 

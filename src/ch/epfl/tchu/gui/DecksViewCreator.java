@@ -21,6 +21,8 @@ import javafx.scene.text.Text;
 import java.util.Objects;
 
 /**
+ * Vue des pioches, et des cartes et tickets du joueur
+ *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */

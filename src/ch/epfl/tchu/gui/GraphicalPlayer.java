@@ -2,7 +2,17 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Dialog;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Box;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 
 import java.util.List;
@@ -12,12 +22,13 @@ public class GraphicalPlayer {
     private final PlayerId playerId;
     private final Map<PlayerId, String> playerNames;
     private final ObservableGameState observableGameState;
+    private final ObservableList<Text> listOfTexts;
 
-    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames){
+    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames, ObservableList<Text> listOfTexts){
         this.playerId = playerId;
         this.playerNames = playerNames;
         observableGameState = new ObservableGameState(playerId);
-
+        this.listOfTexts = listOfTexts;
     }
 
     public void setState(PublicGameState publicGameState, PlayerState playerState){
@@ -26,6 +37,9 @@ public class GraphicalPlayer {
     }
 
     public void receiveInfo(String message){
+        Text text = new Text(message);
+        listOfTexts.add(text);
+        if (listOfTexts.size() > 5) listOfTexts.remove(0);
         // l'ajoutant au bas des informations sur le déroulement de la partie,
         // qui sont présentées dans la partie inférieure de la vue des informations
         // pour mémoire, cette vue ne doit contenir que les cinq derniers messages reçus
@@ -34,6 +48,8 @@ public class GraphicalPlayer {
     public void startTurn(DrawTicketsHandler drawTicketsHandler,
                           ClaimRouteHandler claimRouteHandler,
                           DrawCardHandler drawCardHandler){
+    if (observableGameState.canDrawTickets()) drawTicketsHandler.onDrawTickets();
+    if (observableGameState.canDrawCards()) drawCardHandler.onDrawCard(2);//TODO
 
 
     }
@@ -43,6 +59,10 @@ public class GraphicalPlayer {
         // ouvre une fenêtre similaire à celle des figures 3 et 4,
         // permettant au joueur de faire son choix; une fois celui-ci confirmé,
         // le gestionnaire de choix est appelé avec ce choix en argument
+
+        Dialog<Box> dialogBox = new Dialog<>();
+
+
     }
 
     public void drawCard(DrawCardHandler drawCardHandler){
@@ -62,5 +82,23 @@ public class GraphicalPlayer {
     public void chooseAdditionalCards(List<SortedBag<Card>> listOfBags,
                                       ChooseCardsHandler chooseCardsHandler){
 
+    }
+
+    private Node createWindow() {
+        Stage stage = new Stage(StageStyle.UTILITY);
+        /*
+        Node mapView = MapViewCreator
+                .createMapView(observableGameState, claimRoute, chooseCards);
+        Node cardsView = DecksViewCreator
+                .createCardsView(observableGameState, drawTickets, drawCard);
+        Node handView = DecksViewCreator
+                .createHandView(observableGameState);
+        Node infoView = InfoViewCreator
+                .createInfoView(PLAYER_1, playerNames, gameState, infos);
+
+        BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, infoView);
+        Scene scene = new Scene(mainPane);
+        */
+        return null;
     }
 }
