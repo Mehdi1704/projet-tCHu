@@ -101,7 +101,7 @@ public final class Ticket implements Comparable<Ticket> {
      */
     @Override
     public String toString() {
-        return (text);
+        return (this.text);
     }
 
     /**

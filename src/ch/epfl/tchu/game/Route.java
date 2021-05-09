@@ -133,7 +133,7 @@ public final class Route {
 
         if (level.equals(Level.OVERGROUND)) {
             if (color != null) possibleClaimCards.add(SortedBag.of(length, Card.of(color)));
-            else Card.CARS.forEach((card) -> possibleClaimCards.add(SortedBag.of(length, card)));
+            else Card.CARS.forEach(c -> possibleClaimCards.add(SortedBag.of(length, c)));
         } else {
             if (color != null) {
                 for (int i = 0; i <= length; ++i)

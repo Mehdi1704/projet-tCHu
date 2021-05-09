@@ -162,12 +162,10 @@ public final class Info {
      * @return String "Les cartes supplémentaires sont x..."
      */
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
-
-        if (additionalCost == 0) {
-            return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsNames(drawnCards)) + StringsFr.NO_ADDITIONAL_COST;
-        } else {
-            return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsNames(drawnCards)) + String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost));
-        }
+        String additionalCostString = (additionalCost == 0)
+                ? StringsFr.NO_ADDITIONAL_COST
+                : String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost));
+        return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsNames(drawnCards)) + additionalCostString;
     }
 
     /**
