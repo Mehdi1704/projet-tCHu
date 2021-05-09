@@ -59,8 +59,7 @@ public class GraphicalPlayer {
         // ouvre une fenêtre similaire à celle des figures 3 et 4,
         // permettant au joueur de faire son choix; une fois celui-ci confirmé,
         // le gestionnaire de choix est appelé avec ce choix en argument
-
-        Dialog<Box> dialogBox = new Dialog<>();
+        chooseTicketsHandler.onChooseTickets(bagOfTickets);
 
 
     }
@@ -86,9 +85,9 @@ public class GraphicalPlayer {
 
     private Node createWindow() {
         Stage stage = new Stage(StageStyle.UTILITY);
-        /*
+
         Node mapView = MapViewCreator
-                .createMapView(observableGameState, claimRoute, chooseCards);
+                .createMapView(observableGameState, claim, chooseCards);
         Node cardsView = DecksViewCreator
                 .createCardsView(observableGameState, drawTickets, drawCard);
         Node handView = DecksViewCreator
@@ -98,7 +97,7 @@ public class GraphicalPlayer {
 
         BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, infoView);
         Scene scene = new Scene(mainPane);
-        */
+
         return null;
     }
 }
