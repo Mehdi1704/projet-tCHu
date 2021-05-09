@@ -120,6 +120,7 @@ public final class Trail {
      */
     @Override
     public String toString() {
+        if (routes.isEmpty()) return "Aucun chemin";
         ArrayList<String> stationNames = new ArrayList<>();
         Station currStation = station1;
         stationNames.add(currStation.name());
