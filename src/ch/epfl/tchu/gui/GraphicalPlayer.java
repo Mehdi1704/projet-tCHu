@@ -86,8 +86,31 @@ public class GraphicalPlayer {
                           ClaimRouteHandler claimRouteHandler,
                           DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        if (observableGameState.canDrawTickets()) drawTicketsHandler.onDrawTickets();
-        if (observableGameState.canDrawCards()) drawCardHandler.onDrawCard(0);//TODO
+
+        claimRoute.set((route,sorted)->{
+                claimRoute.set(null);
+                drawCard.set(null);
+                drawTickets.set(null);
+                claimRouteHandler.onClaimRoute(route,sorted);
+        });
+
+        if (observableGameState.canDrawTickets()){
+            drawTickets.set(()->{
+                claimRoute.set(null);
+                drawCard.set(null);
+                drawTickets.set(null);
+                drawTicketsHandler.onDrawTickets();
+                    } );
+
+        }
+        if (observableGameState.canDrawCards()){
+            drawCard.set((index)->{
+                claimRoute.set(null);
+                drawCard.set(null);
+                drawTickets.set(null);
+                drawCardHandler.onDrawCard(index);
+            });
+        }
 
 
     }
