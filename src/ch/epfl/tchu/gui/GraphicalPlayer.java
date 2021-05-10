@@ -4,8 +4,10 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
+import static ch.epfl.tchu.game.Constants.DISCARDABLE_TICKETS_COUNT;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
@@ -100,9 +103,14 @@ public class GraphicalPlayer {
         String title = StringsFr.TICKETS_CHOICE;
         ListView<Text> listView = new ListView<>();
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        Stage chooseTickets = createWindow(title, listView);
+        int minSelectedTickets = bagOfTickets.size()-DISCARDABLE_TICKETS_COUNT;
+        Stage chooseTickets = createWindow(title, listView, minSelectedTickets);
         chooseTickets.show();
 
+
+
+        //pour le choix de billets, tant et aussi longtemps que le nombre
+        // de billets sélectionné n'est pas au moins égal au nombre de billets présentés moins deux
 
         //listView.setCellFactory(v -> bagOfTickets.toList().toString());
 
@@ -138,9 +146,12 @@ public class GraphicalPlayer {
 
     }
 
-    private Stage createWindow(String title, ListView<Text> listView) {
+    private Stage createWindow(String title, ListView<Text> listView, int minSelect) {
 
         Button confirmButton = new Button("Confirmer");
+        //Plusieurs choix
+        confirmButton.disableProperty().bind(Bindings.lessThan(minSelect,
+                Bindings.size(listView.getSelectionModel().getSelectedItems())));
         Text text = new Text(title);
         TextFlow textFlow = new TextFlow();
         textFlow.getChildren().add(text);
@@ -158,7 +169,7 @@ public class GraphicalPlayer {
 
 
 
-        return null;
+        return chooseStage;
     }
 
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
