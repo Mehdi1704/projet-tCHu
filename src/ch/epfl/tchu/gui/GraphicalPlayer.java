@@ -9,15 +9,20 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +65,7 @@ public class GraphicalPlayer {
     }
 
     public void receiveInfo(String message) {
+        assert isFxApplicationThread();
         Text text = new Text(message);
         listOfTexts.add(text);
         if (listOfTexts.size() > 5) listOfTexts.remove(0);
@@ -71,6 +77,7 @@ public class GraphicalPlayer {
     public void startTurn(DrawTicketsHandler drawTicketsHandler,
                           ClaimRouteHandler claimRouteHandler,
                           DrawCardHandler drawCardHandler) {
+        assert isFxApplicationThread();
         if (observableGameState.canDrawTickets()) drawTicketsHandler.onDrawTickets();
         if (observableGameState.canDrawCards()) drawCardHandler.onDrawCard(0);//TODO
 
@@ -79,11 +86,14 @@ public class GraphicalPlayer {
 
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
+        assert isFxApplicationThread();
         // ouvre une fenêtre similaire à celle des figures 3 et 4,
         // permettant au joueur de faire son choix; une fois celui-ci confirmé,
         // le gestionnaire de choix est appelé avec ce choix en argument
         Preconditions.checkArgument(bagOfTickets.size() <= 5);
         Preconditions.checkArgument(bagOfTickets.size() >= 3);
+
+        ListView<String> listViewTickets = new ListView<String>(bagOfTickets.toList());
 
         chooseTicketsHandler.onChooseTickets(bagOfTickets);
 
@@ -91,6 +101,7 @@ public class GraphicalPlayer {
     }
 
     public void drawCard(DrawCardHandler drawCardHandler) {
+        assert isFxApplicationThread();
         // autorise le joueur a choisir une carte wagon/locomotive,
         // soit l'une des cinq dont la face est visible, soit celle du sommet de la pioche;
         // une fois que le joueur a cliqué sur l'une de ces cartes, le gestionnaire
@@ -101,18 +112,40 @@ public class GraphicalPlayer {
 
     public void chooseClaimCards(List<SortedBag<Card>> listOfBags,
                                  ChooseCardsHandler chooseCardsHandler) {
+        assert isFxApplicationThread();
+
+        ListView<SortedBag<Card>> list = new ListView<>();
+        list.setCellFactory(v ->
+                new TextFieldListCell<>(new CardBagStringConverter()));
+
 
     }
 
     public void chooseAdditionalCards(List<SortedBag<Card>> listOfBags,
                                       ChooseCardsHandler chooseCardsHandler) {
+        assert isFxApplicationThread();
 
     }
 
     private Node createWindow() {
         Stage stage = new Stage(StageStyle.UTILITY);
+        stage.initModality(Modality.WINDOW_MODAL);
+
 
 
         return null;
+    }
+
+    public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
+
+        @Override
+        public String toString(SortedBag<Card> object) {
+            return Info.cardsNames(object);
+        }
+
+        @Override
+        public SortedBag<Card> fromString(String string) {
+            throw new UnsupportedOperationException();
+        }
     }
 }
