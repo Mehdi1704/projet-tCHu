@@ -49,15 +49,12 @@ public class RemotePlayerClient{
                                         new OutputStreamWriter(s.getOutputStream(), US_ASCII))) {
             String[] message;
 
-            //do { //TODO pas encore stable
             String readLine = r.readLine();
             while (readLine!=null){
                 message = readLine.split(Pattern.quote(" "), -1);
                 checkMessage(message, w);
                 readLine = r.readLine();
             }
-
-            //} while (r.readLine()!=null);
 
         } catch (IOException e) {
             throw new UncheckedIOException(e);
