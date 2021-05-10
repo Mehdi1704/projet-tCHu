@@ -9,10 +9,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,6 +35,7 @@ public class GraphicalPlayer {
     private final Map<PlayerId, String> playerNames;
     private final ObservableList<Text> listOfTexts;
     private final ObservableGameState observableGameState;
+    private final Stage stage;
     private final ObjectProperty<ClaimRouteHandler> claimRoute;
     private final ObjectProperty<DrawTicketsHandler> drawTickets;
     private final ObjectProperty<DrawCardHandler> drawCard;
@@ -52,7 +57,7 @@ public class GraphicalPlayer {
 
         BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, infoView);
         //creation
-        Stage stage = new Stage();
+        stage = new Stage();
         stage.setTitle("tCHu" + " \u2014 " + playerNames.get(playerId));
         stage.setScene(new Scene(mainPane));
         stage.show();
@@ -87,15 +92,20 @@ public class GraphicalPlayer {
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
-        // ouvre une fenêtre similaire à celle des figures 3 et 4,
-        // permettant au joueur de faire son choix; une fois celui-ci confirmé,
-        // le gestionnaire de choix est appelé avec ce choix en argument
+
         Preconditions.checkArgument(bagOfTickets.size() <= 5);
         Preconditions.checkArgument(bagOfTickets.size() >= 3);
 
-        ListView<String> listViewTickets = new ListView<String>(bagOfTickets.toList());
+        String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS, 2, StringsFr.plural(2));
+        String title = StringsFr.TICKETS_CHOICE;
+        ListView<Text> listView = new ListView<>();
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        Stage chooseTickets = createWindow(title, listView);
+        chooseTickets.show();
 
-        chooseTicketsHandler.onChooseTickets(bagOfTickets);
+
+        //listView.setCellFactory(v -> bagOfTickets.toList().toString());
+
 
 
     }
@@ -105,7 +115,7 @@ public class GraphicalPlayer {
         // autorise le joueur a choisir une carte wagon/locomotive,
         // soit l'une des cinq dont la face est visible, soit celle du sommet de la pioche;
         // une fois que le joueur a cliqué sur l'une de ces cartes, le gestionnaire
-        // est appelé avec le choix du joueur ; cette méthode est destinée à être
+        // est appelé avec le choix du joueur; cette méthode est destinée à être
         // appelée lorsque le joueur a déjà tiré une première carte et doit maintenant tirer la seconde
 
     }
@@ -119,6 +129,7 @@ public class GraphicalPlayer {
                 new TextFieldListCell<>(new CardBagStringConverter()));
 
 
+
     }
 
     public void chooseAdditionalCards(List<SortedBag<Card>> listOfBags,
@@ -127,20 +138,39 @@ public class GraphicalPlayer {
 
     }
 
-    private Node createWindow() {
-        Stage stage = new Stage(StageStyle.UTILITY);
-        stage.initModality(Modality.WINDOW_MODAL);
+    private Stage createWindow(String title, ListView<Text> listView) {
+
+        Button confirmButton = new Button("Confirmer");
+        Text text = new Text(title);
+        TextFlow textFlow = new TextFlow();
+        textFlow.getChildren().add(text);
+        VBox box = new VBox();
+        box.getChildren().addAll(confirmButton, textFlow, listView);
+        //TODO listview
+
+
+        Scene scene = new Scene(new BorderPane(box));
+        scene.getStylesheets().add("chooser.css");
+        Stage chooseStage = new Stage(StageStyle.UTILITY);
+        chooseStage.initOwner(stage);
+        chooseStage.initModality(Modality.WINDOW_MODAL);
+        chooseStage.setScene(scene);
 
 
 
         return null;
     }
 
-    public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
+    public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
         @Override
         public String toString(SortedBag<Card> object) {
-            return Info.cardsNames(object);
+            ArrayList<String> listOfNames = new ArrayList<>();
+            for (Card c : object.toSet()) {
+                int nbOfCards = object.countOf(c);
+                listOfNames.add(nbOfCards + " " + Info.cardName(c, nbOfCards));
+            }
+            return String.join(StringsFr.AND_SEPARATOR, listOfNames);
         }
 
         @Override

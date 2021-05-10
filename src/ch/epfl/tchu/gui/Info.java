@@ -234,7 +234,7 @@ public final class Info {
      * @param cards SortedBag de cartes à représenter en string
      * @return String représentant les cartes ainsi que leur nombres
      */
-    public static String cardsNames(SortedBag<Card> cards) {
+    private static String cardsNames(SortedBag<Card> cards) {
 
         ArrayList<String> listOfNames = new ArrayList<>();
         for (Card c : cards.toSet()) {
