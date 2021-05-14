@@ -81,7 +81,7 @@ class DecksViewCreator {
         // Creation du bouton pour les tickets
         ReadOnlyIntegerProperty percentageTickets = observableGameState.poucentageTicket();
         Button ticketButton = gaugeButton(percentageTickets, "Billets");
-        ticketButton.disabledProperty().isEqualTo(ticketHandler.isNull());
+        ticketButton.disableProperty().bind(ticketHandler.isNull());
         ticketButton.setOnAction(e -> ticketHandler.get().onDrawTickets());
         cardsView.getChildren().add(ticketButton);
         // Creation des cartes face visible

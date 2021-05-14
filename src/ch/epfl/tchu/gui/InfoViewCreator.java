@@ -37,8 +37,8 @@ class InfoViewCreator {
         Separator separator = new Separator();
         separator.setOrientation(Orientation.HORIZONTAL);
 
-        vbox2.getChildren().add(PlayerStats(observableGameState,PlayerId.PLAYER_1,playerNames));
-        vbox2.getChildren().add(PlayerStats(observableGameState,PlayerId.PLAYER_2,playerNames));
+        vbox2.getChildren().add(PlayerStats(observableGameState, playerId, playerNames));
+        vbox2.getChildren().add(PlayerStats(observableGameState, playerId.next(), playerNames));
 
         TextFlow textFlow = new TextFlow();
         textFlow.setId("game-info");

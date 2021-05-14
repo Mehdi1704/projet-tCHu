@@ -56,7 +56,7 @@ public class GraphicalPlayer {
         Node mapView = MapViewCreator.createMapView(observableGameState, claimRoute, this::chooseClaimCards);
         Node cardsView = DecksViewCreator.createCardsView(observableGameState, drawTickets, drawCard);
         Node handView = DecksViewCreator.createHandView(observableGameState);
-        Node infoView = InfoViewCreator.createInfoView(PLAYER_1, playerNames, observableGameState, listOfTexts);
+        Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, listOfTexts);
 
         BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, infoView);
         //creation
@@ -135,8 +135,7 @@ public class GraphicalPlayer {
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
 
-        Preconditions.checkArgument(bagOfTickets.size() <= 5);
-        Preconditions.checkArgument(bagOfTickets.size() >= 3);
+        Preconditions.checkArgument((bagOfTickets.size() == 5 )|| (bagOfTickets.size() == 3)) ;
 
         String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS, 2, StringsFr.plural(2));
         String title = StringsFr.TICKETS_CHOICE;
@@ -144,6 +143,8 @@ public class GraphicalPlayer {
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         int minSelectedTickets = bagOfTickets.size()-DISCARDABLE_TICKETS_COUNT;
         Stage chooseTickets = createWindow(title, listView, minSelectedTickets);
+        chooseTickets.initOwner(stage);
+        chooseTickets.initModality(Modality.WINDOW_MODAL);
         chooseTickets.show();
 
 

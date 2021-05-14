@@ -24,8 +24,8 @@ public class ObservableGameState {
     private PublicGameState publicGameStateAtt;
 
     // Groupe des propriétés concernant l'état public de la partie
-    private final IntegerProperty percentageTicket;
-    private final IntegerProperty percentageCard;
+    private final IntegerProperty percentageTicket  = new SimpleIntegerProperty();
+    private final IntegerProperty percentageCard  = new SimpleIntegerProperty();
     private final List<ObjectProperty<Card>> faceUpCards = new ArrayList<>();
     private final Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMap = new HashMap<>();
 
@@ -50,8 +50,8 @@ public class ObservableGameState {
         playerStateAtt = null;
         publicGameStateAtt = null;
 
-        percentageTicket = new SimpleIntegerProperty(0);
-        percentageCard = new SimpleIntegerProperty(0);
+        percentageTicket.set(0);
+        percentageCard.set(0);
 
         for (int slot : FACE_UP_CARD_SLOTS) {
             faceUpCards.add(new SimpleObjectProperty<Card>(null));
