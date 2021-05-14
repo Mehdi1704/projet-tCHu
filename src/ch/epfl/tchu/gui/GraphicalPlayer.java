@@ -9,6 +9,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -59,7 +60,7 @@ public class GraphicalPlayer {
         Node infoView = InfoViewCreator.createInfoView(playerId, playerNames, observableGameState, listOfTexts);
 
         BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, infoView);
-        //creation
+
         stage = new Stage();
         stage.setTitle("tCHu" + " \u2014 " + playerNames.get(playerId));
         stage.setScene(new Scene(mainPane));
@@ -78,7 +79,7 @@ public class GraphicalPlayer {
     }
 
     /**
-     * ajoutant au bas des informations sur le déroulement de la partie un message.
+     * Ajoute au bas des informations sur le déroulement de la partie un message.
      * @param message message à afficher.
      */
     public void receiveInfo(String message) {
@@ -86,16 +87,13 @@ public class GraphicalPlayer {
         Text text = new Text(message);
         listOfTexts.add(text);
         if (listOfTexts.size() > 5) listOfTexts.remove(0);
-        // l'ajoutant au bas des informations sur le déroulement de la partie,
-        // qui sont présentées dans la partie inférieure de la vue des informations
-        // pour mémoire, cette vue ne doit contenir que les cinq derniers messages reçus
     }
 
     /**
-     *  permet au joueur d'effectuer un types d'actions.
+     * Permet au joueur d'effectuer un type d'action.
      * @param drawTicketsHandler gestionnaires d'action pour tirage de ticket.
      * @param claimRouteHandler gestionnaires d'action pour s'emparer d'une route.
-     * @param drawCardHandler gestionnaires d'action pour tirage de carte .
+     * @param drawCardHandler gestionnaires d'action pour tirage de carte.
      */
 
     public void startTurn(DrawTicketsHandler drawTicketsHandler,
@@ -104,10 +102,10 @@ public class GraphicalPlayer {
         assert isFxApplicationThread();
 
         claimRoute.set((route,sorted)->{
-                claimRoute.set(null);
-                drawCard.set(null);
-                drawTickets.set(null);
-                claimRouteHandler.onClaimRoute(route,sorted);
+            claimRoute.set(null);
+            drawCard.set(null);
+            drawTickets.set(null);
+            claimRouteHandler.onClaimRoute(route,sorted);
         });
 
         if (observableGameState.canDrawTickets()){
@@ -116,7 +114,7 @@ public class GraphicalPlayer {
                 drawCard.set(null);
                 drawTickets.set(null);
                 drawTicketsHandler.onDrawTickets();
-                    } );
+            } );
 
         }
         if (observableGameState.canDrawCards()){
@@ -134,40 +132,39 @@ public class GraphicalPlayer {
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
-
         Preconditions.checkArgument((bagOfTickets.size() == 5 ) || (bagOfTickets.size() == 3)) ;
 
         int minSelectedTickets = bagOfTickets.size()-DISCARDABLE_TICKETS_COUNT;
         String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS,
                 minSelectedTickets,
                 StringsFr.plural(minSelectedTickets));
-        String title = StringsFr.TICKETS_CHOICE;
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(bagOfTickets.toList()));
-        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        Button confirmButton = new Button("Choisir");
 
-        Stage chooseTickets = createWindow(chooseTicketsString, listView, minSelectedTickets);
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        confirmButton.disableProperty().bind(Bindings.greaterThan(minSelectedTickets,
+                Bindings.size(listView.getSelectionModel().getSelectedItems())));
+        confirmButton.setOnAction(e -> {
+            confirmButton.getScene().getWindow().hide();
+            chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
+        });
+        Text text = new Text(chooseTicketsString);
+        TextFlow textFlow = new TextFlow();
+        textFlow.getChildren().add(text);
+        VBox box = new VBox();
+        box.getChildren().addAll(textFlow, listView, confirmButton);
+
+        Stage chooseTickets = createWindow(box);
         chooseTickets.initOwner(stage);
         chooseTickets.initModality(Modality.WINDOW_MODAL);
+        chooseTickets.setTitle(StringsFr.TICKETS_CHOICE);
         chooseTickets.show();
-
-
-
-        //pour le choix de billets, tant et aussi longtemps que le nombre
-        // de billets sélectionné n'est pas au moins égal au nombre de billets présentés moins deux
-
-        //listView.setCellFactory(v -> bagOfTickets.toList().toString());
-
 
 
     }
 
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        // autorise le joueur a choisir une carte wagon/locomotive,
-        // soit l'une des cinq dont la face est visible, soit celle du sommet de la pioche;
-        // une fois que le joueur a cliqué sur l'une de ces cartes, le gestionnaire
-        // est appelé avec le choix du joueur; cette méthode est destinée à être
-        // appelée lorsque le joueur a déjà tiré une première carte et doit maintenant tirer la seconde
 
     }
 
@@ -175,11 +172,10 @@ public class GraphicalPlayer {
                                  ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
-        ListView<SortedBag<Card>> list = new ListView<>();
-        list.setCellFactory(v ->
-                new TextFieldListCell<>(new CardBagStringConverter()));
+        ListView<SortedBag<Card>> listView = new ListView<>(FXCollections.observableList(listOfBags));
+        listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
 
-
+        //Stage chooseTickets = createWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, list, 1);
 
     }
 
@@ -187,20 +183,18 @@ public class GraphicalPlayer {
                                       ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
+        ListView<SortedBag<Card>> list = new ListView<>(FXCollections.observableList(listOfBags));
+        list.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+
+        //TODO sortedbag
+        //TODO listview polymorphique
+        //Stage chooseTickets = createWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, list, 0);
+
     }
 
-    private Stage createWindow(String choiceText, ListView<Ticket> listView, int minSelect) {
+    private Stage createWindow(VBox box) {
 
-        Button confirmButton = new Button("Confirmer");
-        //Plusieurs choix
-        confirmButton.disableProperty().bind(Bindings.lessThan(minSelect,
-                Bindings.size(listView.getSelectionModel().getSelectedItems())));
-        Text text = new Text(choiceText);
-        TextFlow textFlow = new TextFlow();
-        textFlow.getChildren().add(text);
-        VBox box = new VBox();
-        box.getChildren().addAll(textFlow, listView, confirmButton);
-        //TODO listview
+
 
 
         Scene scene = new Scene(new BorderPane(box));
@@ -209,8 +203,7 @@ public class GraphicalPlayer {
         chooseStage.initOwner(stage);
         chooseStage.initModality(Modality.WINDOW_MODAL);
         chooseStage.setScene(scene);
-
-
+        chooseStage.setOnCloseRequest(Event::consume);
 
         return chooseStage;
     }
