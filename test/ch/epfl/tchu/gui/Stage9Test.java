@@ -26,7 +26,7 @@ public class Stage9Test extends Application {
     @Override
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
-        
+
         Map<PlayerId, String> playerNames =
                 Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
         ObservableList<Text> infos = FXCollections.observableArrayList(
