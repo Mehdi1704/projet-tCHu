@@ -67,11 +67,20 @@ public class GraphicalPlayer {
 
     }
 
+    /**
+     * cette méthode permet de mettre à jour l'état public de la partie et l'état du joueur à l'état observable du joueur.
+     * @param publicGameState état public de la partie
+     * @param playerState état du joueur .
+     */
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
         assert isFxApplicationThread();
         observableGameState.setState(publicGameState, playerState);
     }
 
+    /**
+     * ajoutant au bas des informations sur le déroulement de la partie un message.
+     * @param message message à afficher.
+     */
     public void receiveInfo(String message) {
         assert isFxApplicationThread();
         Text text = new Text(message);
@@ -81,6 +90,13 @@ public class GraphicalPlayer {
         // qui sont présentées dans la partie inférieure de la vue des informations
         // pour mémoire, cette vue ne doit contenir que les cinq derniers messages reçus
     }
+
+    /**
+     *  permet au joueur d'effectuer un types d'actions.
+     * @param drawTicketsHandler gestionnaires d'action pour tirage de ticket.
+     * @param claimRouteHandler gestionnaires d'action pour s'emparer d'une route.
+     * @param drawCardHandler gestionnaires d'action pour tirage de carte .
+     */
 
     public void startTurn(DrawTicketsHandler drawTicketsHandler,
                           ClaimRouteHandler claimRouteHandler,
