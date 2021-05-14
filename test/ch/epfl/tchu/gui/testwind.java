@@ -29,10 +29,11 @@ public class testwind extends Application {
         GraphicalPlayer player = new GraphicalPlayer(PlayerId.PLAYER_1, playerNames2, infos2);
 
         player.chooseTickets(SortedBag.of(ChMap.tickets().subList(0, 5)), (e) -> System.out.println("choisi"));
+        
+
+
+
+
+
     }
-
-
-
-
-
 }
