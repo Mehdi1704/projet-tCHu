@@ -133,14 +133,13 @@ public class GraphicalPlayer {
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
-        Preconditions.checkArgument((bagOfTickets.size() == 5 ) || (bagOfTickets.size() == 3)) ;
-
+        Preconditions.checkArgument((bagOfTickets.size() == 5 ) || (bagOfTickets.size() == 3));
         int minSelectedTickets = bagOfTickets.size()-DISCARDABLE_TICKETS_COUNT;
         String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS,
                 minSelectedTickets,
                 StringsFr.plural(minSelectedTickets));
         ListView<Ticket> listView = new ListView<>(FXCollections.observableList(bagOfTickets.toList()));
-        Button confirmButton = new Button("Choisir");
+        Button confirmButton = new Button(StringsFr.CHOOSE);
 
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         confirmButton.disableProperty().bind(Bindings.greaterThan(minSelectedTickets,
@@ -162,6 +161,15 @@ public class GraphicalPlayer {
 
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
+        if(observableGameState.canDrawCards()) {
+            drawCard.set((index -> {
+                claimRoute.set(null);
+                drawCard.set(null);
+                drawTickets.set(null);
+                drawCardHandler.onDrawCard(index);
+
+            }));
+        }
 
     }
 
