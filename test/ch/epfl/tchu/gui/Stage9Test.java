@@ -27,6 +27,15 @@ public class Stage9Test extends Application {
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
 
+        Map<PlayerId, String> playerNames2 =
+                Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
+        ObservableList<Text> infos2 = FXCollections.observableArrayList();
+
+        GraphicalPlayer player = new GraphicalPlayer(PlayerId.PLAYER_1,playerNames2,infos2);
+
+        player.chooseTickets(SortedBag.of(ChMap.tickets().subList(0,5)),(e)-> System.out.println("choisi"));
+
+
         Map<PlayerId, String> playerNames =
                 Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
         ObservableList<Text> infos = FXCollections.observableArrayList(
