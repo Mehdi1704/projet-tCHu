@@ -22,9 +22,8 @@ public class testwind extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        ObservableList<Text> infos = FXCollections.observableArrayList(
-                new Text("Première information.\n"),
-                new Text("\nSeconde information.\n"));
+        ObservableList<Text> infos = FXCollections.observableArrayList();
+
 
         List<SortedBag<Card>> listOfBags = List.of(SortedBag.of(1, Card.ORANGE, 3, Card.RED),
                 SortedBag.of(3, Card.WHITE, 4, Card.LOCOMOTIVE),
