@@ -37,8 +37,12 @@ public class testwind extends Application {
         GraphicalPlayer p = new GraphicalPlayer(PLAYER_1, playerNames, infos);
         setState(p);
 
+        //p.chooseTickets(SortedBag.of(ChMap.tickets().subList(0, 5)), (e) -> System.out.println("tickets choisis"));
         ActionHandlers.DrawTicketsHandler drawTicketsH =
-                () -> p.receiveInfo("Je tire des billets !");
+                () -> p.chooseTickets(SortedBag.of(ChMap.tickets().subList(0,5)),(e) -> System.out.println("tickets choisis"));
+
+
+
         ActionHandlers.DrawCardHandler drawCardH =
                 s -> p.receiveInfo(String.format("Je tire une carte de %s !", s));
         ActionHandlers.ClaimRouteHandler claimRouteH =
