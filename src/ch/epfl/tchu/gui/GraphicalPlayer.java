@@ -135,14 +135,17 @@ public class GraphicalPlayer {
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
 
-        Preconditions.checkArgument((bagOfTickets.size() == 5 )|| (bagOfTickets.size() == 3)) ;
+        Preconditions.checkArgument((bagOfTickets.size() == 5 ) || (bagOfTickets.size() == 3)) ;
 
-        String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS, 2, StringsFr.plural(2));
-        String title = StringsFr.TICKETS_CHOICE;
-        ListView<Text> listView = new ListView<>();
-        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         int minSelectedTickets = bagOfTickets.size()-DISCARDABLE_TICKETS_COUNT;
-        Stage chooseTickets = createWindow(title, listView, minSelectedTickets);
+        String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS,
+                minSelectedTickets,
+                StringsFr.plural(minSelectedTickets));
+        String title = StringsFr.TICKETS_CHOICE;
+        ListView<Ticket> listView = new ListView<>(FXCollections.observableList(bagOfTickets.toList()));
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        Stage chooseTickets = createWindow(chooseTicketsString, listView, minSelectedTickets);
         chooseTickets.initOwner(stage);
         chooseTickets.initModality(Modality.WINDOW_MODAL);
         chooseTickets.show();
@@ -186,17 +189,17 @@ public class GraphicalPlayer {
 
     }
 
-    private Stage createWindow(String title, ListView<Text> listView, int minSelect) {
+    private Stage createWindow(String choiceText, ListView<Ticket> listView, int minSelect) {
 
         Button confirmButton = new Button("Confirmer");
         //Plusieurs choix
         confirmButton.disableProperty().bind(Bindings.lessThan(minSelect,
                 Bindings.size(listView.getSelectionModel().getSelectedItems())));
-        Text text = new Text(title);
+        Text text = new Text(choiceText);
         TextFlow textFlow = new TextFlow();
         textFlow.getChildren().add(text);
         VBox box = new VBox();
-        box.getChildren().addAll(confirmButton, textFlow, listView);
+        box.getChildren().addAll(textFlow, listView, confirmButton);
         //TODO listview
 
 
