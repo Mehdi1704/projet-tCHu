@@ -45,10 +45,11 @@ public class testwind extends Application {
         player.setState(publicGameState,p1State);
 
         player.chooseTickets(SortedBag.of(ChMap.tickets().subList(0, 5)), (e) -> System.out.println("choisi"));
+        
+
+
+
+
+
     }
-
-
-
-
-
 }
