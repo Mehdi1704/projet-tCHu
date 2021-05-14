@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Map;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
@@ -21,10 +22,36 @@ public class testwind extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Map<PlayerId, String> playerNames2 =
-                Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
-        ObservableList<Text> infos2 = FXCollections.observableArrayList();
+        ObservableList<Text> infos = FXCollections.observableArrayList(
+                new Text("Première information.\n"),
+                new Text("\nSeconde information.\n"));
 
+        List<SortedBag<Card>> listOfBags = List.of(SortedBag.of(1, Card.ORANGE, 3, Card.RED),
+                SortedBag.of(3, Card.WHITE, 4, Card.LOCOMOTIVE),
+                SortedBag.of(2, Card.LOCOMOTIVE, 1, Card.BLUE),
+                SortedBag.of(1, Card.GREEN, 1, Card.BLACK));
+
+
+        Map<PlayerId, String> playerNames =
+                Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
+        GraphicalPlayer p = new GraphicalPlayer(PLAYER_1, playerNames, infos);
+        setState(p);
+
+        ActionHandlers.DrawTicketsHandler drawTicketsH =
+                () -> p.receiveInfo("Je tire des billets !");
+        ActionHandlers.DrawCardHandler drawCardH =
+                s -> p.receiveInfo(String.format("Je tire une carte de %s !", s));
+        ActionHandlers.ClaimRouteHandler claimRouteH =
+                (r, cs) -> {
+                    String rn = r.station1() + " - " + r.station2();
+                    p.receiveInfo(String.format("Je m'empare de %s avec %s", rn, cs));
+                };
+
+        p.startTurn(drawTicketsH, claimRouteH, drawCardH);
+    }
+
+
+    private void setState(GraphicalPlayer player) {
         PlayerState p1State =
                 new PlayerState(SortedBag.of(ChMap.tickets().subList(0, 3)),
                         SortedBag.of(1, Card.WHITE, 3, Card.RED),
@@ -39,17 +66,6 @@ public class testwind extends Application {
                 new PublicCardState(Card.ALL.subList(0, 5), 110 - 2 * 4 - 5, 0);
         PublicGameState publicGameState =
                 new PublicGameState(36, cardState, PLAYER_1, pubPlayerStates, null);
-
-
-        GraphicalPlayer player = new GraphicalPlayer(PlayerId.PLAYER_1, playerNames2, infos2);
-        player.setState(publicGameState,p1State);
-
-        player.chooseTickets(SortedBag.of(ChMap.tickets().subList(0, 5)), (e) -> System.out.println("tickets choisis"));
-        
-
-
-
-
-
+        player.setState(publicGameState, p1State);
     }
 }

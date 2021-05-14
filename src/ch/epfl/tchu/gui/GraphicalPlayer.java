@@ -33,6 +33,7 @@ import static javafx.application.Platform.isFxApplicationThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GraphicalPlayer {
     private final PlayerId playerId;
@@ -154,12 +155,8 @@ public class GraphicalPlayer {
         VBox box = new VBox();
         box.getChildren().addAll(textFlow, listView, confirmButton);
 
-        Stage chooseTickets = createWindow(box);
-        chooseTickets.initOwner(stage);
-        chooseTickets.initModality(Modality.WINDOW_MODAL);
-        chooseTickets.setTitle(StringsFr.TICKETS_CHOICE);
+        Stage chooseTickets = createWindow(box, StringsFr.TICKETS_CHOICE);
         chooseTickets.show();
-
 
     }
 
@@ -175,7 +172,23 @@ public class GraphicalPlayer {
         ListView<SortedBag<Card>> listView = new ListView<>(FXCollections.observableList(listOfBags));
         listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
 
-        //Stage chooseTickets = createWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, list, 1);
+        Button confirmButton = new Button(StringsFr.CHOOSE);
+
+        confirmButton.disableProperty().bind(Bindings.greaterThan(1,
+                Bindings.size(listView.getSelectionModel().getSelectedItems())));
+        confirmButton.setOnAction(e -> {
+            confirmButton.getScene().getWindow().hide();
+            SortedBag<Card> cards = SortedBag.of(listView.getSelectionModel().getSelectedItem());
+            chooseCardsHandler.onChooseCards(cards);
+        });
+        Text text = new Text(StringsFr.CHOOSE_CARDS);
+        TextFlow textFlow = new TextFlow();
+        textFlow.getChildren().add(text);
+        VBox box = new VBox();
+        box.getChildren().addAll(textFlow, listView, confirmButton);
+
+        Stage chooseTickets = createWindow(box, StringsFr.CARDS_CHOICE);
+        chooseTickets.show();
 
     }
 
@@ -183,20 +196,31 @@ public class GraphicalPlayer {
                                       ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
 
-        ListView<SortedBag<Card>> list = new ListView<>(FXCollections.observableList(listOfBags));
-        list.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+        ListView<SortedBag<Card>> listView = new ListView<>(FXCollections.observableList(listOfBags));
+        listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
 
-        //TODO sortedbag
-        //TODO listview polymorphique
+        Button confirmButton = new Button(StringsFr.CHOOSE);
+
+        confirmButton.disableProperty().bind(Bindings.greaterThan(0,
+                Bindings.size(listView.getSelectionModel().getSelectedItems())));
+        confirmButton.setOnAction(e -> {
+            confirmButton.getScene().getWindow().hide();
+            SortedBag<Card> cards = SortedBag.of(listView.getSelectionModel().getSelectedItem());
+            chooseCardsHandler.onChooseCards(cards);
+        });
+        Text text = new Text(StringsFr.CHOOSE_ADDITIONAL_CARDS);
+        TextFlow textFlow = new TextFlow();
+        textFlow.getChildren().add(text);
+        VBox box = new VBox();
+        box.getChildren().addAll(textFlow, listView, confirmButton);
+
+        Stage chooseTickets = createWindow(box, StringsFr.CARDS_CHOICE);
+        chooseTickets.show();
         //Stage chooseTickets = createWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, list, 0);
 
     }
 
-    private Stage createWindow(VBox box) {
-
-
-
-
+    private Stage createWindow(VBox box, String title) {
         Scene scene = new Scene(new BorderPane(box));
         scene.getStylesheets().add("chooser.css");
         Stage chooseStage = new Stage(StageStyle.UTILITY);
@@ -204,7 +228,9 @@ public class GraphicalPlayer {
         chooseStage.initModality(Modality.WINDOW_MODAL);
         chooseStage.setScene(scene);
         chooseStage.setOnCloseRequest(Event::consume);
-
+        chooseStage.initOwner(stage);
+        chooseStage.initModality(Modality.WINDOW_MODAL);
+        chooseStage.setTitle(title);
         return chooseStage;
     }
 
