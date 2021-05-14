@@ -93,6 +93,7 @@ class DecksViewCreator {
                 System.out.println("Face up card: " + newValue);
                 card.getStyleClass().set(0, newValue.name());
             });
+            card.disableProperty().bind(cardHandler.isNull());
             card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
             cardsView.getChildren().add(card);
         }
@@ -100,7 +101,8 @@ class DecksViewCreator {
         // Creation du bouton pour la pioche de cartes
         ReadOnlyIntegerProperty percentageCards = observableGameState.pourcentageCard();
         Button cardsButton = gaugeButton(percentageCards, "Cartes");
-        cardsButton.disabledProperty().isEqualTo(cardHandler.isNull());
+       // cardsButton.disabledProperty().isEqualTo(cardHandler.isNull());
+        cardsButton.disableProperty().bind(cardHandler.isNull());
         cardsButton.setOnAction(e -> cardHandler.get().onDrawCard(-1));
         cardsView.getChildren().add(cardsButton);
 
