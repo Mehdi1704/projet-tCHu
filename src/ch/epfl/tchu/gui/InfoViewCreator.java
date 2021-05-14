@@ -15,6 +15,16 @@ import java.util.Map;
 
 class InfoViewCreator {
 
+    /**
+     *
+     * méthode de création de la vue permettant de visualiser les différentes informations de la partie .
+     *
+     * @param playerId identificateur du joueur.
+     * @param playerNames map associant aux identifiants des joueurs le nom correspondant.
+     * @param observableGameState état de jeu observable.
+     * @param textList liste de textes observable.
+     * @return un noeud qui permet de visualiser grqphiquement les différentes informations de la partie.
+     */
     public static Node createInfoView(PlayerId playerId,
                                       Map<PlayerId, String> playerNames,
                                       ObservableGameState observableGameState,
