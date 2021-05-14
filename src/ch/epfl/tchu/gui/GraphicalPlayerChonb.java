@@ -166,6 +166,17 @@ public class GraphicalPlayerChonb {
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
 
+        if(observableGameState.canDrawCards()) {
+            drawCard.set((index -> {
+                claimRoute.set(null);
+                drawCard.set(null);
+                drawTickets.set(null);
+                drawCardHandler.onDrawCard(index);
+
+            }));
+        }
+
+
     }
 
     public void chooseClaimCards(List<SortedBag<Card>> listOfBags,
