@@ -38,16 +38,6 @@ public class PublicCardState {
     }
 
     /**
-     * methode retournant le nombre total de carte face visible , des cartes se trouvant dans la pioche
-     * ainsi que la defausse .
-     *
-     * @return nombre total de cartes en jeu
-     */
-    public int totalSize() {
-        return (Constants.FACE_UP_CARDS_COUNT + deckSize + discardsSize);
-    }
-
-    /**
      * getter de la liste des cartes face visible .
      *
      * @return liste des cartes face visible

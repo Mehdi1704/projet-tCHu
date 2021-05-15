@@ -148,7 +148,7 @@ public final class Game {
                             } else {
                                 // Cartes que le joueur peut jouer
                                 List<SortedBag<Card>> playableCards = gameState.currentPlayerState()
-                                        .possibleAdditionalCards(addClaimCardsCount, playerClaimCards, drawnCards);
+                                        .possibleAdditionalCards(addClaimCardsCount, playerClaimCards);
 
                                 if (playableCards.isEmpty()) {
                                     receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));

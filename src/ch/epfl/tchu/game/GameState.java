@@ -200,7 +200,6 @@ public class GameState extends PublicGameState {
      * tout en étant remplacée par celle au sommet de la pioche
      */
     public GameState withDrawnFaceUpCard(int slot) {
-        Preconditions.checkArgument(canDrawCards());
         PlayerState newPlayerState = currentPlayerState().withAddedCard(cardState.faceUpCards().get(slot));
         CardState newCardState = cardState.withDrawnFaceUpCard(slot);
         Map<PlayerId, PlayerState> newMap = new HashMap<>(playerState);
@@ -219,7 +218,6 @@ public class GameState extends PublicGameState {
      * @return un nouvel état de gamestate ou la carte du sommet de la pioche a été placée dans la main du joueur courant
      */
     public GameState withBlindlyDrawnCard() {
-        Preconditions.checkArgument(canDrawCards());
         PlayerState newPlayerState = currentPlayerState().withAddedCard(cardState.topDeckCard());
         CardState newCardState = cardState.withoutTopDeckCard();
         Map<PlayerId, PlayerState> newMap = new HashMap<>(playerState);
