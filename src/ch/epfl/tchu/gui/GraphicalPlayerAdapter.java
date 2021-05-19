@@ -41,7 +41,7 @@ public class GraphicalPlayerAdapter implements Player {
 
         runLater(() -> {
             try {
-                graphicalPlayer.chooseTickets(tickets, ticketsHandlerBQ.take());
+                graphicalPlayer.chooseTickets(tickets, );
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -50,6 +50,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
+
         return null;
     }
 
@@ -67,7 +68,14 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        return null;
+        runLater(() -> {
+            try {
+                graphicalPlayer.chooseTickets(options, ticketsHandlerBQ.put());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        return ticketsHandlerBQ.take();
     }
 
     @Override
