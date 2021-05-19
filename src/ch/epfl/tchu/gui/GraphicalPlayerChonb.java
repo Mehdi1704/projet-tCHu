@@ -39,19 +39,25 @@ public class GraphicalPlayerChonb implements Player {
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
 
-        runLater(() -> {
-            try {
-                graphicalPlayer.chooseTickets(tickets, );
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        runLater(() -> {graphicalPlayer.chooseTickets(tickets, tickets1 -> {
+            try{
+                    ticketsBQ.put(tickets1);
+            }catch (InterruptedException e){
+                throw new Error();
             }
         });
+    });
     }
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-
-        return null;
+        SortedBag<Ticket> tickets;
+        try{
+            tickets = ticketsBQ.take();
+        }catch (InterruptedException e){
+            throw new Error();
+        }
+        return tickets;
     }
 
     @Override
@@ -75,7 +81,7 @@ public class GraphicalPlayerChonb implements Player {
                 e.printStackTrace();
             }
         });
-        return ticketsHandlerBQ.take();
+       return SortedBag.of() ;
     }
 
     @Override
