@@ -36,14 +36,10 @@ public class ServerMain extends Application {
             Map<PlayerId, String> playerNames =
                     Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
 
-            BufferedReader r =
-                    new BufferedReader(
-                            new InputStreamReader(socket.getInputStream(),
-                                    US_ASCII));
-            BufferedWriter w =
-                    new BufferedWriter(
-                            new OutputStreamWriter(socket.getOutputStream(),
-                                    US_ASCII));
+            BufferedReader r = new BufferedReader(
+                                    new InputStreamReader(socket.getInputStream(), US_ASCII));
+            BufferedWriter w = new BufferedWriter(
+                                    new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
 
             Player graphicalPlayer = new GraphicalPlayerAdapter();
             Player remotePlayerProxy = new RemotePlayerProxy(socket, r, w);
