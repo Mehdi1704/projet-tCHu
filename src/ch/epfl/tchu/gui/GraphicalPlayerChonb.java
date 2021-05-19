@@ -74,11 +74,7 @@ public class GraphicalPlayerChonb implements Player {
         //1) on crée un DrawCardHandler qui met le slot donné dans la queue,
         //2) on appelle la méthode drawCard du graphicalPlayer (avec un runLater) et
         //3) on fait take() sur cette BlockingQueue
-        if (cardHandlerBQ.peek().equals(null)){
-            return cardHandlerBQ.take();
-        }else {
-            runLater(()->graphicalPlayer.drawCard());
-        }
+
 
 
         return 0;

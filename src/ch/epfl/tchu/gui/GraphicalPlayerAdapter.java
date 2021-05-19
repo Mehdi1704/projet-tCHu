@@ -83,23 +83,24 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public int drawSlot() {
-        //Une boucle if vérifie (grâce à la méthode peek()) si la queue qui gère les face up cartes est différent de null (donc non vide)
-        //Si c’est le cas (donc la file contient quelque chose) alors on fait take() sur cette BlockingQueue
-        //Sinon, donc si la queue est vide, alors
-        //1) on crée un DrawCardHandler qui met le slot donné dans la queue,
-        //2) on appelle la méthode drawCard du graphicalPlayer (avec un runLater) et
-        //3) on fait take() sur cette BlockingQueue
-        return 0;
+        if (slotBQ.peek() != null){
+            takeBlockingQueue(slotBQ);
+        }else {
+            ActionHandlers.DrawCardHandler cardHandler;
+            cardHandler = (slot) -> putBlockingQueue(slotBQ, slot);
+            runLater(() -> graphicalPlayer.drawCard(cardHandler));
+        }
+        return takeBlockingQueue(slotBQ);
     }
 
     @Override
     public Route claimedRoute() {
-        return null;
+        return takeBlockingQueue(routesBQ);
     }
 
     @Override
     public SortedBag<Card> initialClaimCards() {
-        return null;
+        return takeBlockingQueue(cardsBQ);
     }
 
     @Override
