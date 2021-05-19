@@ -83,9 +83,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public int drawSlot() {
-        if (slotBQ.peek() != null){
-            takeBlockingQueue(slotBQ);
-        }else {
+        if (slotBQ.size()!= 1 ){
             ActionHandlers.DrawCardHandler cardHandler;
             cardHandler = (slot) -> putBlockingQueue(slotBQ, slot);
             runLater(() -> graphicalPlayer.drawCard(cardHandler));
