@@ -80,7 +80,7 @@ class DecksViewCreator {
         cardsView.setId("card-pane");
         // Creation du bouton pour les tickets
         ReadOnlyIntegerProperty percentageTickets = observableGameState.poucentageTicket();
-        Button ticketButton = gaugeButton(percentageTickets, "Billets");
+        Button ticketButton = gaugeButton(percentageTickets, StringsFr.TICKETS);
         ticketButton.disableProperty().bind(ticketHandler.isNull());
         ticketButton.setOnAction(e -> ticketHandler.get().onDrawTickets());
         cardsView.getChildren().add(ticketButton);
@@ -100,7 +100,7 @@ class DecksViewCreator {
 
         // Creation du bouton pour la pioche de cartes
         ReadOnlyIntegerProperty percentageCards = observableGameState.pourcentageCard();
-        Button cardsButton = gaugeButton(percentageCards, "Cartes");
+        Button cardsButton = gaugeButton(percentageCards, StringsFr.CARDS);
        // cardsButton.disabledProperty().isEqualTo(cardHandler.isNull());
         cardsButton.disableProperty().bind(cardHandler.isNull());
         cardsButton.setOnAction(e -> cardHandler.get().onDrawCard(-1));
@@ -111,7 +111,7 @@ class DecksViewCreator {
 
     private static StackPane cardView(Card card) {
 
-        String cardName="";
+        String cardName = "";
         if (!Objects.isNull(card)){
             cardName = card.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
         }
