@@ -14,7 +14,9 @@ public class GraphicalPlayerAdapter implements Player {
 
     private GraphicalPlayer graphicalPlayer;
     private final BlockingQueue<SortedBag<Ticket>> ticketsBQ = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<Route> routesBQ = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<SortedBag<Card>> cardsBQ = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<Integer> slotBQ = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<TurnKind> turnKindBQ = new ArrayBlockingQueue<>(1);
 
     public GraphicalPlayerAdapter(){
@@ -49,14 +51,26 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public TurnKind nextTurn() {
-        BlockingQueue<ActionHandlers.DrawTicketsHandler> ticketsHandlerBQ = new ArrayBlockingQueue<>(1);
-        BlockingQueue<ActionHandlers.ClaimRouteHandler> routesHandlerBQ = new ArrayBlockingQueue<>(1);
-        BlockingQueue<ActionHandlers.DrawCardHandler> cardHandlerBQ = new ArrayBlockingQueue<>(1);
+        ActionHandlers.DrawTicketsHandler ticketsHandler;
+        ActionHandlers.ClaimRouteHandler routesHandler;
+        ActionHandlers.DrawCardHandler cardHandler;
+
+        ticketsHandler = () -> putBlockingQueue(turnKindBQ, TurnKind.DRAW_TICKETS);
+        routesHandler = (route, card) -> {
+            putBlockingQueue(turnKindBQ, TurnKind.CLAIM_ROUTE);
+            putBlockingQueue(routesBQ, route);
+            putBlockingQueue(cardsBQ, card);
+        };
+        cardHandler = (slot) -> {
+            putBlockingQueue(turnKindBQ, TurnKind.DRAW_CARDS);
+            putBlockingQueue(slotBQ, slot);
+
+        };
 
         runLater(() -> {
-            graphicalPlayer.startTurn(takeBlockingQueue(ticketsHandlerBQ),
-                                      takeBlockingQueue(routesHandlerBQ),
-                                      takeBlockingQueue(cardHandlerBQ));
+            graphicalPlayer.startTurn(ticketsHandler,
+                                      routesHandler,
+                                      cardHandler);
         });
         return takeBlockingQueue(turnKindBQ);
     }
