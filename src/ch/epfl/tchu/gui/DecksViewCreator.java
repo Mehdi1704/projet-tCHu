@@ -47,7 +47,6 @@ class DecksViewCreator {
         // Création des cartes en main du joueur
         Card.ALL.forEach(card -> {
             ReadOnlyIntegerProperty count = observableGameState.numberOfEachTypeOfCards(card);
-            //TODO verifier
             count.addListener((observable, oldValue, newValue) -> System.out.println("Types of cards: " + newValue));
             Text counter = new Text();
             counter.getStyleClass().add("count");

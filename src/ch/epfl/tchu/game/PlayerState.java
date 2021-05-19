@@ -21,7 +21,7 @@ public final class PlayerState extends PublicPlayerState {
     private final List<Route> routes;
 
 
-    //TODO
+    //TODO commentaire
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
         super(tickets.size(), cards.size(), routes);
         this.tickets = tickets;

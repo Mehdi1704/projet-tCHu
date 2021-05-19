@@ -68,14 +68,8 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        runLater(() -> {
-            try {
-                graphicalPlayer.chooseTickets(options, ticketsHandlerBQ.put());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        return ticketsHandlerBQ.take();
+        runLater(() -> graphicalPlayer.chooseTickets(options, ticketsBQ::put));
+        return ticketsBQ::take;
     }
 
     @Override
@@ -96,5 +90,13 @@ public class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         return null;
+    }
+
+    private static void putOnQueue(BlockingQueue<Object> queue, Object object){
+        try {
+            queue.put(object);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
