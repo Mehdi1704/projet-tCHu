@@ -57,7 +57,6 @@ public class GraphicalPlayerAdapter implements Player {
             graphicalPlayer.startTurn(takeBlockingQueue(ticketsHandlerBQ),
                                       takeBlockingQueue(routesHandlerBQ),
                                       takeBlockingQueue(cardHandlerBQ));
-            ticketsHandlerBQ.peek().equals(null)
         });
         return takeBlockingQueue(turnKindBQ);
     }
