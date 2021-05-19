@@ -16,9 +16,10 @@ public class GraphicalPlayerChonb implements Player {
     private final BlockingQueue<ActionHandlers.ChooseTicketsHandler> ticketsHandlerBQ = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<SortedBag<Ticket>> ticketsBQ = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<TurnKind> turnKindBQ = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<Route> routeBQ = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<SortedBag<Card>> cardBQ = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<ActionHandlers.DrawCardHandler> cardHandlerBQ = new ArrayBlockingQueue<>(1);
 
-    public GraphicalPlayerChonb(){
-    }
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
@@ -61,23 +62,36 @@ public class GraphicalPlayerChonb implements Player {
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        runLater(() -> graphicalPlayer.chooseTickets(options, ticketsBQ::put));
-        return ticketsBQ::take;
+        runLater(() -> graphicalPlayer.chooseTickets(options, t -> putBlockingQueue(ticketsBQ, t)));
+        return takeBlockingQueue(ticketsBQ);
     }
 
     @Override
     public int drawSlot() {
+        //Une boucle if vérifie (grâce à la méthode peek()) si la queue qui gère les face up cartes est différent de null (donc non vide)
+        //Si c’est le cas (donc la file contient quelque chose) alors on fait take() sur cette BlockingQueue
+        //Sinon, donc si la queue est vide, alors
+        //1) on crée un DrawCardHandler qui met le slot donné dans la queue,
+        //2) on appelle la méthode drawCard du graphicalPlayer (avec un runLater) et
+        //3) on fait take() sur cette BlockingQueue
+        if (cardHandlerBQ.peek().equals(null)){
+            return cardHandlerBQ.take();
+        }else {
+            runLater(()->graphicalPlayer.drawCard());
+        }
+
+
         return 0;
     }
 
     @Override
     public Route claimedRoute() {
-        return null;
+        return takeBlockingQueue(routeBQ);
     }
 
     @Override
     public SortedBag<Card> initialClaimCards() {
-        return null;
+        return takeBlockingQueue(cardBQ);
     }
 
     @Override
