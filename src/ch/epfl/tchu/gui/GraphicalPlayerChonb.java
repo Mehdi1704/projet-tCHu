@@ -38,26 +38,13 @@ public class GraphicalPlayerChonb implements Player {
 
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-
-        runLater(() -> {graphicalPlayer.chooseTickets(tickets, tickets1 -> {
-            try{
-                    ticketsBQ.put(tickets1);
-            }catch (InterruptedException e){
-                throw new Error();
-            }
-        });
-    });
+        runLater(() -> graphicalPlayer.chooseTickets(
+                tickets, t -> putBlockingQueue(ticketsBQ, t)));
     }
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        SortedBag<Ticket> tickets;
-        try{
-            tickets = ticketsBQ.take();
-        }catch (InterruptedException e){
-            throw new Error();
-        }
-        return tickets;
+        return takeBlockingQueue(ticketsBQ);
     }
 
     @Override
@@ -74,14 +61,8 @@ public class GraphicalPlayerChonb implements Player {
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        runLater(() -> {
-            try {
-                graphicalPlayer.chooseTickets(options, ticketsHandlerBQ.put());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-       return SortedBag.of() ;
+        runLater(() -> graphicalPlayer.chooseTickets(options, ticketsBQ::put));
+        return ticketsBQ::take;
     }
 
     @Override
@@ -102,5 +83,23 @@ public class GraphicalPlayerChonb implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         return null;
+    }
+
+    private <T> void putBlockingQueue(BlockingQueue<T> queue, T object){
+        try {
+            queue.put(object);
+        } catch (InterruptedException e) {
+            throw new Error();
+        }
+    }
+
+    private <T> T takeBlockingQueue(BlockingQueue<T> queue){
+        T object;
+        try {
+            object = queue.take();
+        } catch (InterruptedException e) {
+            throw new Error();
+        }
+        return object;
     }
 }

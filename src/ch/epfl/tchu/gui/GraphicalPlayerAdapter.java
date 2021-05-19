@@ -38,20 +38,13 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-
-        runLater(() -> {
-            try {
-                graphicalPlayer.chooseTickets(tickets, );
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+        runLater(() -> graphicalPlayer.chooseTickets(
+                            tickets, t -> putBlockingQueue(ticketsBQ, t)));
     }
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-
-        return null;
+        return takeBlockingQueue(ticketsBQ);
     }
 
     @Override
@@ -92,11 +85,21 @@ public class GraphicalPlayerAdapter implements Player {
         return null;
     }
 
-    private static void putOnQueue(BlockingQueue<Object> queue, Object object){
+    private <T> void putBlockingQueue(BlockingQueue<T> queue, T object){
         try {
             queue.put(object);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new Error();
         }
+    }
+
+    private <T> T takeBlockingQueue(BlockingQueue<T> queue){
+        T object;
+        try {
+            object = queue.take();
+        } catch (InterruptedException e) {
+            throw new Error();
+        }
+        return object;
     }
 }
