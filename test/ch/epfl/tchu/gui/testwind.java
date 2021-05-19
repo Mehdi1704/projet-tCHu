@@ -33,7 +33,7 @@ public class testwind extends Application {
 
         Map<PlayerId, String> playerNames =
                 Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
-        GraphicalPlayer p = new GraphicalPlayer(PLAYER_1, playerNames, infos);
+        GraphicalPlayer p = new GraphicalPlayer(PLAYER_1, playerNames);
         setState(p);
 
         //p.chooseTickets(SortedBag.of(ChMap.tickets().subList(0, 5)), (e) -> System.out.println("tickets choisis"));

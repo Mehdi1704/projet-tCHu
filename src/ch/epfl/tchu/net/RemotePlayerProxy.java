@@ -40,7 +40,6 @@ public class RemotePlayerProxy implements Player {
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        //TODO a revoir
         List<String> listOfArgs = List.of(
                 Serdes.PLAYER_ID_SERDE.serialize(ownId),
                 Serdes.LIST_STRING_SERDE.serialize(

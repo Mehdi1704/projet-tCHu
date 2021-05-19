@@ -26,14 +26,12 @@ import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
 import static ch.epfl.tchu.game.Constants.DISCARDABLE_TICKETS_COUNT;
-import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class GraphicalPlayer {
     private final PlayerId playerId;
@@ -46,10 +44,10 @@ public class GraphicalPlayer {
     private final ObjectProperty<DrawCardHandler> drawCard;
 
 
-    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames, ObservableList<Text> listOfTexts) {
+    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         this.playerId = playerId;
         this.playerNames = playerNames;
-        this.listOfTexts = listOfTexts;
+        listOfTexts = FXCollections.observableArrayList();
         observableGameState = new ObservableGameState(playerId);
         claimRoute = new SimpleObjectProperty<>(null);
         drawTickets = new SimpleObjectProperty<>(null);
