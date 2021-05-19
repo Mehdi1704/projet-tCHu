@@ -13,8 +13,8 @@ import static javafx.application.Platform.runLater;
 public class GraphicalPlayerAdapter implements Player {
 
     private GraphicalPlayer graphicalPlayer;
-    private final BlockingQueue<ActionHandlers.ChooseTicketsHandler> ticketsHandlerBQ = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<SortedBag<Ticket>> ticketsBQ = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<SortedBag<Card>> cardsBQ = new ArrayBlockingQueue<>(1);
     private final BlockingQueue<TurnKind> turnKindBQ = new ArrayBlockingQueue<>(1);
 
     public GraphicalPlayerAdapter(){
@@ -48,25 +48,34 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     @Override
-    public TurnKind nextTurn() {/*
+    public TurnKind nextTurn() {
+        BlockingQueue<ActionHandlers.DrawTicketsHandler> ticketsHandlerBQ = new ArrayBlockingQueue<>(1);
+        BlockingQueue<ActionHandlers.ClaimRouteHandler> routesHandlerBQ = new ArrayBlockingQueue<>(1);
+        BlockingQueue<ActionHandlers.DrawCardHandler> cardHandlerBQ = new ArrayBlockingQueue<>(1);
+
         runLater(() -> {
-            try {
-                graphicalPlayer.startTurn();
-                return turnKindBQ.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            graphicalPlayer.startTurn(takeBlockingQueue(ticketsHandlerBQ),
+                                      takeBlockingQueue(routesHandlerBQ),
+                                      takeBlockingQueue(cardHandlerBQ));
+            ticketsHandlerBQ.peek().equals(null)
         });
-    }*/ return null;}
+        return takeBlockingQueue(turnKindBQ);
+    }
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        runLater(() -> graphicalPlayer.chooseTickets(options, ticketsBQ::put));
-        return ticketsBQ::take;
+        runLater(() -> graphicalPlayer.chooseTickets(options, t -> putBlockingQueue(ticketsBQ, t)));
+        return takeBlockingQueue(ticketsBQ);
     }
 
     @Override
     public int drawSlot() {
+        //Une boucle if vérifie (grâce à la méthode peek()) si la queue qui gère les face up cartes est différent de null (donc non vide)
+        //Si c’est le cas (donc la file contient quelque chose) alors on fait take() sur cette BlockingQueue
+        //Sinon, donc si la queue est vide, alors
+        //1) on crée un DrawCardHandler qui met le slot donné dans la queue,
+        //2) on appelle la méthode drawCard du graphicalPlayer (avec un runLater) et
+        //3) on fait take() sur cette BlockingQueue
         return 0;
     }
 
@@ -82,7 +91,8 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
-        return null;
+        runLater(() -> graphicalPlayer.chooseAdditionalCards(options, c -> putBlockingQueue(cardsBQ, c)));
+        return takeBlockingQueue(cardsBQ);
     }
 
     private <T> void putBlockingQueue(BlockingQueue<T> queue, T object){
