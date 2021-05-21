@@ -43,7 +43,11 @@ public class GraphicalPlayer {
     private final ObjectProperty<DrawTicketsHandler> drawTickets;
     private final ObjectProperty<DrawCardHandler> drawCard;
 
-
+    /**
+     * Constructeur de GraphicalPlayer.
+     * @param playerId Identité du joueur
+     * @param playerNames Map reliant l'identité du joueur à son nom.
+     */
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         this.playerId = playerId;
         this.playerNames = playerNames;
@@ -128,6 +132,11 @@ public class GraphicalPlayer {
 
     }
 
+    /**
+     * Méthode qui ouvre une fenêtre ,permettant au joueur de faire son choix de ticket.
+     * @param bagOfTickets Multiensemble contenant cinq ou trois billets que le joueur peut choisir.
+     * @param chooseTicketsHandler gestionnaires de choix de ticket.
+     */
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
@@ -157,6 +166,13 @@ public class GraphicalPlayer {
 
     }
 
+    /**
+     * Méthode qui autorise le joueur a choisir une carte wagon/locomotive :
+     * soit l'une des cinq dont la face est visible, soit celle du sommet de la pioche.
+     * Elle va être appelée lorsque le joueur a déjà tiré une première carte et doit maintenant tirer la seconde.
+     *
+     * @param drawCardHandler gestionnaires d'action pour tirage de carte.
+     */
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
         if(observableGameState.canDrawCards()) {
@@ -171,6 +187,11 @@ public class GraphicalPlayer {
 
     }
 
+    /**
+     *
+     * @param listOfBags liste de multiensembles de cartes(cartes initiales qu'il peut utiliser pour s'emparer d'une route).
+     * @param chooseCardsHandler un gestionnaire de choix de cartes.
+     */
     public void chooseClaimCards(List<SortedBag<Card>> listOfBags,
                                  ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();

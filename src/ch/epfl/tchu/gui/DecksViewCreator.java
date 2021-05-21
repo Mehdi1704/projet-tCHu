@@ -21,7 +21,7 @@ import javafx.scene.text.Text;
 import java.util.Objects;
 
 /**
- * Vue des pioches, et des cartes et tickets du joueur
+ * Vue des pioches, et des cartes et tickets du joueur.
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -29,10 +29,10 @@ import java.util.Objects;
 class DecksViewCreator {
 
     /**
-     * Création de la vue des cartes et tickets du joueur
+     * Création de la vue des cartes et tickets du joueur.
      *
-     * @param observableGameState Etat de jeu observable
-     * @return Noeud représentant les élements de jeu du joueur
+     * @param observableGameState Etat de jeu observable.
+     * @return Noeud représentant les élements de jeu du joueur.
      */
     public static Node createHandView(ObservableGameState observableGameState) {
 
@@ -63,12 +63,12 @@ class DecksViewCreator {
     }
 
     /**
-     * Création de la vue des pioches de cartes (visibles ou pas) et de tickets
+     * Création de la vue des pioches de cartes (visibles ou pas) et de tickets.
      *
-     * @param observableGameState Etat de jeu observable
-     * @param ticketHandler       Gestionnaire des tickets
-     * @param cardHandler         Gestionnaire des cartes
-     * @return Noeud représentant les élements piochables visibles aux deux joueurs
+     * @param observableGameState Etat de jeu observable.
+     * @param ticketHandler       Gestionnaire des tickets.
+     * @param cardHandler         Gestionnaire des cartes.
+     * @return Noeud représentant les élements piochables visibles aux deux joueurs.
      */
     public static Node createCardsView(ObservableGameState observableGameState,
                                        ObjectProperty<DrawTicketsHandler> ticketHandler,
