@@ -134,10 +134,10 @@ public final class Game {
                             // Création des DrawnCards
                             SortedBag.Builder<Card> drawnCardsBuilder = new SortedBag.Builder<>();
                             for (int i = 0; i < ADDITIONAL_TUNNEL_CARDS; i++) {
-                                drawnCardsBuilder.add(gameState.withCardsDeckRecreatedIfNeeded(rng).topCard());
-                                gameState = gameState.withCardsDeckRecreatedIfNeeded(rng).withoutTopCard();
+                                gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
+                                drawnCardsBuilder.add(gameState.topCard());
+                                gameState = gameState.withoutTopCard();
                             }
-
                             SortedBag<Card> drawnCards = drawnCardsBuilder.build();
                             gameState = gameState.withMoreDiscardedCards(drawnCards);
                             int addClaimCardsCount = chosenRoute.additionalClaimCardsCount(playerClaimCards, drawnCards);
