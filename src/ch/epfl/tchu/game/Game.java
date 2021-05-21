@@ -158,12 +158,13 @@ public final class Game {
                                 } else {
                                     // Cartes que le joueur va jouer
                                     SortedBag<Card> playedAddCards = currentPlayer.chooseAdditionalCards(playableCards);
-                                    if (playedAddCards.isEmpty()){
+                                    if (playedAddCards.isEmpty()) {
                                         receiveInfoForBothPlayers(players, information.didNotClaimRoute(chosenRoute));
+                                    } else {
+                                        // Ajout de la route et retrait des cartes
+                                        gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
+                                        receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
                                     }
-                                    // Ajout de la route et retrait des cartes
-                                    gameState = gameState.withClaimedRoute(chosenRoute, playedAddCards.union(playerClaimCards));
-                                    receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playedAddCards.union(playerClaimCards)));
                                 }
 
                             }
