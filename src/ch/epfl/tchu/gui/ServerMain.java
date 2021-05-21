@@ -5,7 +5,6 @@ import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Game;
 import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.net.RemotePlayerClient;
 import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -58,6 +57,3 @@ public class ServerMain extends Application {
         }
     }
 }
-
-
-
