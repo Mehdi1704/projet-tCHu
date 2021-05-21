@@ -211,8 +211,14 @@ public class GraphicalPlayer {
                 Bindings.size(listView.getSelectionModel().getSelectedItems())));
         confirmButton.setOnAction(e -> {
             confirmButton.getScene().getWindow().hide();
-            SortedBag<Card> cards = SortedBag.of(listView.getSelectionModel().getSelectedItem());
-            chooseCardsHandler.onChooseCards(cards);
+            //SortedBag<Card> cards = SortedBag.of(listView.getSelectionModel().getSelectedItem());
+            //chooseCardsHandler.onChooseCards(cards);
+
+            if (listView.getSelectionModel().getSelectedItems().size() == 0){
+                chooseCardsHandler.onChooseCards(SortedBag.of());
+            } else if (listView.getSelectionModel().getSelectedItems().size() == 1){
+                chooseCardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
+            }
         });
         Text text = new Text(StringsFr.CHOOSE_ADDITIONAL_CARDS);
         TextFlow textFlow = new TextFlow();

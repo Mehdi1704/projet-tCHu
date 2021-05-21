@@ -90,7 +90,7 @@ class DecksViewCreator {
             StackPane card = cardView(faceUpCard.get());
             faceUpCard.addListener((observable, oldValue, newValue) -> {
                 System.out.println("Face up card: " + newValue);
-                card.getStyleClass().set(0, newValue.name());
+                card.getStyleClass().set(0, newValue.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : newValue.name());
             });
             card.disableProperty().bind(cardHandler.isNull());
             card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
