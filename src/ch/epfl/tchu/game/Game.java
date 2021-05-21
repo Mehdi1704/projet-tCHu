@@ -62,9 +62,9 @@ public final class Game {
             gameState = gameState.withoutTopTickets(INITIAL_TICKETS_COUNT);
         }
 
+        updateStateForBothPlayers(players, gameState);
         // Les joueurs gardent les tickets qu'ils choisissent
         for (Map.Entry<PlayerId, Player> entry : players.entrySet()) {
-            updateStateForBothPlayers(players, gameState);
             playersTickets.put(entry.getKey(), entry.getValue().chooseInitialTickets());
             gameState = gameState.withInitiallyChosenTickets(entry.getKey(), playersTickets.get(entry.getKey()));
         }

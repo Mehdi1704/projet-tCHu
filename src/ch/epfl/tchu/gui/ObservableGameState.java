@@ -94,8 +94,8 @@ public class ObservableGameState {
         //Sortedbag map.
         numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
 
-        List<Route> takenRoutes = publicGameState.claimedRoutes();
-                  Set<List<Station>> setOfListOfStationTaken = takenRoutes
+        Set<List<Station>> setOfListOfStationTaken =
+                    publicGameState.claimedRoutes()
                     .stream()
                     .map(Route::stations)
                     .collect(Collectors.toSet());

@@ -24,8 +24,9 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-       runLater(()-> graphicalPlayer = new GraphicalPlayer(ownId, playerNames));
-
+        BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(1);
+        runLater(()-> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
+        graphicalPlayer = takeBlockingQueue(playerQueue);
     }
 
     @Override
@@ -108,11 +109,7 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     private <T> void putBlockingQueue(BlockingQueue<T> queue, T object){
-        try {
-            queue.put(object);
-        } catch (InterruptedException e) {
-            throw new Error();
-        }
+        queue.add(object);
     }
 
     private <T> T takeBlockingQueue(BlockingQueue<T> queue){

@@ -160,7 +160,7 @@ public class GameState extends PublicGameState {
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(playerState.get(playerId).tickets().isEmpty());
-        PlayerState newPlayerState = currentPlayerState().withAddedTickets(chosenTickets);
+        PlayerState newPlayerState = playerState(playerId).withAddedTickets(chosenTickets);
         Map<PlayerId, PlayerState> newMap = new HashMap<>(playerState);
         newMap.put(playerId, newPlayerState);
         return new GameState(ticket,
