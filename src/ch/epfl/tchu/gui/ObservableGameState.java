@@ -11,34 +11,35 @@ import java.util.stream.Collectors;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
+
+
 /**
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
-
-
 public class ObservableGameState {
 
     private final PlayerId playerId;
-    private PlayerState playerStateAtt;
-    private PublicGameState publicGameStateAtt;
+    private PlayerState playerStateAtt = null;
+    private PublicGameState publicGameStateAtt = null;
 
     // Groupe des propriétés concernant l'état public de la partie
     private final IntegerProperty percentageTicket  = new SimpleIntegerProperty();
     private final IntegerProperty percentageCard  = new SimpleIntegerProperty();
-    private final List<ObjectProperty<Card>> faceUpCards = new ArrayList<>();
-    private final Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMap = new HashMap<>();
+    private final List<ObjectProperty<Card>> faceUpCards = faceUpCardSetter();
+    private final Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMap = routeObjectPropertyMapSetter();
 
     // Groupe des propriétés concernant l'état public de chacun des joueurs
-    private final Map<PlayerId, IntegerProperty> numberOfTicketsMap = new EnumMap<>(PlayerId.class);
-    private final Map<PlayerId, IntegerProperty> numberOfCardsMap = new EnumMap<>(PlayerId.class);
-    private final Map<PlayerId, IntegerProperty> numberOfWagonsMap = new EnumMap<>(PlayerId.class);
-    private final Map<PlayerId, IntegerProperty> numberOfPointsOfConstructionMap = new EnumMap<>(PlayerId.class);
+    private final Map<PlayerId, IntegerProperty> numberOfTicketsMap = enumMapSetter();
+    private final Map<PlayerId, IntegerProperty> numberOfCardsMap = enumMapSetter();
+    private final Map<PlayerId, IntegerProperty> numberOfWagonsMap = enumMapSetter();
+    private final Map<PlayerId, IntegerProperty> numberOfPointsOfConstructionMap = enumMapSetter();
 
     // Groupe des propriétés concernant l'état privé du joueur
-    private final ListProperty<Ticket> listOfTicket = new SimpleListProperty<>();
-    private final Map<Card, IntegerProperty> numberOfEachTypeOfCardMap = new EnumMap<>(Card.class);
-    private final Map<Route, BooleanProperty> canTakeRouteMap = new HashMap<>();
+    private final ObservableList<Ticket> listOfTicket = FXCollections.observableArrayList();
+    private final Map<Card, IntegerProperty> numberOfEachTypeOfCardMap = numberOfEachTypeOfCardMapSetter();
+    private final Map<Route, BooleanProperty> canTakeRouteMap = canTakeRouteMapSetter();
+
 
     /**
      * Constructeur initialisant nos valeurs
@@ -47,31 +48,6 @@ public class ObservableGameState {
 
     public ObservableGameState(PlayerId PlayerId) {
         this.playerId= PlayerId;
-        playerStateAtt = null;
-        publicGameStateAtt = null;
-
-        percentageTicket.set(0);
-        percentageCard.set(0);
-
-        for (int slot : FACE_UP_CARD_SLOTS) {
-            faceUpCards.add(new SimpleObjectProperty<Card>(null));
-        }
-
-        Card.ALL.forEach(carte -> numberOfEachTypeOfCardMap.put(carte, new SimpleIntegerProperty(0)));
-
-        ChMap.routes().forEach(e -> {
-            routeObjectPropertyMap.put(e, new SimpleObjectProperty<>(null));
-            canTakeRouteMap.put(e, new SimpleBooleanProperty(false));
-        });
-
-        PlayerId.ALL.forEach(playerId -> {
-            numberOfTicketsMap.put(playerId, new SimpleIntegerProperty(0));
-            numberOfCardsMap.put(playerId, new SimpleIntegerProperty(0));
-            numberOfWagonsMap.put(playerId, new SimpleIntegerProperty(0));
-            numberOfPointsOfConstructionMap.put(playerId, new SimpleIntegerProperty(0));
-        });
-
-        listOfTicket.set(null);
     }
 
     /**
@@ -113,7 +89,7 @@ public class ObservableGameState {
             numberOfPointsOfConstructionMap.get(playerId).set(tempPlayerState.claimPoints());
         });
         // list Of Ticket
-        listOfTicket.setValue(FXCollections.observableList(playerState.tickets().toList()));
+        listOfTicket.setAll(playerState.tickets().toList());
 
         //Sortedbag map.
         numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
@@ -204,6 +180,36 @@ public class ObservableGameState {
 
     public PlayerId getPlayerId() {
         return playerId;
+    }
+
+    private Map<PlayerId, IntegerProperty> enumMapSetter(){
+        EnumMap<PlayerId, IntegerProperty> map = new EnumMap<>(PlayerId.class);
+        PlayerId.ALL.forEach(playerId -> map.put(playerId, new SimpleIntegerProperty(0)));
+        return map;
+    }
+
+    private Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMapSetter(){
+        Map<Route, ObjectProperty<PlayerId>> map = new HashMap<>();
+        ChMap.routes().forEach(route -> map.put(route, new SimpleObjectProperty<>(null)));
+        return map;
+    }
+
+    private Map<Route, BooleanProperty> canTakeRouteMapSetter(){
+        Map<Route, BooleanProperty> map = new HashMap<>();
+        ChMap.routes().forEach(e -> map.put(e, new SimpleBooleanProperty(false)));
+        return map;
+    }
+
+    private List<ObjectProperty<Card>> faceUpCardSetter() {
+        List<ObjectProperty<Card>> list = new ArrayList<>();
+        for (int slot : FACE_UP_CARD_SLOTS) list.add(new SimpleObjectProperty<Card>(null));
+        return list;
+    }
+
+    private Map<Card, IntegerProperty> numberOfEachTypeOfCardMapSetter(){
+        Map<Card, IntegerProperty> map = new HashMap<>();
+        Card.ALL.forEach(card -> map.put(card, new SimpleIntegerProperty(0)));
+        return map;
     }
 
 }
