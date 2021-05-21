@@ -101,12 +101,14 @@ public final class Game {
                                     .withDrawnFaceUpCard(actualDrawSlot);
 
                             Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
+                            updateStateForBothPlayers(players,gameState);
                             receiveInfoForBothPlayers(players, information.drewVisibleCard(pickedCard));
 
                             // Tire du Deck
                         } else if (actualDrawSlot == Constants.DECK_SLOT) {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                     .withBlindlyDrawnCard();
+                            updateStateForBothPlayers(players,gameState);
                             receiveInfoForBothPlayers(players, information.drewBlindCard());
                         }
                     }
