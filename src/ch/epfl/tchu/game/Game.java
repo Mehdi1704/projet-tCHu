@@ -19,6 +19,8 @@ public final class Game {
 
     public static final int DRAW_CARDS_COUNT = 2;
 
+    private Game(){}
+
     /**
      * Methode permettant le déroulement de la partie :
      * <p>
@@ -97,10 +99,9 @@ public final class Game {
                         updateStateForBothPlayers(players, gameState);
                         // Tire des face up cards
                         if (FACE_UP_CARD_SLOTS.contains(actualDrawSlot)) {
+                            Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                     .withDrawnFaceUpCard(actualDrawSlot);
-
-                            Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
                             updateStateForBothPlayers(players,gameState);
                             receiveInfoForBothPlayers(players, information.drewVisibleCard(pickedCard));
 
