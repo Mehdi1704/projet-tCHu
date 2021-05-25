@@ -282,7 +282,7 @@ public class GraphicalPlayer {
         return chooseStage;
     }
 
-    
+
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
         /**

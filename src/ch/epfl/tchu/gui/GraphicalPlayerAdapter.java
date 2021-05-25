@@ -137,8 +137,15 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      *
+     * teste (sans bloquer) si la file contenant les emplacements des cartes contient une valeur;
+     * si c'est le cas, cela signifie que drawSlot est appelée pour la première fois du tour,
+     * et que le gestionnaire installé par nextTurn a placé l'emplacement de la première carte tirée dans cette file,
+     * qu'il suffit donc de retourner; sinon, cela signifie que drawSlot est appelée pour la seconde fois du tour,
+     * afin que le joueur tire sa seconde carte, et il faut donc appeler, sur le fil JavaFX,
+     * la méthode drawCard du joueur graphique, avant de bloquer en attendant que le gestionnaire
+     * qu'on lui passe place l'emplacement de la carte tirée dans la file, qui est alors extrait et retourné
      *
-     * @return
+     * @return la valeur stockée.
      */
     @Override
     public int drawSlot() {
@@ -151,9 +158,9 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     * Méthode qui extrait et retourne le premier élément de la file contenant les routes.
      *
-     *
-     * @return
+     * @return le premier élément de la file contenant les routes.
      */
     @Override
     public Route claimedRoute() {
@@ -162,6 +169,8 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      *
+     * Méthode qui extrait et retourne le premier élément de la file utilise la file contenant les multiensembles de cartes
+     * contenant les routes.
      *
      * @return
      */
@@ -171,9 +180,10 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     * appelle, sur le fil JavaFX, la méthode du même nom du joueur graphique puis bloque
+     * en attendant qu'un élément soit placé dans la file contenant les multiensembles de cartes
      *
-     *
-     * @param options
+     * @param options liste de Sortedbag.
      * @return
      */
     @Override
