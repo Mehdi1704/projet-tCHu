@@ -69,7 +69,7 @@ public class GraphicalPlayer {
     }
 
     /**
-     * cette méthode permet de mettre à jour l'état public de la partie et l'état du joueur à l'état observable du joueur.
+     * Cette méthode permet de mettre à jour l'état public de la partie et l'état du joueur à l'état observable du joueur.
      *
      * @param publicGameState état public de la partie
      * @param playerState     état du joueur .
@@ -80,7 +80,7 @@ public class GraphicalPlayer {
     }
 
     /**
-     * Ajoute au bas des informations sur le déroulement de la partie un message.
+     * Ajoute un message au bas des informations, sur le déroulement de la partie.
      *
      * @param message message à afficher.
      */
@@ -136,7 +136,7 @@ public class GraphicalPlayer {
      * Méthode qui ouvre une fenêtre ,permettant au joueur de faire son choix de ticket.
      *
      * @param bagOfTickets         Multiensemble contenant cinq ou trois billets que le joueur peut choisir.
-     * @param chooseTicketsHandler gestionnaires de choix de ticket.
+     * @param chooseTicketsHandler gestionnaires d'action pour choix de ticket.
      */
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
@@ -189,8 +189,13 @@ public class GraphicalPlayer {
     }
 
     /**
-     * @param listOfBags         liste de multiensembles de cartes(cartes initiales qu'il peut utiliser pour s'emparer d'une route).
-     * @param chooseCardsHandler un gestionnaire de choix de cartes.
+     *
+     * Cette méthode permet d'ouvrir une fenêtre présentant au joueur une liste de multiensembles de cartes,
+     * étant les cartes initiales qu'il peut utiliser pour s'emparer d'une route,
+     * et ainsi permet au joueur de choisir avec quel multiensemble de carte il désire s'emparer de la route.
+     *
+     * @param listOfBags liste de multiensembles de cartes(cartes initiales qu'il peut utiliser pour s'emparer d'une route).
+     * @param chooseCardsHandler un gestionnaire d'action pour choix de cartes.
      */
     public void chooseClaimCards(List<SortedBag<Card>> listOfBags,
                                  ChooseCardsHandler chooseCardsHandler) {
@@ -221,8 +226,14 @@ public class GraphicalPlayer {
 
     /**
      *
-     * @param listOfBags
-     * @param chooseCardsHandler
+     * Cette méthode permet d'ouvrir une fenêtre présentant au joueur une liste de multiensembles de cartes,
+     * étant plus précisement les cartes additionnelles qu'il peut utiliser pour s'emparer d'un tunnel,
+     * lui permettant ainsi de faire son choix.
+     *
+     *
+     * @param listOfBags Une liste de multiensembles de cartes,
+     *                 (cartes additionnelles qu'il peut utiliser pour s'emparer d'un tunnel).
+     * @param chooseCardsHandler gestionnaire d'action pour choix de cartes.
      */
     public void chooseAdditionalCards(List<SortedBag<Card>> listOfBags,
                                       ChooseCardsHandler chooseCardsHandler) {
@@ -237,8 +248,7 @@ public class GraphicalPlayer {
                 Bindings.size(listView.getSelectionModel().getSelectedItems())));
         confirmButton.setOnAction(e -> {
             confirmButton.getScene().getWindow().hide();
-            //SortedBag<Card> cards = SortedBag.of(listView.getSelectionModel().getSelectedItem());
-            //chooseCardsHandler.onChooseCards(cards);
+
 
             if (listView.getSelectionModel().getSelectedItems().size() == 0) {
                 chooseCardsHandler.onChooseCards(SortedBag.of());
@@ -254,7 +264,7 @@ public class GraphicalPlayer {
 
         Stage chooseTickets = createWindow(box, StringsFr.CARDS_CHOICE);
         chooseTickets.show();
-        //Stage chooseTickets = createWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, list, 0);
+
 
     }
 
@@ -272,15 +282,13 @@ public class GraphicalPlayer {
         return chooseStage;
     }
 
-    /**
-     *
-      */
+    
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
         /**
-         *
-         * @param object
-         * @return
+         * transforme le multiensemble de cartes en chaînes de caratères.
+         * @param object  multiensembles de cartes
+         * @return une chaine de caractère sous le format souhaité.
          */
         @Override
         public String toString(SortedBag<Card> object) {
@@ -293,9 +301,9 @@ public class GraphicalPlayer {
         }
 
         /**
-         *
-         * @param string
-         * @return
+         * lève une exception de type UnsupportedOperationException car jamais utilisée dans ce contexte.
+         * @param string chaine de caractères.
+         * @throw lance une exception du type UnsupportedOperationException.
          */
         @Override
         public SortedBag<Card> fromString(String string) {
