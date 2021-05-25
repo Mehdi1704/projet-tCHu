@@ -15,17 +15,20 @@ import java.util.List;
 public class ClientMain extends Application {
 
     /**
+     * Lance le jeu du côté du client
      *
-     * @param args
+     * @param args arguments du client : hote et adresse IP
      */
     public static void main(String[] args) {
         Application.launch(args);
     }
 
     /**
+     * Lance le jeu du côté du client
+     * Se connecte à un serveur afin de commencer la partie
      *
-     * @param primaryStage
-     * @throws Exception
+     * @param primaryStage Fenetre de jeu
+     * @throws Exception Erreur
      */
     @Override
     public void start(Stage primaryStage) throws Exception {

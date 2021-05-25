@@ -32,17 +32,20 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 public class ServerMain extends Application {
 
     /**
+     * Lance le jeu du côté du serveur
      *
-     * @param args
+     * @param args arguments du client : noms des joueurs 1 et 2
      */
     public static void main(String[] args) {
         Application.launch(args);
     }
 
     /**
+     * Lance le jeu du côté du serveur
+     * Attend la connexion d'un client avant de lancer la partie
      *
-     * @param primaryStage
-     * @throws Exception
+     * @param primaryStage Fenetre de jeu
+     * @throws Exception Erreur
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -66,7 +69,7 @@ public class ServerMain extends Application {
             Map<PlayerId, Player> players =
                     Map.of(PLAYER_1, graphicalPlayer,
                             PLAYER_2, remotePlayerProxy);
-            AudioPlayer.play("/Users/mehdibouchoucha/Desktop/sons/mine.wav",true);
+            AudioPlayer.play("/Users/mehdibouchoucha/Desktop/sons/mine.wav", true);
             new Thread(() -> Game.play(players, playerNames, SortedBag.of(ChMap.tickets()), new Random())).start();
         }
     }

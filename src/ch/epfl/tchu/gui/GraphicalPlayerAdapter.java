@@ -11,7 +11,11 @@ import java.util.concurrent.BlockingQueue;
 import static javafx.application.Platform.runLater;
 
 /**
+ * Adaptateur de cette classe vers un joueur pouvant agir sur le jeu
+ * Ses methodes fonctionnent sur le fil JavaFX
  *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
  */
 public class GraphicalPlayerAdapter implements Player {
 
@@ -23,26 +27,29 @@ public class GraphicalPlayerAdapter implements Player {
     private final BlockingQueue<TurnKind> turnKindBQ = new ArrayBlockingQueue<>(1);
 
     /**
-     *
+     * Constructeur public de GraphicalPlayerAdapter
      */
-    public GraphicalPlayerAdapter(){
+    public GraphicalPlayerAdapter() {
     }
 
     /**
+     * Methode qui construit le GraphicalPlayer qu'elle adapte
+     * et stocke dans un attirbut utilisable par les autres methodes
      *
-     * @param ownId
-     * @param playerNames
+     * @param ownId Identifiant du joueur
+     * @param playerNames Map des noms des joueurs
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(1);
-        runLater(()-> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
+        runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
         graphicalPlayer = takeBlockingQueue(playerQueue);
     }
 
     /**
+     * Appelle la methode eponyme du GraphicalPlayer
      *
-     * @param info information que l'on doit passé au joueur .
+     * @param info information que l'on doit passer au joueur
      */
     @Override
     public void receiveInfo(String info) {
@@ -50,9 +57,10 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     * Appelle la methode setState du GraphicalPlayer
      *
-     * @param newState nouvel état du jeu .
-     * @param ownState état du joueur .
+     * @param newState nouvel état du jeu
+     * @param ownState état du joueur
      */
     @Override
     public void updateState(PublicGameState newState, PlayerState ownState) {
@@ -60,18 +68,21 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     * Appelle chooseTickets de GraphicalPlayer en lui passant
+     * un gestionnaire de choix qui stocke le choix du joueur dans une file bloquante
      *
      * @param tickets les billets qui vont être distribués en debut de partie.
      */
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
         runLater(() -> graphicalPlayer.chooseTickets(
-                            tickets, t -> putBlockingQueue(ticketsBQ, t)));
+                tickets, t -> putBlockingQueue(ticketsBQ, t)));
     }
 
     /**
+     * Bloque jusqu'a l'utilisation de setInitialTicketChoice et retourne la valeur stockée
      *
-     * @return
+     * @return la valeur stockée dans la blocking queue
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
@@ -79,8 +90,13 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     * Appelle la méthode startTurn du joueur graphique,
+     * en lui passant des gestionnaires d'action qui placent le type de tour choisi,
+     * de même que les éventuels «arguments» de l'action dans des files bloquantes,
+     * puis bloque en attendant qu'une valeur soit placée dans la file contenant
+     * le type de tour, qu'elle retire et retourne
      *
-     * @return
+     * @return le type de tour stocké
      */
     @Override
     public TurnKind nextTurn() {
@@ -101,16 +117,17 @@ public class GraphicalPlayerAdapter implements Player {
         };
 
         runLater(() -> graphicalPlayer.startTurn(ticketsHandler,
-                                      routesHandler,
-                                      cardHandler));
+                routesHandler,
+                cardHandler));
 
         return takeBlockingQueue(turnKindBQ);
     }
 
     /**
+     * Appelle la methode eponyme du GraphicalPlayer
      *
      * @param options les billets qu'on propose
-     * @return
+     * @return la valeur stockée
      */
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
@@ -120,11 +137,12 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      *
+     *
      * @return
      */
     @Override
     public int drawSlot() {
-        if (slotBQ.size()!= 1 ){
+        if (slotBQ.size() != 1) {
             ActionHandlers.DrawCardHandler cardHandler;
             cardHandler = (slot) -> putBlockingQueue(slotBQ, slot);
             runLater(() -> graphicalPlayer.drawCard(cardHandler));
@@ -133,6 +151,7 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     *
      *
      * @return
      */
@@ -143,6 +162,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      *
+     *
      * @return
      */
     @Override
@@ -151,6 +171,7 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
+     *
      *
      * @param options
      * @return
@@ -161,11 +182,11 @@ public class GraphicalPlayerAdapter implements Player {
         return takeBlockingQueue(cardsBQ);
     }
 
-    private <T> void putBlockingQueue(BlockingQueue<T> queue, T object){
+    private <T> void putBlockingQueue(BlockingQueue<T> queue, T object) {
         queue.add(object);
     }
 
-    private <T> T takeBlockingQueue(BlockingQueue<T> queue){
+    private <T> T takeBlockingQueue(BlockingQueue<T> queue) {
         T object;
         try {
             object = queue.take();
