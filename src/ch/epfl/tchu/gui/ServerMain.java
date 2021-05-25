@@ -66,7 +66,7 @@ public class ServerMain extends Application {
             Map<PlayerId, Player> players =
                     Map.of(PLAYER_1, graphicalPlayer,
                             PLAYER_2, remotePlayerProxy);
-
+            AudioPlayer.play("/Users/mehdibouchoucha/Desktop/sons/mine.wav",true);
             new Thread(() -> Game.play(players, playerNames, SortedBag.of(ChMap.tickets()), new Random())).start();
         }
     }
