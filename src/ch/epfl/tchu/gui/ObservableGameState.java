@@ -14,6 +14,8 @@ import static ch.epfl.tchu.game.Constants.TOTAL_CARDS_COUNT;
 
 
 /**
+ * Etat de jeu observable
+ *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
@@ -24,8 +26,8 @@ public class ObservableGameState {
     private PublicGameState publicGameStateAtt = null;
 
     // Groupe des propriétés concernant l'état public de la partie
-    private final IntegerProperty percentageTicket  = new SimpleIntegerProperty();
-    private final IntegerProperty percentageCard  = new SimpleIntegerProperty();
+    private final IntegerProperty percentageTicket = new SimpleIntegerProperty();
+    private final IntegerProperty percentageCard = new SimpleIntegerProperty();
     private final List<ObjectProperty<Card>> faceUpCards = faceUpCardSetter();
     private final Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMap = routeObjectPropertyMapSetter();
 
@@ -43,21 +45,19 @@ public class ObservableGameState {
 
     /**
      * Constructeur initialisant nos valeurs
+     *
      * @param PlayerId identité du joueur.
      */
-
     public ObservableGameState(PlayerId PlayerId) {
-        this.playerId= PlayerId;
+        this.playerId = PlayerId;
     }
 
     /**
-     * methode permettant de met à jour la totalité des propriétés des éléments du jeu .
-     *
+     * methode permettant de mettre à jour la totalité des propriétés des éléments du jeu .
      *
      * @param publicGameState l'état publique de la partie.
-     * @param playerState état complet du joueur .
+     * @param playerState     état complet du joueur .
      */
-
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
 
         playerStateAtt = playerState;
@@ -92,23 +92,23 @@ public class ObservableGameState {
         listOfTicket.setAll(playerState.tickets().toList());
 
         //Sortedbag map.
-        numberOfEachTypeOfCardMap.forEach((c,v)-> v.set(playerState.cards().countOf(c)));
+        numberOfEachTypeOfCardMap.forEach((c, v) -> v.set(playerState.cards().countOf(c)));
 
         Set<List<Station>> setOfListOfStationTaken =
-                    publicGameState.claimedRoutes()
-                    .stream()
-                    .map(Route::stations)
-                    .collect(Collectors.toSet());
+                publicGameState.claimedRoutes()
+                        .stream()
+                        .map(Route::stations)
+                        .collect(Collectors.toSet());
 
         // can Take Route Map
         canTakeRouteMap.forEach((r, v) -> v.set(playerState.canClaimRoute(r)
-                            && publicGameState.currentPlayerId().equals(playerId)
-                            && !(setOfListOfStationTaken.contains(r.stations()))
+                && publicGameState.currentPlayerId().equals(playerId)
+                && !(setOfListOfStationTaken.contains(r.stations()))
         ));
     }
 
     /**
-     * Les différents getter
+     * Les différents getters
      */
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
     public ReadOnlyIntegerProperty percentageTicket() {
@@ -173,19 +173,19 @@ public class ObservableGameState {
         return playerId;
     }
 
-    private Map<PlayerId, IntegerProperty> enumMapSetter(){
+    private Map<PlayerId, IntegerProperty> enumMapSetter() {
         EnumMap<PlayerId, IntegerProperty> map = new EnumMap<>(PlayerId.class);
         PlayerId.ALL.forEach(playerId -> map.put(playerId, new SimpleIntegerProperty(0)));
         return map;
     }
 
-    private Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMapSetter(){
+    private Map<Route, ObjectProperty<PlayerId>> routeObjectPropertyMapSetter() {
         Map<Route, ObjectProperty<PlayerId>> map = new HashMap<>();
         ChMap.routes().forEach(route -> map.put(route, new SimpleObjectProperty<>(null)));
         return map;
     }
 
-    private Map<Route, BooleanProperty> canTakeRouteMapSetter(){
+    private Map<Route, BooleanProperty> canTakeRouteMapSetter() {
         Map<Route, BooleanProperty> map = new HashMap<>();
         ChMap.routes().forEach(e -> map.put(e, new SimpleBooleanProperty(false)));
         return map;
@@ -197,7 +197,7 @@ public class ObservableGameState {
         return list;
     }
 
-    private Map<Card, IntegerProperty> numberOfEachTypeOfCardMapSetter(){
+    private Map<Card, IntegerProperty> numberOfEachTypeOfCardMapSetter() {
         Map<Card, IntegerProperty> map = new HashMap<>();
         Card.ALL.forEach(card -> map.put(card, new SimpleIntegerProperty(0)));
         return map;
