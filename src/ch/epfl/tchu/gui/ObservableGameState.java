@@ -108,23 +108,14 @@ public class ObservableGameState {
     }
 
     /**
-     * les différents getter .
+     * Les différents getter
      */
-
-    public PublicGameState getPublicGameStateAtt() {
-        return publicGameStateAtt;
-    }
-
-    public PlayerState getPlayerStateAtt() {
-        return playerStateAtt;
-    }
-
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
-    public ReadOnlyIntegerProperty poucentageTicket() {
+    public ReadOnlyIntegerProperty percentageTicket() {
         return percentageTicket;
     }
 
-    public ReadOnlyIntegerProperty pourcentageCard() {
+    public ReadOnlyIntegerProperty percentageCard() {
         return percentageCard;
     }
 
@@ -202,7 +193,7 @@ public class ObservableGameState {
 
     private List<ObjectProperty<Card>> faceUpCardSetter() {
         List<ObjectProperty<Card>> list = new ArrayList<>();
-        for (int slot : FACE_UP_CARD_SLOTS) list.add(new SimpleObjectProperty<Card>(null));
+        for (int ignored : FACE_UP_CARD_SLOTS) list.add(new SimpleObjectProperty<>(null));
         return list;
     }
 

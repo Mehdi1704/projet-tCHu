@@ -23,9 +23,10 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Constructeur d'un RemotePlayerProxy
+     *
      * @param socket Prise dans laquelle les messages vont s'échanger
-     * @param r Objet qui lit les messages
-     * @param w Objet qui écrit les messages
+     * @param r      Objet qui lit les messages
+     * @param w      Objet qui écrit les messages
      */
     public RemotePlayerProxy(Socket socket, BufferedReader r, BufferedWriter w) {
         this.socket = socket;
@@ -35,7 +36,8 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
-     * @param ownId Identité du joueur appelant la methode
+     *
+     * @param ownId       Identité du joueur appelant la methode
      * @param playerNames Noms des différents joueurs se trouvant dans la Map
      */
     @Override
@@ -50,6 +52,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @param info information que l'on doit passé au joueur .
      */
     @Override
@@ -60,6 +63,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @param newState nouvel état du jeu
      * @param ownState état du joueur
      */
@@ -72,6 +76,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @param tickets les billets qui vont être distribués en debut de partie
      */
     @Override
@@ -82,6 +87,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
@@ -92,6 +98,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
@@ -102,6 +109,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @param options les billets qu'on propose
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
@@ -113,6 +121,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
@@ -123,6 +132,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
@@ -133,6 +143,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
     @Override
@@ -143,6 +154,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
+     *
      * @param options Cartes que le joueur peut jouer
      * @return La réponse déserialisée qu'elle recoit par la prise suite à son envoi
      */
@@ -154,14 +166,15 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Methode auxiliaire servant à envoyer un message sur la prise
+     *
      * @param messageId Message correspondant à la méthode appelée
-     * @param args Liste d'arguments de la méthode, sérialisés et listés dans l'ordre
+     * @param args      Liste d'arguments de la méthode, sérialisés et listés dans l'ordre
      */
     private void sendMessage(MessageId messageId, List<String> args) {
         try {
-            if (args.isEmpty()){
+            if (args.isEmpty()) {
                 w.write(messageId.name());
-            }else{
+            } else {
                 String spaceSeparator = " ";
                 w.write(messageId.name() + spaceSeparator + String.join(spaceSeparator, args));
             }
@@ -174,6 +187,7 @@ public class RemotePlayerProxy implements Player {
 
     /**
      * Methode auxiliaire servant à réceptionner un message de la prise
+     *
      * @return Le message recu sous forme de String
      */
     private String receiveMessage() {

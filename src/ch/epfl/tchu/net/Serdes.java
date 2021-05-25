@@ -22,7 +22,7 @@ public final class Serdes {
     private Serdes() {
     }
 
-    private static final char colon     = ':';
+    private static final char colon = ':';
     private static final char semicolon = ';';
 
     /**
@@ -116,8 +116,8 @@ public final class Serdes {
 
         @Override
         public String serialize(PublicCardState toSerialize) {
-            Objects.requireNonNull(toSerialize); 
-            return  LIST_CARDS_SERDE.serialize(toSerialize.faceUpCards()) + semicolon +
+            Objects.requireNonNull(toSerialize);
+            return LIST_CARDS_SERDE.serialize(toSerialize.faceUpCards()) + semicolon +
                     INTEGER_SERDE.serialize(toSerialize.deckSize()) + semicolon +
                     INTEGER_SERDE.serialize(toSerialize.discardsSize());
         }
@@ -141,7 +141,7 @@ public final class Serdes {
         @Override
         public String serialize(PublicPlayerState toSerialize) {
             Objects.requireNonNull(toSerialize);
-            return  INTEGER_SERDE.serialize(toSerialize.ticketCount()) + semicolon +
+            return INTEGER_SERDE.serialize(toSerialize.ticketCount()) + semicolon +
                     INTEGER_SERDE.serialize(toSerialize.cardCount()) + semicolon +
                     LIST_ROUTES_SERDE.serialize(toSerialize.routes());
         }
@@ -165,7 +165,7 @@ public final class Serdes {
         @Override
         public String serialize(PlayerState toSerialize) {
             Objects.requireNonNull(toSerialize);
-            return  SORTEDBAG_TICKETS_SERDE.serialize(toSerialize.tickets()) + semicolon +
+            return SORTEDBAG_TICKETS_SERDE.serialize(toSerialize.tickets()) + semicolon +
                     SORTEDBAG_CARDS_SERDE.serialize(toSerialize.cards()) + semicolon +
                     LIST_ROUTES_SERDE.serialize(toSerialize.routes());
         }
@@ -189,7 +189,7 @@ public final class Serdes {
         @Override
         public String serialize(PublicGameState toSerialize) {
             Objects.requireNonNull(toSerialize);
-            return  INTEGER_SERDE.serialize(toSerialize.ticketsCount()) + colon +
+            return INTEGER_SERDE.serialize(toSerialize.ticketsCount()) + colon +
                     PUBLIC_CARD_STATE_SERDE.serialize(toSerialize.cardState()) + colon +
                     PLAYER_ID_SERDE.serialize(toSerialize.currentPlayerId()) + colon +
                     PUBLIC_PLAYER_STATE_SERDE.serialize(toSerialize.playerState(PlayerId.PLAYER_1)) + colon +
@@ -205,7 +205,7 @@ public final class Serdes {
                     INTEGER_SERDE.deserialize(position[0]),
                     PUBLIC_CARD_STATE_SERDE.deserialize(position[1]),
                     PLAYER_ID_SERDE.deserialize(position[2]),
-                    Map.of( PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE_SERDE.deserialize(position[3]),
+                    Map.of(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE_SERDE.deserialize(position[3]),
                             PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE_SERDE.deserialize(position[4])),
                     LAST_PLAYER_SERDE.deserialize(position[5]));
         }

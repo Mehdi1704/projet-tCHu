@@ -21,22 +21,18 @@ import java.util.Objects;
  * @author Ali Ridha Mrad (314529)
  */
 class MapViewCreator {
+
     /**
-     *création de la vue de la carte avec les différents éléments qui la compose .
+     * Création de la vue de la carte avec les différents éléments qui la compose .
      *
      * @param observableGameState état du jeu observable
-     * @param claimRouteHandler le gestionnaire d'action à utiliser lorsque le joueur désire s'emparer d'une route.
-     * @param cardChooser notre sélectionneur de cartes .
+     * @param claimRouteHandler   le gestionnaire d'action à utiliser lorsque le joueur désire s'emparer d'une route.
+     * @param cardChooser         notre sélectionneur de cartes .
      * @return un nœud représantant une vue de la carte contenant les différents éléments(route , case, wagon) .
      */
-
     public static Node createMapView(ObservableGameState observableGameState,
                                      ObjectProperty<ClaimRouteHandler> claimRouteHandler,
                                      CardChooser cardChooser) {
-
-        CardChooser firstChoice = (options, handler) -> {
-            handler.onChooseCards(options.get(0));
-        };
 
         Pane paneFond = new Pane();
         paneFond.getStylesheets().addAll("map.css", "colors.css");
@@ -63,16 +59,16 @@ class MapViewCreator {
     }
 
     /**
-     * création de groupe route .
+     * Création de groupe route
      *
-     * @param route route que l'on desire créer
+     * @param route               route que l'on desire créer
      * @param observableGameState le gamestate observable.
      * @return un Group de route .
      */
     private static Group GroupRoute(Route route, ObservableGameState observableGameState) {
         Group theRoute = new Group();
         observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) -> {
-            theRoute.getStyleClass().set(3,n.name());
+            theRoute.getStyleClass().set(3, n.name());
         });
 
         String type = route.level().name();
@@ -87,10 +83,10 @@ class MapViewCreator {
     }
 
     /**
-     * création de case.
+     * Création de case.
      *
-     * @param index index de la route
-     * @param route route pour laquelle on désire créer les cases
+     * @param index               index de la route
+     * @param route               route pour laquelle on désire créer les cases
      * @param observableGameState le gamestate observable
      * @return un Group de la case .
      */
@@ -111,10 +107,10 @@ class MapViewCreator {
     }
 
     /**
-     * creation de wagon .
+     * Creation de wagon
+     *
      * @return un groupe de wagon
      */
-    // création d'un wagon ;
     private static Group GroupWagon() {
         Group wagon = new Group();
         wagon.getStyleClass().add("car");

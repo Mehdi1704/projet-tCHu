@@ -19,7 +19,8 @@ public final class Game {
 
     public static final int DRAW_CARDS_COUNT = 2;
 
-    private Game(){}
+    private Game() {
+    }
 
     /**
      * Methode permettant le déroulement de la partie :
@@ -102,14 +103,14 @@ public final class Game {
                             Card pickedCard = gameState.cardState().faceUpCard(actualDrawSlot);
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                     .withDrawnFaceUpCard(actualDrawSlot);
-                            updateStateForBothPlayers(players,gameState);
+                            updateStateForBothPlayers(players, gameState);
                             receiveInfoForBothPlayers(players, information.drewVisibleCard(pickedCard));
 
                             // Tire du Deck
                         } else if (actualDrawSlot == Constants.DECK_SLOT) {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng)
                                     .withBlindlyDrawnCard();
-                            updateStateForBothPlayers(players,gameState);
+                            updateStateForBothPlayers(players, gameState);
                             receiveInfoForBothPlayers(players, information.drewBlindCard());
                         }
                     }
@@ -237,17 +238,16 @@ public final class Game {
                                            Map<PlayerId, Trail> playerLongestTrails) {
 
         int conditionTrail = Integer.compare(playerLongestTrails.get(PlayerId.PLAYER_1).length(), playerLongestTrails.get(PlayerId.PLAYER_2).length());
-        switch (conditionTrail) {
-            case (0):        // Meme longueur
-                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
-                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
-                break;
-            case (1):        // Joueur 1 a le bonus
-                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
-                break;
-            case (-1):        // Joueur 2 a le bonus
-                longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
-                break;
+        if (conditionTrail > 0) {
+            // Joueur 1 a le bonus
+            longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
+        } else if (conditionTrail < 0) {
+            // Joueur 2 a le bonus
+            longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
+        } else {
+            // Meme longueur
+            longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_1);
+            longestFinalDeclaration(players, playerPoints, playerInformation, playerLongestTrails, PlayerId.PLAYER_2);
         }
     }
 
@@ -277,20 +277,20 @@ public final class Game {
         ArrayList<String> playerName = new ArrayList<>(playerNames.values());
         int conditionPoint = Integer.compare(playerPoints.get(PlayerId.PLAYER_1), playerPoints.get(PlayerId.PLAYER_2));
 
-        switch (conditionPoint) {
-            case (0):        // Egalité
-                receiveInfoForBothPlayers(players, Info.draw(playerName, playerPoints.get(PlayerId.PLAYER_1)));
-                break;
-            case (1):        // Joueur 1 gagne
-                receiveInfoForBothPlayers(players, playerInformation.get(PlayerId.PLAYER_1).won(
-                        playerPoints.get(PlayerId.PLAYER_1),
-                        playerPoints.get(PlayerId.PLAYER_2)));
-                break;
-            case (-1):        // Joueur 2 gagne
-                receiveInfoForBothPlayers(players, playerInformation.get(PlayerId.PLAYER_2).won(
-                        playerPoints.get(PlayerId.PLAYER_2),
-                        playerPoints.get(PlayerId.PLAYER_1)));
-                break;
+        if (conditionPoint > 0) {
+            // Joueur 1 gagne
+            receiveInfoForBothPlayers(players, playerInformation.get(PlayerId.PLAYER_1).won(
+                    playerPoints.get(PlayerId.PLAYER_1),
+                    playerPoints.get(PlayerId.PLAYER_2)));
+        } else if (conditionPoint < 0) {
+            // Joueur 2 gagne
+            receiveInfoForBothPlayers(players, playerInformation.get(PlayerId.PLAYER_2).won(
+                    playerPoints.get(PlayerId.PLAYER_2),
+                    playerPoints.get(PlayerId.PLAYER_1)));
+        } else {
+            // Egalité
+            receiveInfoForBothPlayers(players, Info.draw(playerName, playerPoints.get(PlayerId.PLAYER_1)));
         }
     }
+
 }

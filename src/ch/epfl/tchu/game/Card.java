@@ -45,8 +45,6 @@ public enum Card {
      */
     public static Card of(Color color) {
         return Card.valueOf(color.name());
-
-
     }
 
 }

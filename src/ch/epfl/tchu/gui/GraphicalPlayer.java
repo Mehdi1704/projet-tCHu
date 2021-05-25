@@ -34,8 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphicalPlayer {
-    private final PlayerId playerId;
-    private final Map<PlayerId, String> playerNames;
     private final ObservableList<Text> listOfTexts;
     private final ObservableGameState observableGameState;
     private final Stage stage;
@@ -45,12 +43,11 @@ public class GraphicalPlayer {
 
     /**
      * Constructeur de GraphicalPlayer.
-     * @param playerId Identité du joueur
+     *
+     * @param playerId    Identité du joueur
      * @param playerNames Map reliant l'identité du joueur à son nom.
      */
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
-        this.playerId = playerId;
-        this.playerNames = playerNames;
         listOfTexts = FXCollections.observableArrayList();
         observableGameState = new ObservableGameState(playerId);
         claimRoute = new SimpleObjectProperty<>(null);
@@ -73,8 +70,9 @@ public class GraphicalPlayer {
 
     /**
      * cette méthode permet de mettre à jour l'état public de la partie et l'état du joueur à l'état observable du joueur.
+     *
      * @param publicGameState état public de la partie
-     * @param playerState état du joueur .
+     * @param playerState     état du joueur .
      */
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
         assert isFxApplicationThread();
@@ -83,6 +81,7 @@ public class GraphicalPlayer {
 
     /**
      * Ajoute au bas des informations sur le déroulement de la partie un message.
+     *
      * @param message message à afficher.
      */
     public void receiveInfo(String message) {
@@ -94,9 +93,10 @@ public class GraphicalPlayer {
 
     /**
      * Permet au joueur d'effectuer un type d'action.
+     *
      * @param drawTicketsHandler gestionnaires d'action pour tirage de ticket.
-     * @param claimRouteHandler gestionnaires d'action pour s'emparer d'une route.
-     * @param drawCardHandler gestionnaires d'action pour tirage de carte.
+     * @param claimRouteHandler  gestionnaires d'action pour s'emparer d'une route.
+     * @param drawCardHandler    gestionnaires d'action pour tirage de carte.
      */
 
     public void startTurn(DrawTicketsHandler drawTicketsHandler,
@@ -104,24 +104,24 @@ public class GraphicalPlayer {
                           DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
 
-        claimRoute.set((route,sorted)->{
+        claimRoute.set((route, sorted) -> {
             claimRoute.set(null);
             drawCard.set(null);
             drawTickets.set(null);
-            claimRouteHandler.onClaimRoute(route,sorted);
+            claimRouteHandler.onClaimRoute(route, sorted);
         });
 
-        if (observableGameState.canDrawTickets()){
-            drawTickets.set(()->{
+        if (observableGameState.canDrawTickets()) {
+            drawTickets.set(() -> {
                 claimRoute.set(null);
                 drawCard.set(null);
                 drawTickets.set(null);
                 drawTicketsHandler.onDrawTickets();
-            } );
+            });
 
         }
-        if (observableGameState.canDrawCards()){
-            drawCard.set((index)->{
+        if (observableGameState.canDrawCards()) {
+            drawCard.set((index) -> {
                 claimRoute.set(null);
                 drawCard.set(null);
                 drawTickets.set(null);
@@ -134,14 +134,15 @@ public class GraphicalPlayer {
 
     /**
      * Méthode qui ouvre une fenêtre ,permettant au joueur de faire son choix de ticket.
-     * @param bagOfTickets Multiensemble contenant cinq ou trois billets que le joueur peut choisir.
+     *
+     * @param bagOfTickets         Multiensemble contenant cinq ou trois billets que le joueur peut choisir.
      * @param chooseTicketsHandler gestionnaires de choix de ticket.
      */
     public void chooseTickets(SortedBag<Ticket> bagOfTickets,
                               ChooseTicketsHandler chooseTicketsHandler) {
         assert isFxApplicationThread();
-        Preconditions.checkArgument((bagOfTickets.size() == 5 ) || (bagOfTickets.size() == 3));
-        int minSelectedTickets = bagOfTickets.size()-DISCARDABLE_TICKETS_COUNT;
+        Preconditions.checkArgument((bagOfTickets.size() == 5) || (bagOfTickets.size() == 3));
+        int minSelectedTickets = bagOfTickets.size() - DISCARDABLE_TICKETS_COUNT;
         String chooseTicketsString = String.format(StringsFr.CHOOSE_TICKETS,
                 minSelectedTickets,
                 StringsFr.plural(minSelectedTickets));
@@ -175,7 +176,7 @@ public class GraphicalPlayer {
      */
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        if(observableGameState.canDrawCards()) {
+        if (observableGameState.canDrawCards()) {
             drawCard.set((index -> {
                 claimRoute.set(null);
                 drawCard.set(null);
@@ -188,8 +189,7 @@ public class GraphicalPlayer {
     }
 
     /**
-     *
-     * @param listOfBags liste de multiensembles de cartes(cartes initiales qu'il peut utiliser pour s'emparer d'une route).
+     * @param listOfBags         liste de multiensembles de cartes(cartes initiales qu'il peut utiliser pour s'emparer d'une route).
      * @param chooseCardsHandler un gestionnaire de choix de cartes.
      */
     public void chooseClaimCards(List<SortedBag<Card>> listOfBags,
@@ -219,6 +219,11 @@ public class GraphicalPlayer {
 
     }
 
+    /**
+     *
+     * @param listOfBags
+     * @param chooseCardsHandler
+     */
     public void chooseAdditionalCards(List<SortedBag<Card>> listOfBags,
                                       ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
@@ -235,9 +240,9 @@ public class GraphicalPlayer {
             //SortedBag<Card> cards = SortedBag.of(listView.getSelectionModel().getSelectedItem());
             //chooseCardsHandler.onChooseCards(cards);
 
-            if (listView.getSelectionModel().getSelectedItems().size() == 0){
+            if (listView.getSelectionModel().getSelectedItems().size() == 0) {
                 chooseCardsHandler.onChooseCards(SortedBag.of());
-            } else if (listView.getSelectionModel().getSelectedItems().size() == 1){
+            } else if (listView.getSelectionModel().getSelectedItems().size() == 1) {
                 chooseCardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
             }
         });
@@ -267,8 +272,16 @@ public class GraphicalPlayer {
         return chooseStage;
     }
 
+    /**
+     *
+      */
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
+        /**
+         *
+         * @param object
+         * @return
+         */
         @Override
         public String toString(SortedBag<Card> object) {
             ArrayList<String> listOfNames = new ArrayList<>();
@@ -279,6 +292,11 @@ public class GraphicalPlayer {
             return String.join(StringsFr.AND_SEPARATOR, listOfNames);
         }
 
+        /**
+         *
+         * @param string
+         * @return
+         */
         @Override
         public SortedBag<Card> fromString(String string) {
             throw new UnsupportedOperationException();

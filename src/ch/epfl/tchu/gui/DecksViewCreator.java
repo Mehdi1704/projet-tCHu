@@ -47,7 +47,6 @@ class DecksViewCreator {
         // Création des cartes en main du joueur
         Card.ALL.forEach(card -> {
             ReadOnlyIntegerProperty count = observableGameState.numberOfEachTypeOfCards(card);
-            count.addListener((observable, oldValue, newValue) -> System.out.println("Types of cards: " + newValue));
             Text counter = new Text();
             counter.getStyleClass().add("count");
             counter.textProperty().bind(Bindings.convert(count));
@@ -57,7 +56,6 @@ class DecksViewCreator {
             stackPane.getChildren().add(counter);
             box2.getChildren().add(stackPane);
         });
-
         box.getChildren().addAll(listView, box2);
         return box;
     }
@@ -78,29 +76,27 @@ class DecksViewCreator {
         cardsView.getStylesheets().addAll("decks.css", "colors.css");
         cardsView.setId("card-pane");
         // Creation du bouton pour les tickets
-        ReadOnlyIntegerProperty percentageTickets = observableGameState.poucentageTicket();
+        ReadOnlyIntegerProperty percentageTickets = observableGameState.percentageTicket();
         Button ticketButton = gaugeButton(percentageTickets, StringsFr.TICKETS);
         ticketButton.disableProperty().bind(ticketHandler.isNull());
         ticketButton.setOnAction(e -> ticketHandler.get().onDrawTickets());
         cardsView.getChildren().add(ticketButton);
         // Creation des cartes face visible
-        for (int i = 0; i < 5; i++) {//TODO optimiser boucle
+
+        for (int i = 0; i < 5; i++) {
             int slot = i;
             ReadOnlyObjectProperty<Card> faceUpCard = observableGameState.faceUpCard(i);
             StackPane card = cardView(faceUpCard.get());
-            faceUpCard.addListener((observable, oldValue, newValue) -> {
-                System.out.println("Face up card: " + newValue);
-                card.getStyleClass().set(0, newValue.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : newValue.name());
-            });
+            faceUpCard.addListener((observable, oldValue, newValue) ->
+                    card.getStyleClass().set(0, newValue.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : newValue.name()));
             card.disableProperty().bind(cardHandler.isNull());
             card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
             cardsView.getChildren().add(card);
         }
 
         // Creation du bouton pour la pioche de cartes
-        ReadOnlyIntegerProperty percentageCards = observableGameState.pourcentageCard();
+        ReadOnlyIntegerProperty percentageCards = observableGameState.percentageCard();
         Button cardsButton = gaugeButton(percentageCards, StringsFr.CARDS);
-       // cardsButton.disabledProperty().isEqualTo(cardHandler.isNull());
         cardsButton.disableProperty().bind(cardHandler.isNull());
         cardsButton.setOnAction(e -> cardHandler.get().onDrawCard(-1));
         cardsView.getChildren().add(cardsButton);
@@ -109,19 +105,22 @@ class DecksViewCreator {
     }
 
     private static StackPane cardView(Card card) {
+        int rectWidth = 40;
+        int rectHeight = 70;
+        int outsideMargin = 20;
 
         String cardName = "";
-        if (!Objects.isNull(card)){
+        if (!Objects.isNull(card)) {
             cardName = card.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
         }
 
-        Rectangle rect1 = new Rectangle(60, 90);
+        Rectangle rect1 = new Rectangle(rectWidth + outsideMargin, rectHeight + outsideMargin);
         rect1.getStyleClass().add("outside");
 
-        Rectangle rect2 = new Rectangle(40, 70);
+        Rectangle rect2 = new Rectangle(rectWidth, rectHeight);
         rect2.getStyleClass().addAll("filled", "inside");
 
-        Rectangle rect3 = new Rectangle(40, 70);
+        Rectangle rect3 = new Rectangle(rectWidth, rectHeight);
         rect3.getStyleClass().add("train-image");
 
         StackPane stackPane = new StackPane();

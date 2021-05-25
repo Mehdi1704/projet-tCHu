@@ -11,6 +11,8 @@ import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;
 
 /**
+ * Etat d'un joueur
+ *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
@@ -21,7 +23,13 @@ public final class PlayerState extends PublicPlayerState {
     private final List<Route> routes;
 
 
-    //TODO commentaire
+    /**
+     * Constructeur d'état de joueur
+     *
+     * @param tickets tickets du joueur
+     * @param cards cartes du joueur
+     * @param routes routes du joueur
+     */
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
         super(tickets.size(), cards.size(), routes);
         this.tickets = tickets;

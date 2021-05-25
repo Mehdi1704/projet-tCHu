@@ -23,12 +23,27 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+/**
+ * Serveur de jeu
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class ServerMain extends Application {
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Application.launch(args);
     }
 
+    /**
+     *
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         try (ServerSocket serverSocket = new ServerSocket(5108)) {
@@ -41,9 +56,9 @@ public class ServerMain extends Application {
                     Map.of(PLAYER_1, args.get(0), PLAYER_2, args.get(1));
 
             BufferedReader r = new BufferedReader(
-                                    new InputStreamReader(socket.getInputStream(), US_ASCII));
+                    new InputStreamReader(socket.getInputStream(), US_ASCII));
             BufferedWriter w = new BufferedWriter(
-                                    new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+                    new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
 
             Player graphicalPlayer = new GraphicalPlayerAdapter();
             Player remotePlayerProxy = new RemotePlayerProxy(socket, r, w);
@@ -52,8 +67,7 @@ public class ServerMain extends Application {
                     Map.of(PLAYER_1, graphicalPlayer,
                             PLAYER_2, remotePlayerProxy);
 
-
-            new Thread(()->Game.play(players, playerNames, SortedBag.of(ChMap.tickets()), new Random())).start();
+            new Thread(() -> Game.play(players, playerNames, SortedBag.of(ChMap.tickets()), new Random())).start();
         }
     }
 }

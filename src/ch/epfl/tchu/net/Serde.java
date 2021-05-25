@@ -47,7 +47,7 @@ public interface Serde<E> {
             public String serialize(E toSerialize) {
                 return serialize.apply(toSerialize);
             }
-                
+
             @Override
             public E deserialize(String toDeserialize) {
                 return deserialize.apply(toDeserialize);

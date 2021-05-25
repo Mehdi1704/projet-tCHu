@@ -2,6 +2,12 @@ package ch.epfl.tchu.net;
 
 import java.util.List;
 
+/**
+ * Identifiants de messages correspondant aux types d'action d'un joueur
+ *
+ * @author Mehdi Bouchoucha(314843)
+ * @author Ali Ridha Mrad(314529)
+ */
 public enum MessageId {
 
     INIT_PLAYERS,
@@ -15,10 +21,7 @@ public enum MessageId {
     ROUTE,
     CARDS,
     CHOOSE_ADDITIONAL_CARDS;
-    // peut etre faut il renommer la methode ALL
-    /**
-     * liste de tous les type de messageID .
-     */
+
     public static final List<MessageId> ALL = List.of(MessageId.values());
 
     public static final int COUNT = ALL.size();

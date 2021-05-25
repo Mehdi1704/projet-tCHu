@@ -23,8 +23,6 @@ public enum PlayerId {
      */
     public PlayerId next() {
 
-        return values()[(this.ordinal()+1) % COUNT];
-        //return (this.equals(PLAYER_1) ? PLAYER_2 : PLAYER_1);
-
+        return values()[(this.ordinal() + 1) % COUNT];
     }
 }
