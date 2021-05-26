@@ -33,6 +33,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Le joueur graphique
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 public class GraphicalPlayer {
     private final ObservableList<Text> listOfTexts;
     private final ObservableGameState observableGameState;
