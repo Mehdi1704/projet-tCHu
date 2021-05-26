@@ -3,9 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 import static ch.epfl.tchu.game.Constants.INITIAL_CARDS_COUNT;
@@ -57,6 +55,14 @@ public final class PlayerState extends PublicPlayerState {
      */
     public SortedBag<Ticket> tickets() {
         return tickets;
+    }
+
+    public Map<Ticket, Boolean> accomplishedTickets(){
+        Map<Ticket, Boolean> newMap = new HashMap<>();
+        tickets().toList().forEach(t -> {
+            if (t.isConnect()) newMap.put(t, true);
+        });
+        return newMap;
     }
 
     /**

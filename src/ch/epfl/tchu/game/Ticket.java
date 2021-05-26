@@ -109,7 +109,7 @@ public final class Ticket implements Comparable<Ticket> {
         }
     }
 
-    private boolean ticketDone(StationConnectivity connectivity){
+    public boolean ticketDone(StationConnectivity connectivity){
 
                if(trips.size()==1){
                     connect = connectivity.connected(trips.get(0).from(), trips.get(0).to());
@@ -119,6 +119,10 @@ public final class Ticket implements Comparable<Ticket> {
                    }
                }
                return connect;
+    }
+
+    public boolean isConnect(){
+        return connect;
     }
 
     /**
