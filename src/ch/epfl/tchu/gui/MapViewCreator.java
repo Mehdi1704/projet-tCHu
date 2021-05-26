@@ -46,10 +46,15 @@ class MapViewCreator {
                 List<SortedBag<Card>> pCC = observableGameState.possibleClaimCards(route);
                 if (pCC.size() == 1) {
                     claimRouteHandler.get().onClaimRoute(route, pCC.get(0));
+                    if(route.level().equals(Route.Level.OVERGROUND)){
+                        AudioPlayer.play("/ziw.wav",false);
+                    }
+
                 } else if (pCC.size() > 1) {
                     ChooseCardsHandler chooseCardsH =
                             chosenCards -> claimRouteHandler.get().onClaimRoute(route, chosenCards);
                     cardChooser.chooseCards(pCC, chooseCardsH);
+
                 }
             });
             paneFond.getChildren().add(r1);

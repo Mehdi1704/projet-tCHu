@@ -79,7 +79,12 @@ class DecksViewCreator {
         ReadOnlyIntegerProperty percentageTickets = observableGameState.percentageTicket();
         Button ticketButton = gaugeButton(percentageTickets, StringsFr.TICKETS);
         ticketButton.disableProperty().bind(ticketHandler.isNull());
-        ticketButton.setOnAction(e -> ticketHandler.get().onDrawTickets());
+        ticketButton.setOnAction(e -> {
+            ticketHandler.get().onDrawTickets();
+            AudioPlayer.play("/cardraw.wav",false);
+
+        });
+
         cardsView.getChildren().add(ticketButton);
         // Creation des cartes face visible
 
@@ -90,7 +95,11 @@ class DecksViewCreator {
             faceUpCard.addListener((observable, oldValue, newValue) ->
                     card.getStyleClass().set(0, newValue.equals(Card.LOCOMOTIVE) ? "NEUTRAL" : newValue.name()));
             card.disableProperty().bind(cardHandler.isNull());
-            card.setOnMouseClicked(e -> cardHandler.get().onDrawCard(slot));
+            card.setOnMouseClicked(e -> {
+                        cardHandler.get().onDrawCard(slot);
+                        AudioPlayer.play("/cardraw.wav",false);
+                    }
+            );
             cardsView.getChildren().add(card);
         }
 
@@ -98,7 +107,11 @@ class DecksViewCreator {
         ReadOnlyIntegerProperty percentageCards = observableGameState.percentageCard();
         Button cardsButton = gaugeButton(percentageCards, StringsFr.CARDS);
         cardsButton.disableProperty().bind(cardHandler.isNull());
-        cardsButton.setOnAction(e -> cardHandler.get().onDrawCard(-1));
+        cardsButton.setOnAction(e -> {
+                    cardHandler.get().onDrawCard(-1);
+                    AudioPlayer.play("/cardraw.wav",false);
+                }
+        );
         cardsView.getChildren().add(cardsButton);
 
         return cardsView;

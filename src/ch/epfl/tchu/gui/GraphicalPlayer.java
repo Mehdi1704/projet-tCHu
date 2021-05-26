@@ -246,6 +246,7 @@ public class GraphicalPlayer {
             if (listView.getSelectionModel().getSelectedItems().size() == 0) {
                 chooseCardsHandler.onChooseCards(SortedBag.of());
             } else if (listView.getSelectionModel().getSelectedItems().size() == 1) {
+                AudioPlayer.play("/ziw.wav",false);
                 chooseCardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
             }
         });

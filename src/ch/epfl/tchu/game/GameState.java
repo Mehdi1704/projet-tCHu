@@ -305,5 +305,12 @@ public class GameState extends PublicGameState {
         return playerState.get(currentPlayerId());
     }
 
+   /* private void determination(Map<PlayerId, PlayerState> playerState){
+        playerState.get(PLAYER_1).tickets().toList().forEach(ticket1 -> {
+            if(ticket1.)
+
+                } );
+
+    }*/
 
 }
