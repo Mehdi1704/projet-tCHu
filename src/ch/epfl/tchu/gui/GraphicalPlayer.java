@@ -111,26 +111,20 @@ public class GraphicalPlayer {
         assert isFxApplicationThread();
 
         claimRoute.set((route, sorted) -> {
-            claimRoute.set(null);
-            drawCard.set(null);
-            drawTickets.set(null);
+            setToNull();
             claimRouteHandler.onClaimRoute(route, sorted);
         });
 
         if (observableGameState.canDrawTickets()) {
             drawTickets.set(() -> {
-                claimRoute.set(null);
-                drawCard.set(null);
-                drawTickets.set(null);
+                setToNull();
                 drawTicketsHandler.onDrawTickets();
             });
 
         }
         if (observableGameState.canDrawCards()) {
             drawCard.set((index) -> {
-                claimRoute.set(null);
-                drawCard.set(null);
-                drawTickets.set(null);
+                setToNull();
                 drawCardHandler.onDrawCard(index);
             });
         }
@@ -181,9 +175,7 @@ public class GraphicalPlayer {
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
         drawCard.set((index -> {
-                claimRoute.set(null);
-                drawCard.set(null);
-                drawTickets.set(null);
+            setToNull();
                 drawCardHandler.onDrawCard(index);
 
             }));
@@ -281,6 +273,12 @@ public class GraphicalPlayer {
         chooseStage.initModality(Modality.WINDOW_MODAL);
         chooseStage.setTitle(title);
         return chooseStage;
+    }
+
+    private void setToNull(){
+        claimRoute.set(null);
+        drawCard.set(null);
+        drawTickets.set(null);
     }
 
 
