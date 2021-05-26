@@ -53,7 +53,7 @@ public class ObservableGameState {
     }
 
     /**
-     * methode permettant de mettre à jour la totalité des propriétés des éléments du jeu .
+     * Methode permettant de mettre à jour la totalité des propriétés des éléments du jeu.
      *
      * @param publicGameState l'état publique de la partie.
      * @param playerState     état complet du joueur .
@@ -108,7 +108,7 @@ public class ObservableGameState {
     }
 
     /**
-     * Les différents getters
+     * Les différents getters.
      */
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
     public ReadOnlyIntegerProperty percentageTicket() {

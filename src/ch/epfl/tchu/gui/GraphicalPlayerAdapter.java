@@ -12,7 +12,7 @@ import static javafx.application.Platform.runLater;
 
 /**
  * Adaptateur de cette classe vers un joueur pouvant agir sur le jeu
- * Ses methodes fonctionnent sur le fil JavaFX
+ * Ses methodes fonctionnent sur le fil JavaFX.
  *
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
@@ -28,10 +28,10 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      * Methode qui construit le GraphicalPlayer qu'elle adapte
-     * et stocke dans un attirbut utilisable par les autres methodes
+     * et stocke dans un attirbut utilisable par les autres methodes.
      *
-     * @param ownId Identifiant du joueur
-     * @param playerNames Map des noms des joueurs
+     * @param ownId Identifiant du joueur.
+     * @param playerNames Map des noms des joueurs.
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
@@ -41,9 +41,9 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Appelle la methode eponyme du GraphicalPlayer
+     * Appelle la methode eponyme du GraphicalPlayer.
      *
-     * @param info information que l'on doit passer au joueur
+     * @param info information que l'on doit passer au joueur.
      */
     @Override
     public void receiveInfo(String info) {
@@ -51,10 +51,10 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Appelle la methode setState du GraphicalPlayer
+     * Appelle la methode setState du GraphicalPlayer.
      *
-     * @param newState nouvel état du jeu
-     * @param ownState état du joueur
+     * @param newState nouvel état du jeu.
+     * @param ownState état du joueur.
      */
     @Override
     public void updateState(PublicGameState newState, PlayerState ownState) {
@@ -63,7 +63,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     /**
      * Appelle chooseTickets de GraphicalPlayer en lui passant
-     * un gestionnaire de choix qui stocke le choix du joueur dans une file bloquante
+     * un gestionnaire de choix qui stocke le choix du joueur dans une file bloquante.
      *
      * @param tickets les billets qui vont être distribués en debut de partie.
      */
@@ -74,9 +74,9 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Bloque jusqu'a l'utilisation de setInitialTicketChoice et retourne la valeur stockée
+     * Bloque jusqu'a l'utilisation de setInitialTicketChoice et retourne la valeur stockée.
      *
-     * @return la valeur stockée dans la blocking queue
+     * @return la valeur stockée dans la blocking queue.
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
@@ -88,7 +88,7 @@ public class GraphicalPlayerAdapter implements Player {
      * en lui passant des gestionnaires d'action qui placent le type de tour choisi,
      * de même que les éventuels «arguments» de l'action dans des files bloquantes,
      * puis bloque en attendant qu'une valeur soit placée dans la file contenant
-     * le type de tour, qu'elle retire et retourne
+     * le type de tour, qu'elle retire et retourne.
      *
      * @return le type de tour stocké
      */
@@ -119,10 +119,10 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Appelle la methode eponyme du GraphicalPlayer
+     * Appelle la methode eponyme du GraphicalPlayer.
      *
-     * @param options les billets qu'on propose
-     * @return la valeur stockée
+     * @param options les billets qu'on propose.
+     * @return la valeur stockée.
      */
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
@@ -135,7 +135,7 @@ public class GraphicalPlayerAdapter implements Player {
      * Methode qui retourne la valeur de la BlockingQueue si elle est stockée
      * sinon, elle appelle la méthode drawCard du joueur graphique, avant de
      * bloquer en attendant que le gestionnaire qu'on lui passe place l'emplacement
-     * de la carte tirée dans la file, qui est alors extrait et retourné
+     * de la carte tirée dans la file, qui est alors extrait et retourné.
      *
      * @return la valeur stockée.
      */
@@ -173,8 +173,8 @@ public class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * appelle la méthode eponyme puis bloque en attendant
-     * qu'un élément soit placé dans la file de SortedBag de Cartes
+     * Appelle la méthode eponyme puis bloque en attendant
+     * qu'un élément soit placé dans la file de SortedBag de Cartes.
      *
      * @param options liste de Sortedbag.
      * @return la valeur stockée.

@@ -20,8 +20,8 @@ public final class Trip {
 
 
     /**
-     * @param from   station de depart
-     * @param to     station d'arrivée
+     * @param from   station de depart.
+     * @param to     station d'arrivée.
      * @param points point correspondant au trajet .
      */
     public Trip(Station from, Station to, int points) {
@@ -34,8 +34,8 @@ public final class Trip {
     }
 
     /**
-     * @param from   liste des stations de depart
-     * @param to     liste des stations d'arrivée
+     * @param from   liste des stations de depart.
+     * @param to     liste des stations d'arrivée.
      * @param points point correspondant au trajet.
      * @return retourne la liste de tous les trajets possibles allant d'une des gares de la première liste (from)
      * à l'une des gares de la seconde liste

@@ -59,9 +59,9 @@ class MapViewCreator {
     }
 
     /**
-     * Création de groupe route
+     * Création de groupe route.
      *
-     * @param route               route que l'on desire créer
+     * @param route               route que l'on desire créer.
      * @param observableGameState le gamestate observable.
      * @return un Group de route .
      */
@@ -85,9 +85,9 @@ class MapViewCreator {
     /**
      * Création de case.
      *
-     * @param index               index de la route
-     * @param route               route pour laquelle on désire créer les cases
-     * @param observableGameState le gamestate observable
+     * @param index               index de la route.
+     * @param route               route pour laquelle on désire créer les cases.
+     * @param observableGameState le gamestate observable.
      * @return un Group de la case .
      */
     private static Group GroupCase(int index, Route route, ObservableGameState observableGameState) {
@@ -107,9 +107,9 @@ class MapViewCreator {
     }
 
     /**
-     * Creation de wagon
+     * Creation de wagon.
      *
-     * @return un groupe de wagon
+     * @return un groupe de wagon.
      */
     private static Group GroupWagon() {
         Group wagon = new Group();

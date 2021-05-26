@@ -12,12 +12,17 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.util.Map;
+/**
+ *
+ * @author Mehdi Bouchoucha (314843)
+ * @author Ali Ridha Mrad (314529)
+ */
 
 class InfoViewCreator {
 
     /**
      *
-     * méthode de création de la vue permettant de visualiser les différentes informations de la partie .
+     * Méthode de création de la vue permettant de visualiser les différentes informations de la partie.
      *
      * @param playerId identificateur du joueur.
      * @param playerNames map associant aux identifiants des joueurs le nom correspondant.
