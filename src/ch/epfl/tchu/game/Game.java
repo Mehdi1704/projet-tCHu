@@ -79,7 +79,7 @@ public final class Game {
             Player currentPlayer = players.get(gameState.currentPlayerId());
             // Initialisation information du joueur
             Info information = playerInformation.get(gameState.currentPlayerId());
-            receiveInfoForBothPlayers(players, playerInformation.get(gameState.currentPlayerId()).canPlay());
+            receiveInfoForBothPlayers(players, information.canPlay());
             updateStateForBothPlayers(players, gameState);
             // Action que le joueur veut effectuer durant ce tour
             Player.TurnKind typeOfAction = players.get(gameState.currentPlayerId()).nextTurn();

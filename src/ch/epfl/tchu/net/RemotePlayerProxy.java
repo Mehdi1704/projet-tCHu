@@ -15,7 +15,7 @@ import java.util.Map;
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
-public class RemotePlayerProxy implements Player {
+public final class RemotePlayerProxy implements Player {
 
     private final Socket socket;
     private final BufferedReader r;

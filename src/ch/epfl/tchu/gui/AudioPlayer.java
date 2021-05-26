@@ -1,7 +1,10 @@
 package ch.epfl.tchu.gui;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -17,12 +20,13 @@ public class AudioPlayer {
 
     /**
      * Joue un enregistrement audio.
+     *
      * @param audioFilePath chemin pour le fichier audio.
      */
     public static void play(String audioFilePath, Boolean still) {
-        File audioFile = new File(audioFilePath);
-
         try {
+            InputStream audioFile = new BufferedInputStream(Objects.requireNonNull(AudioPlayer.class.getResourceAsStream(audioFilePath)));
+
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
 
             AudioFormat format = audioStream.getFormat();
@@ -34,9 +38,8 @@ public class AudioPlayer {
             audioClip.open(audioStream);
 
             audioClip.start();
-            if(still)
+            if (still)
                 audioClip.loop(Clip.LOOP_CONTINUOUSLY);
-
 
 
         } catch (UnsupportedAudioFileException ex) {
@@ -45,11 +48,9 @@ public class AudioPlayer {
         } catch (LineUnavailableException ex) {
             System.out.println("Audio line for playing back is unavailable.");
             ex.printStackTrace();
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             System.out.println("Error playing the audio file.");
             ex.printStackTrace();
         }
-
     }
-
 }

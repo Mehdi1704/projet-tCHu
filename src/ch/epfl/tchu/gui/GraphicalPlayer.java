@@ -134,8 +134,6 @@ public class GraphicalPlayer {
                 drawCardHandler.onDrawCard(index);
             });
         }
-
-
     }
 
     /**
@@ -182,16 +180,13 @@ public class GraphicalPlayer {
      */
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        if (observableGameState.canDrawCards()) {
-            drawCard.set((index -> {
+        drawCard.set((index -> {
                 claimRoute.set(null);
                 drawCard.set(null);
                 drawTickets.set(null);
                 drawCardHandler.onDrawCard(index);
 
             }));
-        }
-
     }
 
     /**

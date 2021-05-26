@@ -27,12 +27,6 @@ public class GraphicalPlayerAdapter implements Player {
     private final BlockingQueue<TurnKind> turnKindBQ = new ArrayBlockingQueue<>(1);
 
     /**
-     * Constructeur public de GraphicalPlayerAdapter
-     */
-    public GraphicalPlayerAdapter() {
-    }
-
-    /**
      * Methode qui construit le GraphicalPlayer qu'elle adapte
      * et stocke dans un attirbut utilisable par les autres methodes
      *
@@ -116,7 +110,8 @@ public class GraphicalPlayerAdapter implements Player {
 
         };
 
-        runLater(() -> graphicalPlayer.startTurn(ticketsHandler,
+        runLater(() -> graphicalPlayer.startTurn(
+                ticketsHandler,
                 routesHandler,
                 cardHandler));
 
@@ -146,7 +141,7 @@ public class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public int drawSlot() {
-        if (slotBQ.size() != 1) {
+        if (slotBQ.isEmpty()) {
             ActionHandlers.DrawCardHandler cardHandler;
             cardHandler = (slot) -> putBlockingQueue(slotBQ, slot);
             runLater(() -> graphicalPlayer.drawCard(cardHandler));

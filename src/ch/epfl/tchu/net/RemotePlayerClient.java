@@ -18,7 +18,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Mehdi Bouchoucha (314843)
  * @author Ali Ridha Mrad (314529)
  */
-public class RemotePlayerClient {
+public final class RemotePlayerClient {
 
     private final Player player;
     private final String portName;
@@ -123,7 +123,6 @@ public class RemotePlayerClient {
      * @throws IOException Si la connexion entre le client et le serveur est interrompue
      */
     private void sendOutput(BufferedWriter w, String output) throws IOException {
-        Preconditions.checkIfEmptyString(output);
         w.write(Objects.requireNonNull(output));
         w.write('\n');
         w.flush();
