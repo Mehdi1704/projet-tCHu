@@ -5,19 +5,28 @@ import ch.epfl.tchu.game.*;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -41,6 +50,31 @@ class DecksViewCreator {
         // Création de la liste de tickets
         ListView<Ticket> listView = new ListView<>(observableGameState.tickets());
         listView.setId("tickets");
+/*
+        TableView<Ticket.TicketState> table = new TableView<>();
+        ObservableList<Ticket.TicketState> data =
+                FXCollections.observableArrayList();
+        observableGameState.tickets().forEach(t ->data.add(new Ticket.TicketState(t)));
+        table.setId("tickets");
+        TableColumn<Ticket.TicketState, String> ticketCol = new TableColumn<>("Ticket");
+        ticketCol.setMinWidth(300);
+        ticketCol.setCellValueFactory(
+                new PropertyValueFactory<>("ticket"));
+
+        TableColumn<Boolean, String> tookCol = new TableColumn<>("Done");
+
+        table.setItems(data);
+
+        table.getColumns().add(ticketCol);*/
+
+
+
+        listView.getItems().forEach(t -> {
+            if (observableGameState.getAccomplishedTicket(t).get()){
+                System.out.println("connexion faite");
+            }
+        });
+
 
         HBox box2 = new HBox();
         box2.setId("hand-pane");

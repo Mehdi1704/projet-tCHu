@@ -41,7 +41,7 @@ public class ObservableGameState {
     private final ObservableList<Ticket> listOfTicket = FXCollections.observableArrayList();
     private final Map<Card, IntegerProperty> numberOfEachTypeOfCardMap = numberOfEachTypeOfCardMapSetter();
     private final Map<Route, BooleanProperty> canTakeRouteMap = canTakeRouteMapSetter();
-
+    private final Map<Ticket, BooleanProperty> ticketsMap = ticketsSetter();
 
     /**
      * Constructeur initialisant nos valeurs
@@ -105,6 +105,8 @@ public class ObservableGameState {
                 && publicGameState.currentPlayerId().equals(playerId)
                 && !(setOfListOfStationTaken.contains(r.stations()))
         ));
+
+        ticketsMap.forEach((t,b) -> b.set(t.isConnect()));
     }
 
     /**
@@ -171,6 +173,21 @@ public class ObservableGameState {
 
     public PlayerId getPlayerId() {
         return playerId;
+    }
+
+    public BooleanProperty getAccomplishedTicket(Ticket ticket){
+        return ticketsMap.get(ticket);
+    }
+
+    public Map<Ticket, BooleanProperty> ticketsGetter(){
+        return ticketsMap;
+    }
+
+
+    public Map<Ticket, BooleanProperty> ticketsSetter(){
+        Map<Ticket, BooleanProperty> newMap = new HashMap<>();
+        listOfTicket.forEach(t -> newMap.put(t, new SimpleBooleanProperty(false)));
+        return newMap;
     }
 
     private Map<PlayerId, IntegerProperty> enumMapSetter() {

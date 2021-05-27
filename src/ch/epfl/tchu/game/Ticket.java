@@ -36,7 +36,6 @@ public final class Ticket implements Comparable<Ticket> {
         }
         this.trips = List.copyOf(trips);
         this.text = computeText(trips);
-        connect = true;
     }
 
     /**
@@ -122,7 +121,8 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     public boolean isConnect(){
-        return connect;
+        StationPartition.Builder deepPartition = new StationPartition.Builder(2);
+        return ticketDone(deepPartition.build());
     }
 
     /**
@@ -144,5 +144,16 @@ public final class Ticket implements Comparable<Ticket> {
     @Override
     public int compareTo(Ticket that) {
         return this.text().compareTo(that.text());
+    }
+
+    public static class TicketState {
+        private boolean done;
+
+        public TicketState(Ticket ticket){
+            boolean done = ticket.isConnect();
+        }
+        public boolean getDone(){
+            return done;
+        }
     }
 }

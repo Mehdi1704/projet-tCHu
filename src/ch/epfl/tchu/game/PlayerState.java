@@ -184,11 +184,11 @@ public final class PlayerState extends PublicPlayerState {
                 indexMax = Math.max(r.station1().id(), r.station2().id());
             }
         }
-        StationPartition.Builder stationPartitonProfonde = new StationPartition.Builder(indexMax + 1);
-        routes.forEach(r -> stationPartitonProfonde.connect(r.station1(), r.station2()));
-        StationPartition stationPartitionAplatie = stationPartitonProfonde.build();
+        StationPartition.Builder deepPartiton = new StationPartition.Builder(indexMax + 1);
+        routes.forEach(r -> deepPartiton.connect(r.station1(), r.station2()));
+        StationPartition platePartition = deepPartiton.build();
         int ticketPt = 0;
-        for (Ticket t : tickets) ticketPt += t.points(stationPartitionAplatie);
+        for (Ticket t : tickets) ticketPt += t.points(platePartition);
         return ticketPt;
     }
 
