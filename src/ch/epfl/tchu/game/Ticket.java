@@ -2,6 +2,7 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.gui.AudioPlayer;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.util.List;
 import java.util.TreeSet;
@@ -16,7 +17,7 @@ import static java.lang.Math.abs;
  */
 public final class Ticket implements Comparable<Ticket> {
 
-    private static boolean connect;
+    private static boolean connect = false;
     private final List<Trip> trips;
     private final String text;
     //private  boolean connect;
@@ -53,23 +54,16 @@ public final class Ticket implements Comparable<Ticket> {
      * @return une représentation textuelle du billet
      */
     private static String computeText(List<Trip> trips) {
-        String statue = "  connexion accomplie !";
-        String statue2 = "";
-        String apply;
-        if(connect){
-            apply=statue;
-        }else{
-            apply=statue2;
-        }
+
         if (trips.size() == 1) {
-            return (String.format("%s - %s (%d)"+apply, trips.get(0).from(), trips.get(0).to(), trips.get(0).points()));
+            return (String.format("%s - %s (%d)", trips.get(0).from(), trips.get(0).to(), trips.get(0).points()));
         } else {
             TreeSet<String> station = new TreeSet<>();
             for (Trip s : trips) {
                 station.add(s.to().name() + " (" + s.points() + ")");
 
             }
-            return (String.format("%s - {%s}"+apply, trips.get(0).from(), String.join(", ", station)));
+            return (String.format("%s - {%s}", trips.get(0).from(), String.join(", ", station)));
         }
     }
 
@@ -87,7 +81,6 @@ public final class Ticket implements Comparable<Ticket> {
     public int points(StationConnectivity connectivity) {
         if (trips.size() == 1) {
             if (connectivity.connected(trips.get(0).from(), trips.get(0).to())) {
-                                 AudioPlayer.play("/klaxonette.wav",false);                    // a voir
                 return (trips.get(0).points());
             } else {
                 return (-(trips.get(0).points()));
@@ -108,21 +101,15 @@ public final class Ticket implements Comparable<Ticket> {
         }
     }
 
-    public boolean ticketDone(StationConnectivity connectivity){
-
-               if(trips.size()==1){
-                    connect = connectivity.connected(trips.get(0).from(), trips.get(0).to());
-               }else {
-                   for (Trip t : trips) {
-                       connect = connectivity.connected(t.from(), t.to());
-                   }
-               }
-               return connect;
-    }
-
-    public boolean isConnect(){
-        StationPartition.Builder deepPartition = new StationPartition.Builder(2);
-        return ticketDone(deepPartition.build());
+    public boolean ticketDone(StationConnectivity connectivity) {
+        if (trips.size() == 1) {
+            return connectivity.connected(trips.get(0).from(), trips.get(0).to());
+        } else {
+            for (Trip t : trips) {
+                return (connectivity.connected(t.from(), t.to()));
+            }
+        }
+        return connect;
     }
 
     /**
@@ -146,14 +133,4 @@ public final class Ticket implements Comparable<Ticket> {
         return this.text().compareTo(that.text());
     }
 
-    public static class TicketState {
-        private boolean done;
-
-        public TicketState(Ticket ticket){
-            boolean done = ticket.isConnect();
-        }
-        public boolean getDone(){
-            return done;
-        }
-    }
 }

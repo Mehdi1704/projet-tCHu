@@ -150,7 +150,7 @@ public final class Game {
                                 // Ajout de la route et retrait des cartes initiales
                                 gameState = gameState.withClaimedRoute(chosenRoute, playerClaimCards);
                                 receiveInfoForBothPlayers(players, information.claimedRoute(chosenRoute, playerClaimCards));
-                                AudioPlayer.play("/ziw.wav",false);
+
                             } else {
                                 // Cartes que le joueur peut jouer
                                 List<SortedBag<Card>> playableCards = gameState.currentPlayerState()

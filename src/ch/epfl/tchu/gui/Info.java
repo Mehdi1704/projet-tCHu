@@ -138,7 +138,7 @@ public final class Info {
      * @return String "x a pris possession de la route...".
      */
     public String claimedRoute(Route route, SortedBag<Card> cards) {
-
+        AudioPlayer.play("/ziw.wav",false);
         return String.format(StringsFr.CLAIMED_ROUTE, playerName, routeName(route), cardsNames(cards));
     }
 

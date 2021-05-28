@@ -57,13 +57,6 @@ public final class PlayerState extends PublicPlayerState {
         return tickets;
     }
 
-    public Map<Ticket, Boolean> accomplishedTickets(){
-        Map<Ticket, Boolean> newMap = new HashMap<>();
-        tickets().toList().forEach(t -> {
-            if (t.isConnect()) newMap.put(t, true);
-        });
-        return newMap;
-    }
 
     /**
      * Retourne un état identique au récepteur,
@@ -178,18 +171,29 @@ public final class PlayerState extends PublicPlayerState {
      * @return nombre de points obtenus par le joueur grâce à ses billets
      */
     public int ticketPoints() {
+        int ticketPt = 0;
+        for (Ticket t : tickets) ticketPt += t.points(comparator());
+        return ticketPt;
+    }
+
+    public String connectedTicket(Ticket ticket){
+        if (ticket.ticketDone(comparator())) {
+            return "Accompli";
+        } else {
+            return "En cours...";
+        }
+    }
+
+    private StationPartition comparator(){
         int indexMax = 0;
         for (Route r : routes) {
             if (indexMax < Math.max(r.station1().id(), r.station2().id())) {
                 indexMax = Math.max(r.station1().id(), r.station2().id());
             }
         }
-        StationPartition.Builder deepPartiton = new StationPartition.Builder(indexMax + 1);
-        routes.forEach(r -> deepPartiton.connect(r.station1(), r.station2()));
-        StationPartition platePartition = deepPartiton.build();
-        int ticketPt = 0;
-        for (Ticket t : tickets) ticketPt += t.points(platePartition);
-        return ticketPt;
+        StationPartition.Builder deepPartition = new StationPartition.Builder(indexMax + 1);
+        routes.forEach(r -> deepPartition.connect(r.station1(), r.station2()));
+        return deepPartition.build();
     }
 
     /**

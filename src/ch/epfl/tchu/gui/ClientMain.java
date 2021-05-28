@@ -4,6 +4,7 @@ import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,18 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        List<String> args = getParameters().getRaw();
+        //List<String> args = getParameters().getRaw();
+
+
+        List<String> args = new ArrayList<>(getParameters().getRaw());
+
+        if(args.isEmpty()){
+            args.add("localhost");
+            args.add("5108");
+        }else if(args.size()==1){
+            args.add("5108");
+        }
+
         GraphicalPlayerAdapter player = new GraphicalPlayerAdapter();
         RemotePlayerClient client = new RemotePlayerClient(player, args.get(0), Integer.parseInt(args.get(1)));
         new Thread(client::run).start();

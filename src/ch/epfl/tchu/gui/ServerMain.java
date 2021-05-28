@@ -51,12 +51,23 @@ public class ServerMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         try (ServerSocket serverSocket = new ServerSocket(5108)) {
 
+
+
             Socket socket = serverSocket.accept();
 
             List<String> args = getParameters().getRaw();
 
-            Map<PlayerId, String> playerNames =
-                    Map.of(PLAYER_1, args.get(0), PLAYER_2, args.get(1));
+            Map<PlayerId, String> playerNames;
+
+            if(args.isEmpty()){
+                playerNames = Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
+            }else if(args.size()==1){
+                playerNames  = Map.of(PLAYER_1, args.get(0), PLAYER_2, "Charles");
+            }else {
+                playerNames = Map.of(PLAYER_1, args.get(0), PLAYER_2, args.get(1));
+            }
+
+
 
             BufferedReader r = new BufferedReader(
                     new InputStreamReader(socket.getInputStream(), US_ASCII));
