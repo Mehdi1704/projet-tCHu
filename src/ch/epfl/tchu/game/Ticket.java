@@ -106,7 +106,10 @@ public final class Ticket implements Comparable<Ticket> {
             return connectivity.connected(trips.get(0).from(), trips.get(0).to());
         } else {
             for (Trip t : trips) {
-                return (connectivity.connected(t.from(), t.to()));
+                connect=(connectivity.connected(t.from(), t.to()));
+                if(connect){
+                    return true;
+                }
             }
         }
         return connect;
