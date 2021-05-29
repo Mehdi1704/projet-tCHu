@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -29,106 +30,127 @@ import java.util.*;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 import static java.nio.charset.StandardCharsets.US_ASCII;
+import static javafx.scene.paint.Color.rgb;
 
 public class MenuMain extends Application {
-    private static boolean launchGame;
+
     private static int wagonsCount;
     private static int initCardsCount;
     private static int longestCount;
+    private static Color player1Color;
+    private static Color player2Color;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Application.launch(args);
     }
 
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("TCHU GAME");
         StackPane layout = new StackPane();
-        layout.getChildren().add(createMenu());
-        if (launchGame){
-            primaryStage.close();
-            try {
-                launchServer(Collections.singletonList("Ada"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Scene scene = new Scene(layout, 1000, 800);
+        layout.getChildren().add(createMenu(primaryStage));
+        Scene scene = new Scene(layout, 1120, 530);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    public static Node createMenu(){
+    public static Node createMenu(Stage primaryStage) {
 
         BackgroundImage myBI = new BackgroundImage(new Image("/menu.png"),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         Pane paneFond = new Pane();
         paneFond.setBackground(new Background(myBI));
-        Button serverButton = createButton("Héberger une partie",500, 200, 200, 100);
-        Button clientButton = createButton("Rejoindre une partie", 500, 400, 200, 100);
+        Button serverButton = createButton("Héberger une partie", 100);
+        Button clientButton = createButton("Rejoindre une partie", 400);
+        Button quitButton = createButton("Quitter", 600);
         paneFond.getChildren().addAll(serverButton, clientButton);
         serverButton.setOnAction(h -> {
             paneFond.getChildren().clear();
-            paneFond.getChildren().add(createServerPage());
+            paneFond.getChildren().add(createServerPage(primaryStage));
         });
+        clientButton.setOnAction(h -> {
+            System.out.println("Client lancé");
+            try {
+                List<String> args = new ArrayList<>();
+                args.add("localhost");
+                args.add("5108");
+                launchClient(args);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        quitButton.setOnAction(h -> primaryStage.close());
         return paneFond;
     }
 
-    public static Node createServerPage(){
+    public static Node createServerPage(Stage primaryStage) {
 
         Pane paneFond = new Pane();
         Slider wagonsSlider = createSlider(20, 40, 5);
         Slider initCardsSlider = createSlider(4, 12, 2);
         Slider bonusLongestSlider = createSlider(5, 20, 2);
-        Button back = createButton("Retour", 200, 300, 100, 100);
-        Button launch = createButton("Lancer le jeu", 600, 300, 100, 100);
+        Button back = createButton("Retour", 100);
+        Button launch = createButton("Lancer le jeu", 400);
         Text text1 = createText("Wagons initiaux");
         Text text2 = createText("Cartes initiales");
         Text text3 = createText("Bonus du plus long chemin");
         Text text4 = createText("Couleur de l'hôte");
         Text text5 = createText("Couleur de l'adversaire");
+        Text text6 = createText("Nom de l'hôte");
+        Text text7 = createText("Nom de l'adversaire");
 
-        ColorPicker colorPicker1 = new ColorPicker();
-        ColorPicker colorPicker2 = new ColorPicker();
+        Color lightBlue = rgb(173, 216, 230);
+        Color lightPink = rgb(255, 182, 193);
 
-        Color value1 = colorPicker1.getValue();
-        Color value2 = colorPicker1.getValue();
+        TextField textField1 = new TextField();
+        TextField textField2 = new TextField();
 
+        ColorPicker colorPicker1 = new ColorPicker(lightBlue);
+        ColorPicker colorPicker2 = new ColorPicker(lightPink);
 
+        Color color1 = colorPicker1.getValue();
+        Color color2 = colorPicker1.getValue();
 
         launch.setOnAction(h -> {
-
-            wagonsCount = (int)wagonsSlider.getValue();
-            initCardsCount = (int)initCardsSlider.getValue();
-            longestCount = (int)bonusLongestSlider.getValue();
-
-            System.out.println((int)wagonsSlider.getValue());
-            System.out.println((int)initCardsSlider.getValue());
-            System.out.println((int)bonusLongestSlider.getValue());
-            launchGame = true;
+            wagonsCount = (int) wagonsSlider.getValue();
+            initCardsCount = (int) initCardsSlider.getValue();
+            longestCount = (int) bonusLongestSlider.getValue();
+            player1Color = color1;
+            player2Color = color2;
+            System.out.println("Serveur lancé");
+            try {
+                List<String> args = new ArrayList<>();
+                args.add("Ada");
+                args.add("Charles");
+                launchServer(args);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
-        VBox rulesBox = new VBox();
+        VBox rulesBox = createVBox(10, 10);
         rulesBox.setStyle("-fx-background-color: #ffffff;" + "-fx-border-color: #000000;");
         rulesBox.getChildren().addAll(text1, wagonsSlider, text2, initCardsSlider, text3, bonusLongestSlider);
-        rulesBox.setMinSize(700, 300);
+        rulesBox.setMinSize(625, 325);
 
-        VBox colorBox = new VBox(text4, colorPicker1, text5, colorPicker2);
-        colorBox.setLayoutX(50);
-        colorBox.setLayoutY(200);
+        VBox colorBox = createVBox(100, 200);
+        colorBox.getChildren().addAll(text4, colorPicker1, text5, colorPicker2);
 
-        paneFond.getChildren().addAll(rulesBox, launch, back,colorBox);
+        VBox namesBox = createVBox(400, 200);
+        namesBox.getChildren().addAll(text6, textField1, text7, textField2);
+
+        paneFond.getChildren().addAll(rulesBox, launch, back, colorBox, namesBox);
 
         back.setOnAction(h -> {
             paneFond.getChildren().clear();
-            paneFond.getChildren().add(createMenu());
+            paneFond.getChildren().add(createMenu(primaryStage));
         });
 
 
         return paneFond;
     }
 
-    public static int getWagonsCount(){
+    public static int getWagonsCount() {
         return wagonsCount;
     }
 
@@ -138,6 +160,14 @@ public class MenuMain extends Application {
 
     public static int getLongestCount() {
         return longestCount;
+    }
+
+    public static Color getPlayer1Color() {
+        return player1Color;
+    }
+
+    public static Color getPlayer2Color() {
+        return player2Color;
     }
 
     public static void launchServer(List<String> args) throws Exception {
@@ -173,10 +203,10 @@ public class MenuMain extends Application {
 
     public static void launchClient(List<String> args) throws Exception {
 
-        if(args.isEmpty()){
+        if (args.isEmpty()) {
             args.add("localhost");
             args.add("5108");
-        }else if(args.size()==1){
+        } else if (args.size() == 1) {
             args.add("5108");
         }
 
@@ -185,7 +215,7 @@ public class MenuMain extends Application {
         new Thread(client::run).start();
     }
 
-    private static Slider createSlider(int min, int max, int majTick){
+    private static Slider createSlider(int min, int max, int majTick) {
         Slider slider = new Slider(min, max, 0);
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
@@ -196,17 +226,24 @@ public class MenuMain extends Application {
         return slider;
     }
 
-    private static Button createButton(String text, int x, int y, int width, int height){
+    private static Button createButton(String text, int x) {
         Button button = new Button(text);
         button.setLayoutX(x);
-        button.setLayoutY(y);
-        button.setMinSize(width, height);
+        button.setLayoutY(350);
+        button.setMinSize(200, 100);
         return button;
     }
 
-    private static Text createText(String string){
+    private static Text createText(String string) {
         Text text = new Text();
         text.setText(string);
         return text;
+    }
+
+    private static VBox createVBox(int x, int y) {
+        VBox vBox = new VBox();
+        vBox.setLayoutX(x);
+        vBox.setLayoutY(y);
+        return vBox;
     }
 }
