@@ -73,7 +73,7 @@ public class MenuMain extends Application {
             try {
                 List<String> args = new ArrayList<>();
                 args.add("localhost");
-                args.add("5108");
+                args.add("128.179.159.4");
                 launchClient(args);
             } catch (Exception e) {
                 e.printStackTrace();

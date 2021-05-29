@@ -61,12 +61,12 @@ public final class Constants {
     /**
      * Nombre de cartes distribuées à chaque joueur en début de partie.
      */
-    public static final int INITIAL_CARDS_COUNT = 4;//MenuMain.getInitCardsCount();
+    public static final int INITIAL_CARDS_COUNT = /*4;*/MenuMain.getInitCardsCount();
 
     /**
      * Nombre de wagons dont dispose chaque joueur en début de partie.
      */
-    public static final int INITIAL_CAR_COUNT = 40;//MenuMain.getWagonsCount();
+    public static final int INITIAL_CAR_COUNT = /*40;*/MenuMain.getWagonsCount();
 
     /**
      * Nombre de billets tirés à la fois en cours de partie.
@@ -104,5 +104,5 @@ public final class Constants {
     /**
      * Nombre de points bonus obtenus par le(s) joueur(s) disposant du plus long chemin.
      */
-    public static final int LONGEST_TRAIL_BONUS_POINTS = 10;//MenuMain.getLongestCount();
+    public static final int LONGEST_TRAIL_BONUS_POINTS = /*10;*/MenuMain.getLongestCount();
 }
