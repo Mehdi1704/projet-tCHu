@@ -72,8 +72,8 @@ public class MenuMain extends Application {
             System.out.println("Client lancé");
             try {
                 List<String> args = new ArrayList<>();
+                args.add("localhost");
                 args.add("128.179.159.4");
-                args.add("5108");
                 launchClient(args);
             } catch (Exception e) {
                 e.printStackTrace();
