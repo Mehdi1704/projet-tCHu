@@ -6,15 +6,15 @@ import ch.epfl.tchu.net.RemotePlayerClient;
 import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -34,9 +34,9 @@ import static javafx.scene.paint.Color.rgb;
 
 public class MenuMain extends Application {
 
-    private static int wagonsCount;
-    private static int initCardsCount;
-    private static int longestCount;
+    private static int wagonsCount = 40;
+    private static int initCardsCount = 4;
+    private static int longestCount = 10;
     private static Color player1Color;
     private static Color player2Color;
 
@@ -54,7 +54,6 @@ public class MenuMain extends Application {
     }
 
     public static Node createMenu(Stage primaryStage) {
-
         BackgroundImage myBI = new BackgroundImage(new Image("/menu.png"),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
@@ -62,21 +61,33 @@ public class MenuMain extends Application {
         paneFond.setBackground(new Background(myBI));
         Button serverButton = createButton("Héberger une partie", 100);
         Button clientButton = createButton("Rejoindre une partie", 400);
-        Button quitButton = createButton("Quitter", 600);
-        paneFond.getChildren().addAll(serverButton, clientButton);
+        Button quitButton = createButton("Quitter", 700);
+        TextField ipField = new TextField();
+        ipField.setPrefColumnCount(15);
+        ipField.setPromptText("Adresse IP de l'hôte");
+        ipField.setLayoutX(400);
+        ipField.setLayoutY(460);
+        paneFond.getChildren().addAll(serverButton, clientButton, ipField, quitButton);
         serverButton.setOnAction(h -> {
             paneFond.getChildren().clear();
             paneFond.getChildren().add(createServerPage(primaryStage));
         });
         clientButton.setOnAction(h -> {
             System.out.println("Client lancé");
-            try {
-                List<String> args = new ArrayList<>();
-                args.add("localhost");
-                args.add("128.179.159.4");
-                launchClient(args);
-            } catch (Exception e) {
-                e.printStackTrace();
+            String address = ipField.getText();
+            if (address.equals("")||!address.subSequence(0,8).equals("128.179.")){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Veuillez entrer une adresse IP valide!");
+                alert.show();
+            }else {
+                try {
+                    List<String> args = new ArrayList<>();
+                    args.add(address);
+                    args.add("5108");
+                    launchClient(args);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         quitButton.setOnAction(h -> primaryStage.close());
@@ -98,6 +109,7 @@ public class MenuMain extends Application {
         Text text5 = createText("Couleur de l'adversaire");
         Text text6 = createText("Nom de l'hôte");
         Text text7 = createText("Nom de l'adversaire");
+        Text text8 = createText("Reglages de jeu:");
 
         Color lightBlue = rgb(173, 216, 230);
         Color lightPink = rgb(255, 182, 193);
@@ -112,25 +124,32 @@ public class MenuMain extends Application {
         Color color2 = colorPicker1.getValue();
 
         launch.setOnAction(h -> {
-            wagonsCount = (int) wagonsSlider.getValue();
-            initCardsCount = (int) initCardsSlider.getValue();
-            longestCount = (int) bonusLongestSlider.getValue();
-            player1Color = color1;
-            player2Color = color2;
-            System.out.println("Serveur lancé");
-            try {
-                List<String> args = new ArrayList<>();
-                args.add("Ada");
-                args.add("Charles");
-                launchServer(args);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (textField1.getText().equals("")||textField2.getText().equals("")){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Veuillez entrer des noms pour les deux joueurs!");
+                alert.show();
+
+            }else {
+                wagonsCount = (int) wagonsSlider.getValue();
+                initCardsCount = (int) initCardsSlider.getValue();
+                longestCount = (int) bonusLongestSlider.getValue();
+                player1Color = color1;
+                player2Color = color2;
+                System.out.println("Serveur lancé");
+                try {
+                    List<String> args = new ArrayList<>();
+                    args.add(textField1.getText());
+                    args.add(textField2.getText());
+                    launchServer(args);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         VBox rulesBox = createVBox(10, 10);
-        rulesBox.setStyle("-fx-background-color: #ffffff;" + "-fx-border-color: #000000;");
-        rulesBox.getChildren().addAll(text1, wagonsSlider, text2, initCardsSlider, text3, bonusLongestSlider);
+        rulesBox.setStyle("-fx-background-color: #ffffffdd;" + "-fx-border-color: #000000;");
+        rulesBox.getChildren().addAll(text8, text1, wagonsSlider, text2, initCardsSlider, text3, bonusLongestSlider);
         rulesBox.setMinSize(625, 325);
 
         VBox colorBox = createVBox(100, 200);
@@ -145,7 +164,6 @@ public class MenuMain extends Application {
             paneFond.getChildren().clear();
             paneFond.getChildren().add(createMenu(primaryStage));
         });
-
 
         return paneFond;
     }
@@ -172,44 +190,22 @@ public class MenuMain extends Application {
 
     public static void launchServer(List<String> args) throws Exception {
         try (ServerSocket serverSocket = new ServerSocket(5108)) {
-
             Socket socket = serverSocket.accept();
-
-            Map<PlayerId, String> playerNames;
-
-            if (args.isEmpty()) {
-                playerNames = Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
-            } else if (args.size() == 1) {
-                playerNames = Map.of(PLAYER_1, args.get(0), PLAYER_2, "Charles");
-            } else {
-                playerNames = Map.of(PLAYER_1, args.get(0), PLAYER_2, args.get(1));
-            }
-
+            Map<PlayerId, String> playerNames =
+                    Map.of(PLAYER_1, args.get(0), PLAYER_2, args.get(1));
             BufferedReader r = new BufferedReader(
                     new InputStreamReader(socket.getInputStream(), US_ASCII));
             BufferedWriter w = new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
-
             Player graphicalPlayer = new GraphicalPlayerAdapter();
             Player remotePlayerProxy = new RemotePlayerProxy(socket, r, w);
-
             Map<PlayerId, Player> players =
-                    Map.of(PLAYER_1, graphicalPlayer,
-                            PLAYER_2, remotePlayerProxy);
-            AudioPlayer.play("/mine.wav", true);
+                    Map.of(PLAYER_1, graphicalPlayer, PLAYER_2, remotePlayerProxy);
             new Thread(() -> Game.play(players, playerNames, SortedBag.of(ChMap.tickets()), new Random())).start();
         }
     }
 
     public static void launchClient(List<String> args) throws Exception {
-
-        if (args.isEmpty()) {
-            args.add("localhost");
-            args.add("5108");
-        } else if (args.size() == 1) {
-            args.add("5108");
-        }
-
         GraphicalPlayerAdapter player = new GraphicalPlayerAdapter();
         RemotePlayerClient client = new RemotePlayerClient(player, args.get(0), Integer.parseInt(args.get(1)));
         new Thread(client::run).start();
@@ -228,6 +224,7 @@ public class MenuMain extends Application {
 
     private static Button createButton(String text, int x) {
         Button button = new Button(text);
+        button.setStyle("-fx-font-size: 15pt;");
         button.setLayoutX(x);
         button.setLayoutY(350);
         button.setMinSize(200, 100);
@@ -237,6 +234,7 @@ public class MenuMain extends Application {
     private static Text createText(String string) {
         Text text = new Text();
         text.setText(string);
+        text.setFont(Font.font("Trebuchet MS", FontWeight.LIGHT, 15));
         return text;
     }
 
