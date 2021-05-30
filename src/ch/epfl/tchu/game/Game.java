@@ -51,8 +51,15 @@ public final class Game {
         playerNames.forEach((player, info) -> playerInformation.put(player, new Info(info)));
         // Tickets initiaux
         Map<PlayerId, SortedBag<Ticket>> playersTickets = new EnumMap<>(PlayerId.class);
+        //BONUS: couleurs et constanes
+        Map<PlayerId, String> playersColors = new EnumMap<>(PlayerId.class);
+        playersColors.put(PlayerId.PLAYER_1, colorPlayer1.toString());
+        playersColors.put(PlayerId.PLAYER_2, colorPlayer2.toString());
         // Joueurs
-        players.forEach((key, value) -> value.initPlayers(key, playerNames));
+        players.forEach((k, v) -> {
+            v.initConstants(playersColors, constantsList);
+            v.initPlayers(k, playerNames);
+        });
         // Etat de jeu
         GameState gameState = GameState.initial(tickets, rng);
         updateStateForBothPlayers(players, gameState);

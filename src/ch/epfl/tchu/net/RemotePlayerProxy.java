@@ -50,6 +50,18 @@ public final class RemotePlayerProxy implements Player {
         sendMessage(MessageId.INIT_PLAYERS, listOfArgs);
     }
 
+    @Override
+    public void initConstants(Map<PlayerId, String> playerColors, List<Integer> constants){
+        System.out.println(playerColors);
+        List<String> listOfArgs = List.of(
+                Serdes.STRING_SERDE.serialize(playerColors.get(PlayerId.PLAYER_1)),
+                Serdes.STRING_SERDE.serialize(playerColors.get(PlayerId.PLAYER_2)),
+                Serdes.INTEGER_SERDE.serialize(constants.get(0)),
+                Serdes.INTEGER_SERDE.serialize(constants.get(1)),
+                Serdes.INTEGER_SERDE.serialize(constants.get(2)));
+        sendMessage(MessageId.INIT_CONSTANTS, listOfArgs);
+    }
+
     /**
      * Envoie sur la prise le MessageId de la methode et ses arguments listés et sérialisés
      *

@@ -30,6 +30,11 @@ public class RemotePlayerClientTest {
             }
 
             @Override
+            public void initConstants(Map<PlayerId, String> playerColors, List<Integer> constants){
+
+            }
+
+            @Override
             public void receiveInfo(String info) {
                 System.out.println(MessageId.RECEIVE_INFO.name()+".........\n");
                 System.out.printf("info: %s\n", info);

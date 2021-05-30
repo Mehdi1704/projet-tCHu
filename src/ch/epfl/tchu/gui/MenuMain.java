@@ -6,7 +6,7 @@ import ch.epfl.tchu.net.RemotePlayerClient;
 import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 
-import javafx.geometry.VPos;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -37,8 +37,8 @@ public class MenuMain extends Application {
     private static int wagonsCount = 40;
     private static int initCardsCount = 4;
     private static int longestCount = 10;
-    private static Color player1Color;
-    private static Color player2Color;
+    private static Color player1Color = rgb(173, 216, 230);
+    private static Color player2Color = rgb(255, 182, 193);
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -75,11 +75,12 @@ public class MenuMain extends Application {
         clientButton.setOnAction(h -> {
             System.out.println("Client lancé");
             String address = ipField.getText();
-            if (address.equals("")||!address.subSequence(0,8).equals("128.179.")){
+            if (address.isEmpty()/*||!address.subSequence(0,8).equals("128.179.")*/){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Veuillez entrer une adresse IP valide!");
                 alert.show();
             }else {
+                //Platform.setImplicitExit(false);
                 try {
                     List<String> args = new ArrayList<>();
                     args.add(address);
@@ -97,9 +98,10 @@ public class MenuMain extends Application {
     public static Node createServerPage(Stage primaryStage) {
 
         Pane paneFond = new Pane();
-        Slider wagonsSlider = createSlider(20, 40, 5);
-        Slider initCardsSlider = createSlider(4, 12, 2);
-        Slider bonusLongestSlider = createSlider(5, 20, 2);
+        Slider wagonsSlider = createSlider(20, 40, 5, 4);
+
+        Slider initCardsSlider = createSlider(4, 12, 1, 0);
+        Slider bonusLongestSlider = createSlider(5, 20, 1, 0);
         Button back = createButton("Retour", 100);
         Button launch = createButton("Lancer le jeu", 400);
         Text text1 = createText("Wagons initiaux");
@@ -111,17 +113,11 @@ public class MenuMain extends Application {
         Text text7 = createText("Nom de l'adversaire");
         Text text8 = createText("Reglages de jeu:");
 
-        Color lightBlue = rgb(173, 216, 230);
-        Color lightPink = rgb(255, 182, 193);
-
         TextField textField1 = new TextField();
         TextField textField2 = new TextField();
 
-        ColorPicker colorPicker1 = new ColorPicker(lightBlue);
-        ColorPicker colorPicker2 = new ColorPicker(lightPink);
-
-        Color color1 = colorPicker1.getValue();
-        Color color2 = colorPicker1.getValue();
+        ColorPicker colorPicker1 = new ColorPicker(player1Color);
+        ColorPicker colorPicker2 = new ColorPicker(player2Color);
 
         launch.setOnAction(h -> {
             if (textField1.getText().equals("")||textField2.getText().equals("")){
@@ -133,9 +129,10 @@ public class MenuMain extends Application {
                 wagonsCount = (int) wagonsSlider.getValue();
                 initCardsCount = (int) initCardsSlider.getValue();
                 longestCount = (int) bonusLongestSlider.getValue();
-                player1Color = color1;
-                player2Color = color2;
+                player1Color = colorPicker1.getValue();
+                player2Color = colorPicker2.getValue();
                 System.out.println("Serveur lancé");
+                //Platform.setImplicitExit(false);
                 try {
                     List<String> args = new ArrayList<>();
                     args.add(textField1.getText());
@@ -187,6 +184,17 @@ public class MenuMain extends Application {
     public static Color getPlayer2Color() {
         return player2Color;
     }
+    public static void setConstants(List<String> listString) {
+        System.out.println(listString);
+        wagonsCount = Integer.parseInt(listString.get(0));
+        initCardsCount = Integer.parseInt(listString.get(1));
+        longestCount = Integer.parseInt(listString.get(2));
+    }
+
+    public static void setColors(List<String> listString){
+        player1Color = Color.web(listString.get(0));
+        player2Color = Color.web(listString.get(1));
+    }
 
     public static void launchServer(List<String> args) throws Exception {
         try (ServerSocket serverSocket = new ServerSocket(5108)) {
@@ -211,20 +219,20 @@ public class MenuMain extends Application {
         new Thread(client::run).start();
     }
 
-    private static Slider createSlider(int min, int max, int majTick) {
+    private static Slider createSlider(int min, int max, int majTick, int minTick) {
         Slider slider = new Slider(min, max, 0);
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.valueProperty().addListener(
                 (obs, oldVal, newVal) -> slider.setValue(newVal.intValue()));
         slider.setMajorTickUnit(majTick);
-        slider.setMinorTickCount(1);
+        slider.setMinorTickCount(minTick);
         return slider;
     }
 
     private static Button createButton(String text, int x) {
         Button button = new Button(text);
-        button.setStyle("-fx-font-size: 15pt;");
+        button.setStyle("-fx-font-size: 15pt;"+"-fx-background-color: #ffffffdd");
         button.setLayoutX(x);
         button.setLayoutY(350);
         button.setMinSize(200, 100);

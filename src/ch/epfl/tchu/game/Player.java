@@ -30,6 +30,8 @@ public interface Player {
      */
     void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames);
 
+    void initConstants(Map<PlayerId, String> playerColors, List<Integer> constants);
+
     /**
      * qui est appelée chaque fois qu'une information doit être communiquée au joueur au cours de la partie;
      * cette information est donnée sous la forme d'une chaîne de caractères, généralement produite par la classe Info

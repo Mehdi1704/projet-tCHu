@@ -2,10 +2,13 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.gui.MenuMain;
+import javafx.scene.paint.Color;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -76,6 +79,12 @@ public final class RemotePlayerClient {
                 playerNames.put(PlayerId.PLAYER_1, Serdes.LIST_STRING_SERDE.deserialize(message[2]).get(0));
                 playerNames.put(PlayerId.PLAYER_2, Serdes.LIST_STRING_SERDE.deserialize(message[2]).get(1));
                 player.initPlayers(Serdes.PLAYER_ID_SERDE.deserialize(message[1]), playerNames);
+                break;
+            case INIT_CONSTANTS:
+                MenuMain.setColors(List.of(
+                        Serdes.STRING_SERDE.deserialize(message[1]),
+                        Serdes.STRING_SERDE.deserialize(message[2])));
+                MenuMain.setConstants(List.of(message[3],message[4],message[5]));
                 break;
             case RECEIVE_INFO:
                 player.receiveInfo(Serdes.STRING_SERDE.deserialize(message[1]));

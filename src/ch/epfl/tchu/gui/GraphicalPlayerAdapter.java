@@ -40,6 +40,10 @@ public class GraphicalPlayerAdapter implements Player {
         graphicalPlayer = takeBlockingQueue(playerQueue);
     }
 
+    @Override
+    public void initConstants(Map<PlayerId, String> playerColors, List<Integer> constants) {
+    }
+
     /**
      * Appelle la methode eponyme du GraphicalPlayer.
      *

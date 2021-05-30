@@ -97,7 +97,7 @@ class MapViewCreator {
      */
     private static Group GroupCase(int index, Route route, ObservableGameState observableGameState) {
         Group theCase = new Group();
-        Group wagon = GroupWagon();
+        Group wagon = GroupWagon(observableGameState);
         theCase.setId(route.id() + "_" + index);
         //voie
         Rectangle rect = new Rectangle(36, 12);
@@ -107,7 +107,7 @@ class MapViewCreator {
         observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) ->
                 wagon.visibleProperty().set(!Objects.isNull(n)));
 
-        theCase.getChildren().add(GroupWagon());
+        theCase.getChildren().add(GroupWagon(observableGameState));
         return theCase;
     }
 
@@ -116,11 +116,11 @@ class MapViewCreator {
      *
      * @return un groupe de wagon.
      */
-    private static Group GroupWagon() {
+    private static Group GroupWagon(ObservableGameState observableGameState) {
         Group wagon = new Group();
         wagon.getStyleClass().add("car");
 
-        Rectangle rect = new Rectangle(36, 12);
+        Rectangle rect = new Rectangle(36, 12);//), Constants.COLOR_MAP.get(observableGameState.getPublicGameStateAtt().currentPlayerId()));
         rect.getStyleClass().add("filled");
         Circle cercle1 = new Circle(12, 6, 3);
         Circle cercle2 = new Circle(24, 6, 3);

@@ -120,6 +120,10 @@ public class ObservableGameState {
      * Les différents getters.
      */
     //_____________________GETTERS DE PUBLIC GAME STATE_____________________
+    public PublicGameState getPublicGameStateAtt(){
+        return publicGameStateAtt;
+    }
+
     public ReadOnlyIntegerProperty percentageTicket() {
         return percentageTicket;
     }

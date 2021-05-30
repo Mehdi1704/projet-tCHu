@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.MenuMain;
 
 import java.util.List;
+import java.util.Map;
 
 
 public final class Constants {
@@ -110,4 +111,10 @@ public final class Constants {
     public static final javafx.scene.paint.Color colorPlayer1 = MenuMain.getPlayer1Color();
 
     public static final javafx.scene.paint.Color colorPlayer2 = MenuMain.getPlayer2Color();
+
+    public static final Map<PlayerId, javafx.scene.paint.Color> COLOR_MAP = Map.of(
+            PlayerId.PLAYER_1, colorPlayer1,
+            PlayerId.PLAYER_2, colorPlayer2);
+
+    public static final List<Integer> constantsList = List.of(INITIAL_CAR_COUNT, INITIAL_CARDS_COUNT, LONGEST_TRAIL_BONUS_POINTS);
 }

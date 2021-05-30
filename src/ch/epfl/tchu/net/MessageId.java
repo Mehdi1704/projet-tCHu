@@ -11,6 +11,7 @@ import java.util.List;
 public enum MessageId {
 
     INIT_PLAYERS,
+    INIT_CONSTANTS,
     RECEIVE_INFO,
     UPDATE_STATE,
     SET_INITIAL_TICKETS,
