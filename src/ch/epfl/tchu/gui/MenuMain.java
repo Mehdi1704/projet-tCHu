@@ -6,7 +6,7 @@ import ch.epfl.tchu.net.RemotePlayerClient;
 import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 
-import javafx.application.Platform;
+
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,13 +18,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
@@ -37,8 +35,8 @@ public class MenuMain extends Application {
     private static int wagonsCount = 40;
     private static int initCardsCount = 4;
     private static int longestCount = 10;
-    private static Color player1Color = rgb(173, 216, 230);
-    private static Color player2Color = rgb(255, 182, 193);
+    private static Color player1Color;
+    private static Color player2Color;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -75,13 +73,14 @@ public class MenuMain extends Application {
         clientButton.setOnAction(h -> {
             System.out.println("Client lancé");
             String address = ipField.getText();
-            if (address.isEmpty()/*||!address.subSequence(0,8).equals("128.179.")*/){
+            if (address.isEmpty()/*||!address.subSequence(0,8).equals("128.179.")*/) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Veuillez entrer une adresse IP valide!");
                 alert.show();
-            }else {
+            } else {
                 //Platform.setImplicitExit(false);
                 try {
+                    //setThemeColors(getPlayer1Color(), getPlayer2Color());
                     List<String> args = new ArrayList<>();
                     args.add(address);
                     args.add("5108");
@@ -99,7 +98,6 @@ public class MenuMain extends Application {
 
         Pane paneFond = new Pane();
         Slider wagonsSlider = createSlider(20, 40, 5, 4);
-
         Slider initCardsSlider = createSlider(4, 12, 1, 0);
         Slider bonusLongestSlider = createSlider(5, 20, 1, 0);
         Button back = createButton("Retour", 100);
@@ -116,22 +114,23 @@ public class MenuMain extends Application {
         TextField textField1 = new TextField();
         TextField textField2 = new TextField();
 
-        ColorPicker colorPicker1 = new ColorPicker(player1Color);
-        ColorPicker colorPicker2 = new ColorPicker(player2Color);
+        ColorPicker colorPicker1 = new ColorPicker(rgb(173, 216, 230));
+        ColorPicker colorPicker2 = new ColorPicker(rgb(255, 182, 193));
 
         launch.setOnAction(h -> {
-            if (textField1.getText().equals("")||textField2.getText().equals("")){
+            if (textField1.getText().equals("") || textField2.getText().equals("")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Veuillez entrer des noms pour les deux joueurs!");
                 alert.show();
 
-            }else {
+            } else {
                 wagonsCount = (int) wagonsSlider.getValue();
                 initCardsCount = (int) initCardsSlider.getValue();
                 longestCount = (int) bonusLongestSlider.getValue();
                 player1Color = colorPicker1.getValue();
                 player2Color = colorPicker2.getValue();
                 System.out.println("Serveur lancé");
+                setThemeColors();
                 //Platform.setImplicitExit(false);
                 try {
                     List<String> args = new ArrayList<>();
@@ -184,6 +183,7 @@ public class MenuMain extends Application {
     public static Color getPlayer2Color() {
         return player2Color;
     }
+
     public static void setConstants(List<String> listString) {
         System.out.println(listString);
         wagonsCount = Integer.parseInt(listString.get(0));
@@ -191,9 +191,10 @@ public class MenuMain extends Application {
         longestCount = Integer.parseInt(listString.get(2));
     }
 
-    public static void setColors(List<String> listString){
+    public static void setColors(List<String> listString) {
         player1Color = Color.web(listString.get(0));
         player2Color = Color.web(listString.get(1));
+        setThemeColors();
     }
 
     public static void launchServer(List<String> args) throws Exception {
@@ -232,7 +233,7 @@ public class MenuMain extends Application {
 
     private static Button createButton(String text, int x) {
         Button button = new Button(text);
-        button.setStyle("-fx-font-size: 15pt;"+"-fx-background-color: #ffffffdd");
+        button.setStyle("-fx-font-size: 15pt;" + "-fx-background-color: #ffffffdd");
         button.setLayoutX(x);
         button.setLayoutY(350);
         button.setMinSize(200, 100);
@@ -252,4 +253,28 @@ public class MenuMain extends Application {
         vBox.setLayoutY(y);
         return vBox;
     }
+
+    private static void setThemeColors() {
+        try {
+            File file = new File("resources/players.css");
+            Path path = file.toPath();
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            Files.writeString(path,
+                    ".PLAYER_1 .filled { -fx-fill: \"#" + getPlayer1Color().toString().subSequence(2, 8) + "\"; }\n" +
+                            ".PLAYER_2 .filled { -fx-fill: \"#" + getPlayer2Color().toString().subSequence(2, 8) + "\"; }");
+            path.toFile().deleteOnExit();
+
+            System.out.println("Wrote " + path);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+

@@ -52,7 +52,8 @@ public final class RemotePlayerProxy implements Player {
 
     @Override
     public void initConstants(Map<PlayerId, String> playerColors, List<Integer> constants){
-        System.out.println(playerColors);
+        System.out.println("INIT-COLORS: "+playerColors);
+        System.out.println("INIT-CONSTANTS: "+constants);
         List<String> listOfArgs = List.of(
                 Serdes.STRING_SERDE.serialize(playerColors.get(PlayerId.PLAYER_1)),
                 Serdes.STRING_SERDE.serialize(playerColors.get(PlayerId.PLAYER_2)),

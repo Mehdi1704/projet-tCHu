@@ -37,7 +37,7 @@ class InfoViewCreator {
                                       ObservableList<Text> textList){
 
         VBox vBox = new VBox();
-        vBox.getStylesheets().addAll("info.css","colors.css");
+        vBox.getStylesheets().addAll("info.css","colors.css","players.css");
         VBox vbox2 = new VBox();
         vbox2.setId("player-stats");
         Separator separator = new Separator();
@@ -58,8 +58,8 @@ class InfoViewCreator {
     private static TextFlow PlayerStats(ObservableGameState observableGameState,PlayerId playerId, Map<PlayerId, String> playerNames){
         TextFlow textFlow = new TextFlow();
         textFlow.getStyleClass().add(playerId.name());
-        Circle circle = new Circle(5, Constants.COLOR_MAP.get(playerId));
-        //circle.getStyleClass().add("filled");
+        Circle circle = new Circle(5);
+        circle.getStyleClass().addAll("filled");
 
         Text text = new Text();
         text.textProperty().bind(Bindings.format(StringsFr.PLAYER_STATS,playerNames.get(playerId),

@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+import ch.epfl.tchu.gui.MenuMain;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class PublicPlayerState {
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
         this.routes = List.copyOf(routes);
-        int totalCars = INITIAL_CAR_COUNT;
+        int totalCars = MenuMain.getWagonsCount();
         int totalPoints = 0;
         for (Route r : routes()) {
             totalCars -= r.length();

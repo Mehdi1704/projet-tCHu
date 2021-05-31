@@ -35,7 +35,7 @@ class MapViewCreator {
                                      CardChooser cardChooser) {
 
         Pane paneFond = new Pane();
-        paneFond.getStylesheets().addAll("map.css", "colors.css");
+        paneFond.getStylesheets().addAll("map.css", "colors.css", "players.css");
         paneFond.getChildren().add(new ImageView());
 
         ChMap.routes().forEach(route -> {
@@ -97,7 +97,7 @@ class MapViewCreator {
      */
     private static Group GroupCase(int index, Route route, ObservableGameState observableGameState) {
         Group theCase = new Group();
-        Group wagon = GroupWagon(observableGameState);
+        Group wagon = GroupWagon();
         theCase.setId(route.id() + "_" + index);
         //voie
         Rectangle rect = new Rectangle(36, 12);
@@ -107,7 +107,7 @@ class MapViewCreator {
         observableGameState.routeObjectPropertyMap(route).addListener((p, o, n) ->
                 wagon.visibleProperty().set(!Objects.isNull(n)));
 
-        theCase.getChildren().add(GroupWagon(observableGameState));
+        theCase.getChildren().add(GroupWagon());
         return theCase;
     }
 
@@ -116,11 +116,11 @@ class MapViewCreator {
      *
      * @return un groupe de wagon.
      */
-    private static Group GroupWagon(ObservableGameState observableGameState) {
+    private static Group GroupWagon() {
         Group wagon = new Group();
         wagon.getStyleClass().add("car");
 
-        Rectangle rect = new Rectangle(36, 12);//), Constants.COLOR_MAP.get(observableGameState.getPublicGameStateAtt().currentPlayerId()));
+        Rectangle rect = new Rectangle(36, 12);
         rect.getStyleClass().add("filled");
         Circle cercle1 = new Circle(12, 6, 3);
         Circle cercle2 = new Circle(24, 6, 3);
