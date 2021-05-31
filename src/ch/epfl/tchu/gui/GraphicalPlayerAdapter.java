@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -42,6 +43,12 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public void initConstants(Map<PlayerId, String> playerColors, List<Integer> constants) {
+        List<String> list = List.of(
+                playerColors.get(PlayerId.PLAYER_1),
+                playerColors.get(PlayerId.PLAYER_2));
+        BlockingQueue<Boolean> pathQueue = new ArrayBlockingQueue<>(1);
+        runLater(() -> pathQueue.add(MenuMain.setColors(list)));
+        takeBlockingQueue(pathQueue);
     }
 
     /**

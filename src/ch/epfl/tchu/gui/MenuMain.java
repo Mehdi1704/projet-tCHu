@@ -7,6 +7,7 @@ import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -78,7 +79,8 @@ public class MenuMain extends Application {
                 alert.setContentText("Veuillez entrer une adresse IP valide!");
                 alert.show();
             } else {
-                //Platform.setImplicitExit(false);
+                Platform.setImplicitExit(false);
+                primaryStage.hide();
                 try {
                     //setThemeColors(getPlayer1Color(), getPlayer2Color());
                     List<String> args = new ArrayList<>();
@@ -131,7 +133,8 @@ public class MenuMain extends Application {
                 player2Color = colorPicker2.getValue();
                 System.out.println("Serveur lancé");
                 setThemeColors();
-                //Platform.setImplicitExit(false);
+                Platform.setImplicitExit(false);
+                primaryStage.hide();
                 try {
                     List<String> args = new ArrayList<>();
                     args.add(textField1.getText());
@@ -191,10 +194,11 @@ public class MenuMain extends Application {
         longestCount = Integer.parseInt(listString.get(2));
     }
 
-    public static void setColors(List<String> listString) {
+    public static boolean setColors(List<String> listString) {
         player1Color = Color.web(listString.get(0));
         player2Color = Color.web(listString.get(1));
         setThemeColors();
+        return true;
     }
 
     public static void launchServer(List<String> args) throws Exception {

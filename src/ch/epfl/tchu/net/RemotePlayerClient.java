@@ -81,10 +81,17 @@ public final class RemotePlayerClient {
                 player.initPlayers(Serdes.PLAYER_ID_SERDE.deserialize(message[1]), playerNames);
                 break;
             case INIT_CONSTANTS:
+
+                Map<PlayerId, String> playerColors = new EnumMap<>(PlayerId.class);
+                playerColors.put(PlayerId.PLAYER_1, Serdes.STRING_SERDE.deserialize(message[1]));
+                playerColors.put(PlayerId.PLAYER_2, Serdes.STRING_SERDE.deserialize(message[2]));
+/*
                 MenuMain.setColors(List.of(
                         Serdes.STRING_SERDE.deserialize(message[1]),
-                        Serdes.STRING_SERDE.deserialize(message[2])));
+                        Serdes.STRING_SERDE.deserialize(message[2])));*/
+
                 MenuMain.setConstants(List.of(message[3],message[4],message[5]));
+                player.initConstants(playerColors, List.of());
                 break;
             case RECEIVE_INFO:
                 player.receiveInfo(Serdes.STRING_SERDE.deserialize(message[1]));
