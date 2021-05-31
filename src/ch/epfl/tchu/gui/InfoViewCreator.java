@@ -35,6 +35,7 @@ class InfoViewCreator {
                                       Map<PlayerId, String> playerNames,
                                       ObservableGameState observableGameState,
                                       ObservableList<Text> textList){
+        System.out.println("info view created");
 
         VBox vBox = new VBox();
         vBox.getStylesheets().addAll("info.css","colors.css","players.css");

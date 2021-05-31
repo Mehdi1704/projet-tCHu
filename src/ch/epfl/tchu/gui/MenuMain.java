@@ -264,7 +264,7 @@ public class MenuMain extends Application {
             Path path = file.toPath();
 
             if (!file.exists()) {
-                file.createNewFile();
+            file.createNewFile();
             }
 
             Files.writeString(path,

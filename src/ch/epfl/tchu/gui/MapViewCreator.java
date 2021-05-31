@@ -33,7 +33,7 @@ class MapViewCreator {
     public static Node createMapView(ObservableGameState observableGameState,
                                      ObjectProperty<ClaimRouteHandler> claimRouteHandler,
                                      CardChooser cardChooser) {
-
+        System.out.println("map view created");
         Pane paneFond = new Pane();
         paneFond.getStylesheets().addAll("map.css", "colors.css", "players.css");
         paneFond.getChildren().add(new ImageView());
