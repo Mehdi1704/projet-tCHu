@@ -37,7 +37,7 @@ class MapViewCreator {
         Pane paneFond = new Pane();
         paneFond.getStylesheets().addAll("map.css", "colors.css", "players.css");
         paneFond.getChildren().add(new ImageView());
-        AudioPlayer.play("mine.wav",true);
+        AudioPlayer.play("/mine.wav",true);
         ChMap.routes().forEach(route -> {
             Group r1 = GroupRoute(route, observableGameState);
             r1.disableProperty().bind(claimRouteHandler.isNull().or(observableGameState.canTakeRoute(route).not()));
