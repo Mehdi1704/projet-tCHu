@@ -260,7 +260,7 @@ public class MenuMain extends Application {
 
     private static void setThemeColors() {
         try {
-            File file = new File("resources/players.css");
+            File file = new File("out/production/projet tCHu/players.css");
             Path path = file.toPath();
 
             if (!file.exists()) {
