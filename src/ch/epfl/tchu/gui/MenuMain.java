@@ -74,7 +74,7 @@ public class MenuMain extends Application {
         clientButton.setOnAction(h -> {
             System.out.println("Client lancé");
             String address = ipField.getText();
-            if (address.isEmpty()/*||!address.subSequence(0,8).equals("128.179.")*/) {
+            if (address.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Veuillez entrer une adresse IP valide!");
                 alert.show();
@@ -120,7 +120,7 @@ public class MenuMain extends Application {
         ColorPicker colorPicker2 = new ColorPicker(rgb(255, 182, 193));
 
         launch.setOnAction(h -> {
-            if (textField1.getText().equals("") || textField2.getText().equals("")) {
+            if (textField1.getText().isEmpty() || textField2.getText().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setContentText("Veuillez entrer des noms pour les deux joueurs!");
                 alert.show();
