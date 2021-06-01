@@ -99,7 +99,7 @@ public class MenuMain extends Application {
     public static Node createServerPage(Stage primaryStage) {
 
         Pane paneFond = new Pane();
-        Slider wagonsSlider = createSlider(20, 40, 5, 4);
+        Slider wagonsSlider = createSlider(20, 60, 5, 4);
         Slider initCardsSlider = createSlider(4, 12, 1, 0);
         Slider bonusLongestSlider = createSlider(5, 20, 1, 0);
         Button back = createButton("Retour", 100);
@@ -265,6 +265,7 @@ public class MenuMain extends Application {
 
             if (!file.exists()) {
             file.createNewFile();
+                System.out.println("File created");
             }
 
             Files.writeString(path,
