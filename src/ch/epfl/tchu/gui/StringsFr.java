@@ -60,7 +60,7 @@ public final class StringsFr {
     public static final String LAST_TURN_BEGINS =
             "\n%s n'a plus que %s wagon%s, le dernier tour commence !\n";
     public static final String GETS_BONUS =
-            "\n%s reçoit un bonus de 10 points pour le plus long trajet (%s).\n";
+            "\n%s reçoit un bonus de %s points pour le plus long trajet (%s).\n";
     public static final String WINS =
             "\n%s remporte la victoire avec %s point%s, contre %s point%s !\n";
     public static final String DRAW =

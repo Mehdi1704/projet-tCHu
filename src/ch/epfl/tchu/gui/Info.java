@@ -198,7 +198,7 @@ public final class Info {
      */
     public String getsLongestTrailBonus(Trail longestTrail) {
 
-        return String.format(StringsFr.GETS_BONUS, playerName,
+        return String.format(StringsFr.GETS_BONUS, playerName, Constants.LONGEST_TRAIL_BONUS_POINTS,
                 longestTrail.station1().name() + StringsFr.EN_DASH_SEPARATOR + longestTrail.station2().name());
     }
 
